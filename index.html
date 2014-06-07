@@ -31,14 +31,14 @@
 				<li><a href="#">Examples</a></li>
 				<li><a href="#">Create Store!</a></li>
 			  </ul>
-			  <form class="navbar-form navbar-right" role="form">
-				<button type="button" class="btn btn-primary" onClick="$(this).fadeOut(400, function() {$('#hidden_login').fadeIn(400);});">Login</button>
-				<span id="hidden_login" class="sorta_hidden">
-				  <div class="form-group"><input class="form-control" type="text" placeholder="Email"></div>
-				  <div class="form-group"><input class="form-control" type="password" placeholder="Password"></div>
-				  <button class="btn btn-success" type="submit">Login</button>
-				</span>
-			  </form>
+			  <div class="navbar-right">
+				<ul class="nav navbar-nav"><li><a href="#" onClick="$(this).fadeOut(400, function() {$('#hidden_login').fadeIn(400);});">Login</a></li></ul>
+			    <form id="hidden_login" class="navbar-form sorta_hidden" role="form">
+				    <div class="form-group"><input class="form-control" type="text" placeholder="Email"></div>
+				    <div class="form-group"><input class="form-control" type="password" placeholder="Password"></div>
+				    <button class="btn btn-success" type="submit">Login</button>
+			    </form>
+			  </div>
 			</div>
 		  </div>
 		</div>
