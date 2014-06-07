@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+    <title>Settings</title>
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="jumbotron-narrow.css" rel="stylesheet">
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+
+  <body>
+<!-- link to top --
+    <a name="top"></a>
+		<a href="#top"><div style="position:fixed;width:50px;height:50px;bottom:0;right:0;background-color:grey"></div></a>
+<!-- /link to top -->
+		<div class="bs-example bs-example-tabs">
+		  <ul id="myTab" class="nav nav-tabs">
+		    <li class="active"><a href="#elements" data-toggle="tab">Elements</a></li>
+		    <li><a href="#products" data-toggle="tab">Products</a></li>
+
+		    <li><a href="#images" data-toggle="tab">Images</a></li>
+
+		    <li><a href="#settings" data-toggle="tab">Settings</a></li>
+		    
+		  </ul>
+		<div id="myTabContent" class="tab-content">
+    	<div class="tab-pane fade in active" id="elements">
+
+		
+						<!-- element Page -->
+						<div class="container">
+							
+						 <div style="background-color:#cccccc;padding:10px">
+							 <div class="jumbotron">
+							 add new elements and stuff<br>
+								<form class="form-inline" role="form" action="/my-handling-form-page" method="post">
+									 <select class="form-control">
+										 <option>Logo</option>
+										 <option>stuff</option>
+										 <option>Really long title</option>
+										 <option>4</option>
+										 <option>5</option>
+									</select>
+									<button type="submit" class="btn btn-primary">Submit</button>
+									</form>
+									<form class="form-inline" role="form" action="/my-handling-form-page" method="post">
+										<button type="submit" class="btn btn-primary">Save</button>
+										<button type="submit" class="btn btn-primary">Save Draft</button>
+										<button type="submit" class="btn btn-primary">Restore Default</button>
+										<button type="submit" class="btn btn-primary">Preview</button>
+								</form>
+							</div>
+							<div class="row marketing">
+								<div class="col-lg-6">
+									<!-- Textblock-->
+										<div style="background-color:#aaaaaa;padding:10px;margin:5px">Textblock
+											<button type="button" class="close" aria-hidden="true">&times;</button>
+											<form class="form-horizontal" role="form""> 
+												<div class="form-group">
+													<label for="text3" class="col-sm-2 control-label">Title</label>
+													<div class="col-sm-10">
+												 	 	<input type="email" class="form-control" id="inputEmail3" placeholder="Title">
+											 		</div>
+													<label for="text3" class="col-sm-2 control-label">Description</label>
+													<div class="col-sm-10">
+														<textarea class="form-control" rows="2" placeholder="Description"></textarea>
+													</div>
+													<div>
+														<center>
+															<button type="submit" class="btn btn-default">Save</button>
+														</center>
+													</div>
+												</div>
+
+
+											</form>
+										</div>
+									<!-- /Textblock-->
+
+									<!-- Imageblock-->
+										<div style="background-color:#aaaaaa;padding:10px;margin:5px">Imageblock
+											<button type="button" class="close" aria-hidden="true">&times;</button>
+											<form class="form-horizontal" role="form"">
+												<div class="form-group">
+													<label for="text3" class="col-sm-2 control-label">Title</label>
+													<div class="col-sm-10">
+												 	 <input type="email" class="form-control" id="inputEmail3" placeholder="Title">
+											 		</div>
+													<label for="text3" class="col-sm-2 control-label">Description</label>
+													<div class="col-sm-10">
+														<textarea class="form-control" rows="2" placeholder="Description"></textarea>
+													</div>
+			
+													<label for="text3" class="col-sm-2 control-label">Image</label>
+													<div class="col-sm-10">
+															<select class="form-control">
+																<option>None</option>
+																<option>image1.jpg</option>
+																<option>image2.jpg</option>
+																<option>image3.jpg</option>
+																<option>image4.jpg</option>
+																<option>image5.jpg</option>
+															</select>
+													</div>
+													<div>
+														<center>
+															<button type="submit" class="btn btn-default">Save</button>
+														</center>
+													</div>
+												</div>
+											</form>
+										</div>
+									<!-- /Imageblock-->
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- element Page -->	
+	
+				<br>
+				<!-- product page -->
+
+					<div class="tab-pane fade" id="products">
+						<div class="container">
+							
+							<div style="background-color:#cccccc;padding:10px;"><!-- stuff -->
+							 	<div class="jumbotron">
+							 		add new products and stuff<br>
+									<form class="form-inline" role="form" action="/my-handling-form-page" method="post">
+										<button type="submit" class="btn btn-primary">New Product</button>
+									</form>
+								</div>
+								<div class="row marketing">
+									<div class="col-lg-6">
+										<!-- Product-->
+											<div style="background-color:#aaaaaa;padding:10px;margin:5px">
+												<button type="button" class="close" aria-hidden="true">&times;</button><br>
+												<form class="form-horizontal" role="form"">
+													<div class="form-group">
+														<label for="text3" class="col-sm-3 control-label">Product</label>
+														<div class="col-sm-9">
+													 	 <input type="email" class="form-control" id="inputEmail3" placeholder="Product Name">
+												 		</div>
+														<label for="text3" class="col-sm-3 control-label">Description</label>
+														<div class="col-sm-9">
+															<textarea class="form-control" rows="2" placeholder="Description"></textarea>
+														</div>
+
+														<label for="text3" class="col-sm-3 control-label">Price</label>
+
+														<div class="col-sm-9">
+													 	 <input type="email" class="form-control" id="inputEmail3" placeholder="Price">
+												 		</div>
+														<label for="text3" class="col-sm-3 control-label">Image</label>
+														<div class="col-sm-9">
+																<select class="form-control">
+																	<option>None</option>
+																	<option>image1.jpg</option>
+																	<option>image2.jpg</option>
+																	<option>image3.jpg</option>
+																	<option>image4.jpg</option>
+																	<option>image5.jpg</option>
+																</select>
+														</div>
+														<div>
+															<center>
+																<button type="submit" class="btn btn-default">Save</button>
+															</center>
+														</div>
+													</div>
+												</form>
+											</div>
+										<!-- /Product-->
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				<!-- /Product Page -->
+				<br>
+				<!-- image page -->
+
+					<div class="tab-pane fade" id="images">
+						<div class="container">
+							
+						<div style="background-color:#cccccc;padding:10px;">
+						 	<div class="jumbotron">
+						 		add new image and stuff<br>
+								<form class="form-inline" role="form" action="/my-handling-form-page" method="post">
+						 
+									<button type="submit" class="btn btn-primary">New image</button>
+								</form>
+
+							</div>
+							<div class="row marketing">
+								<div class="col-lg-6">
+									<!-- Image-->
+										<div style="background-color:#aaaaaa;padding:10px;margin:5px"><button type="button" class="close" aria-hidden="true">&times;</button><br>
+											<form class="form-horizontal" role="form"">
+											<form class="form-horizontal" role="form"">
+												<div class="form-group">
+													<label for="text3" class="col-sm-3 control-label">Name</label>
+													<div class="col-sm-9">
+												 	 <input type="email" class="form-control" id="inputEmail3" placeholder="Product Name">
+											 		</div>
+													<label for="text3" class="col-sm-3 control-label">Description</label>
+													<div class="col-sm-9">
+														<textarea class="form-control" rows="2" placeholder="Description"></textarea>
+													</div>
+	
+													<div>
+													<center>
+														<button type="submit" class="btn btn-default">Save</button>
+													</center></div>
+												</div>
+											</form>
+										</div>
+									<!-- /Image-->
+
+							</div>
+						</div>
+					</div>
+				</div>
+				</div>
+				<!-- /image Page -->
+				<br>
+				<!-- settings page -->
+
+				<div class="tab-pane fade" id="settings">
+					<div class="container">
+							
+						<div style="background-color:#cccccc;padding:10px;">
+							<div class="row marketing">
+								<div class="col-lg-6">
+									<!-- setting block-->
+										<div style="background-color:#aaaaaa;padding:10px;margin:5px">
+											<form class="form-horizontal" role="form"">
+												<div class="form-group">
+													<label for="text3" class="col-sm-3 control-label">Currency</label>
+
+													<div class="col-sm-9">
+												 	 <select class="form-control">
+														<option>$</option>
+														<option>stuff</option>
+														<option>3</option>
+														<option>4</option>
+														<option>5</option>
+													 </select>
+											 		</div>
+													<label for="text3" class="col-sm-3 control-label">Background color</label>
+
+													<div class="col-sm-9">
+												 	 <select class="form-control">
+														<option>$</option>
+														<option>stuff</option>
+														<option>3</option>
+														<option>4</option>
+														<option>5</option>
+													 </select>
+											 		</div>
+													<label for="text3" class="col-sm-3 control-label">Font color</label>
+
+													<div class="col-sm-9">
+												 	 <select class="form-control">
+														<option>$</option>
+														<option>stuff</option>
+														<option>3</option>
+														<option>4</option>
+														<option>5</option>
+													 </select>
+											 		</div>
+													<label for="text3" class="col-sm-3 control-label">navbar color</label>
+
+													<div class="col-sm-9">
+												 	 <select class="form-control">
+														<option>$</option>
+														<option>stuff</option>
+														<option>3</option>
+														<option>4</option>
+														<option>5</option>
+													 </select>
+											 		</div>
+													<label for="text3" class="col-sm-3 control-label">Font </label>
+
+													<div class="col-sm-9">
+												 	 <select class="form-control">
+														<option>$</option>
+														<option>stuff</option>
+														<option>3</option>
+														<option>4</option>
+														<option>5</option>
+													 </select>
+											 		</div>
+													<div>	
+														<center>
+															<button type="submit" class="btn btn-default">Save</button>
+														</center>
+													</div>
+												</div>
+											</form>
+										</div>
+									<!-- /setting block-->
+							</div>
+						</div>
+					</div>
+				<!-- /settings Page -->
+				</div>
+			</div>
+</div>
+		</p>
+      <div class="footer">
+        <p>&copy; Company 2014</p>
+      </div>
+    </div> <!-- /container -->
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+  </body>
+</html>

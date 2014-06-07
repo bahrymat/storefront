@@ -9,9 +9,11 @@
 		<link href="index.css" rel="stylesheet">
 		<script type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
         <script type='text/javascript' src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script type='text/javascript' src="index.js"></script>
 	</head>
-	<body>
-		<div class="navbar navbar-inverse navbar-fixed-top">
+    <body onClick="hideLogin();">
+        
+        <div class="navbar navbar-inverse">
 		  <div class="container">   
 		    <div class="navbar-header">
 			  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -28,8 +30,8 @@
 				<li><a href="#">Examples</a></li>
 				<li><a href="#">Create Store!</a></li>
 			  </ul>
-			  <div class="navbar-right">
-				<ul class="nav navbar-nav"><li><a href="#" onClick="$(this).fadeOut(400, function() {$('#hidden_login').fadeIn(400);});">Login</a></li></ul>
+			  <div class="navbar-right" onClick="event.stopPropagation();">
+				<ul class="nav navbar-nav"><li><a href="#" id="login_button" onClick="showLogin();">Login</a></li></ul>
 			    <form id="hidden_login" class="navbar-form sorta_hidden" role="form">
 				    <div class="form-group"><input class="form-control" type="text" placeholder="Email"></div>
 				    <div class="form-group"><input class="form-control" type="password" placeholder="Password"></div>
@@ -39,13 +41,17 @@
 			</div>
 		  </div>
 		</div>
+
+			</div>
+		  </div>
+		</div>
 		<div class="container">
 			<div class="jumbotron">
 				<div class="row">
-					<div class="col-md-3">
-						<img src="keeg.svg">
+					<div class="col-md-3 col-sm-4">
+						<img src="def_img.png" class="img-responsive img-rounded">
 					</div>
-					<div class="col-md-9">
+					<div class="col-md-9 col-sm-8">
 						<h2>Matthew Bahry</h2>
 						<p>text text text text text text text text text
 						 text text text text text text text text text 
@@ -60,10 +66,10 @@
 			</div>
 			<div class="jumbotron">
 				<div class="row">
-					<div class="col-md-3">
-						<img src="keeg.svg">
+					<div class="col-md-3 col-sm-4">
+						<img src="def_img.png" class="img-responsive img-rounded">
 					</div>
-					<div class="col-md-9">
+					<div class="col-md-9 col-sm-8">
 						<h2>Keegan Bubalo</h2>
 						<p>text text text text text text text text text
 						 text text text text text text text text text 
@@ -72,16 +78,16 @@
 						 text text text text text text text text text 
 						 text text text text text text text text text 
 						 text  </p>
-						 <p class="email"><small>Contact: foo@bar.com</small></p>
+						 <p class="email"><small>Contact: keeganbubalo@gmail.com</small></p>
 					</div>
 				</div>
 			</div>
 			<div class="jumbotron">
 				<div class="row">
-					<div class="col-md-3">
-						<img src="keeg.svg">
+					<div class="col-md-3 col-sm-4">
+						<img src="def_img.png" class="img-responsive img-rounded">
 					</div>
-					<div class="col-md-9">
+					<div class="col-md-9 col-sm-8">
 						<h2>Jason Lawrence</h2>
 						<p>text text text text text text text text text
 						 text text text text text text text text text 
@@ -90,16 +96,16 @@
 						 text text text text text text text text text 
 						 text text text text text text text text text 
 						 text  </p>
-						 <p class="email"><small>Contact: foo@bar.com</small></p>
+						 <p class="email"><small>Contact: j4sonlawrence@gmail.com</small></p>
 					</div>
 				</div>
 			</div>
 			<div class="jumbotron">
 				<div class="row">
-					<div class="col-md-3">
-						<img src="keeg.svg">
+					<div class="col-md-3 col-sm-4">
+						<img src="def_img.png" class="img-responsive img-rounded">
 					</div>
-					<div class="col-md-9">
+					<div class="col-md-9 col-sm-8">
 						<h2>Yuwei Zhang</h2>
 						<p>text text text text text text text text text
 						 text text text text text text text text text 
@@ -108,7 +114,7 @@
 						 text text text text text text text text text 
 						 text text text text text text text text text 
 						 text  </p>
-						 <p class="email"><small>Contact: foo@bar.com</small></p>
+						 <p class="email"><small>Contact: ywzhang75@gmail.com</small></p>
 					</div>
 				</div>
 			</div>
