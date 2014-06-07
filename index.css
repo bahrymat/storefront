@@ -5,3 +5,6 @@ body {
   padding: 40px 15px;
   text-align: center;
 }
+.sorta_hidden {
+  display: none; /* unlike bootstrap's "hidden" class, is not considered !important */
+}
