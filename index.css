@@ -4,3 +4,8 @@ body {
 .sorta_hidden {
   display: none; /* unlike bootstrap's "hidden" class, is not considered !important */
 }
+
+.email {
+  font-style: italic;
+  color: #555555;
+}
