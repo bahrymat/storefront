@@ -1,6 +1,3 @@
-body {
-  padding-top: 70px;
-}
 .sorta_hidden {
   display: none; /* unlike bootstrap's "hidden" class, is not considered !important */
 }
