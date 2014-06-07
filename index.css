@@ -5,6 +5,12 @@ body {
   display: none; /* unlike bootstrap's "hidden" class, is not considered !important */
 }
 
+
 html { 
   overflow-y: scroll; 
+}
+
+.email {
+  font-style: italic;
+  color: #555555;
 }
