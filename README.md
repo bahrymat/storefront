@@ -1,4 +1,4 @@
-storefront
+storefrunt
 ==========
 
 wow, such readme
