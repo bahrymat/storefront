@@ -24,6 +24,13 @@ body {
   color: #555;
 }
 
+.navbar-brand {
+  padding: 0px;
+}
+.navbar-brand img {
+  padding: 5px;
+}
+
 /* begin custom navbar */
 
 .navbar-custom {
