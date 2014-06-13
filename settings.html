@@ -18,13 +18,13 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+		
   </head>
 
 
   <body>
-<!-- link to top --
-    <a name="top"></a>
-		<a href="#top"><div style="position:fixed;width:50px;height:50px;bottom:0;right:0;background-color:grey"></div></a>
+<!-- link to top -->
+    <div style="position:fixed;width:50px;height:50px;bottom:0;right:0;background-color:grey" class="toTop" style="display:none"></div>
 <!-- /link to top -->
 		<div class="bs-example bs-example-tabs">
 		  <ul id="myTab" class="nav nav-tabs">
@@ -44,18 +44,18 @@
 						<div class="container">
 							
 						 <div style="background-color:#cccccc;padding:10px">
-							 <div class="jumbotron">
+							 <div class="jumbotron big">
 							 add new elements and stuff<br>
-								<form class="form-inline" role="form" action="/my-handling-form-page" method="post">
-									 <select class="form-control">
-										 <option>Logo</option>
-										 <option>stuff</option>
-										 <option>Really long title</option>
-										 <option>4</option>
-										 <option>5</option>
-									</select>
-									<button type="submit" class="btn btn-primary">Submit</button>
-									</form>
+								<div class="btn-group">
+  								<button type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown">
+    									New element <span class="caret"></span>
+  								</button>
+  								<ul class="dropdown-menu newElement" role="menu">
+    								<li id="TextBlock">Text Block</li>
+    								<li id="ImageBlock">Image Block</li>
+    								<li id="Logo">Logo</li>
+  								</ul>
+								</div>
 									<form class="form-inline" role="form" action="/my-handling-form-page" method="post">
 										<button type="submit" class="btn btn-primary">Save</button>
 										<button type="submit" class="btn btn-primary">Save Draft</button>
@@ -63,20 +63,20 @@
 										<button type="submit" class="btn btn-primary">Preview</button>
 								</form>
 							</div>
-							<div class="row marketing">
-								<div class="col-lg-6">
-									<!-- Textblock-->
+							<div class="row marketing" id="elementContent">
+								<!-- Textblock-->
+									<div class="col-lg-6 textblockBox">
 										<div style="background-color:#aaaaaa;padding:10px;margin:5px">Textblock
-											<button type="button" class="close" aria-hidden="true">&times;</button>
+											<button type="button" class="close deleteTextblock" aria-hidden="true">&times;</button>
 											<form class="form-horizontal" role="form""> 
 												<div class="form-group">
-													<label for="text3" class="col-sm-2 control-label">Title</label>
+													<label for="ttitle" class="col-sm-2 control-label">Title</label>
 													<div class="col-sm-10">
-												 	 	<input type="email" class="form-control" id="inputEmail3" placeholder="Title">
+												 	 	<input type="text" class="form-control" id="ttitle" placeholder="Title">
 											 		</div>
-													<label for="text3" class="col-sm-2 control-label">Description</label>
+													<label for="tdescription" class="col-sm-2 control-label">Description</label>
 													<div class="col-sm-10">
-														<textarea class="form-control" rows="2" placeholder="Description"></textarea>
+														<textarea class="form-control" rows="2" columns="3" id="tdescription" placeholder="Description"></textarea>
 													</div>
 													<div>
 														<center>
@@ -88,25 +88,27 @@
 
 											</form>
 										</div>
+									</div>
 									<!-- /Textblock-->
 
 									<!-- Imageblock-->
+									<div class="col-lg-6 imageblockBox">
 										<div style="background-color:#aaaaaa;padding:10px;margin:5px">Imageblock
-											<button type="button" class="close" aria-hidden="true">&times;</button>
-											<form class="form-horizontal" role="form"">
+											<button type="button" class="close deleteImageblock" aria-hidden="true">&times;</button>
+											<form class="form-horizontal" role="form">
 												<div class="form-group">
-													<label for="text3" class="col-sm-2 control-label">Title</label>
+													<label for="ititle" class="col-sm-2 control-label">Title</label>
 													<div class="col-sm-10">
-												 	 <input type="email" class="form-control" id="inputEmail3" placeholder="Title">
+												 	 <input type="text" class="form-control" id="ititle" placeholder="Title">
 											 		</div>
-													<label for="text3" class="col-sm-2 control-label">Description</label>
+													<label for="idescription" class="col-sm-2 control-label">Description</label>
 													<div class="col-sm-10">
-														<textarea class="form-control" rows="2" placeholder="Description"></textarea>
+														<textarea class="form-control" rows="2" id="idescription" placeholder="Description"></textarea>
 													</div>
 			
-													<label for="text3" class="col-sm-2 control-label">Image</label>
+													<label for="iimage" class="col-sm-2 control-label">Image</label>
 													<div class="col-sm-10">
-															<select class="form-control">
+															<select class="form-control" id="iimage">
 																<option>None</option>
 																<option>image1.jpg</option>
 																<option>image2.jpg</option>
@@ -123,6 +125,7 @@
 												</div>
 											</form>
 										</div>
+									</div>
 									<!-- /Imageblock-->
 
 								</div>
@@ -132,7 +135,7 @@
 				</div>
 				<!-- element Page -->	
 	
-				<br>
+				
 				<!-- product page -->
 
 					<div class="tab-pane fade" id="products">
@@ -141,32 +144,30 @@
 							<div style="background-color:#cccccc;padding:10px;"><!-- stuff -->
 							 	<div class="jumbotron">
 							 		add new products and stuff<br>
-									<form class="form-inline" role="form" action="/my-handling-form-page" method="post">
-										<button type="submit" class="btn btn-primary">New Product</button>
-									</form>
+									<button type="submit" class="btn btn-primary newProduct">New Product</button>
 								</div>
-								<div class="row marketing">
-									<div class="col-lg-6">
+								<div class="row" id="productContent" margin>
 										<!-- Product-->
-											<div style="background-color:#aaaaaa;padding:10px;margin:5px">
-												<button type="button" class="close" aria-hidden="true">&times;</button><br>
+										<div class="col-lg-6 productBox">
+											<div style="background-color:#aaaaaa;padding:10px;margin:5px" >
+												<button type="button" class="close deleteProduct" aria-hidden="true">&times;</button><br>
 												<form class="form-horizontal" role="form"">
 													<div class="form-group">
-														<label for="text3" class="col-sm-3 control-label">Product</label>
+														<label for="ptitle" class="col-sm-3 control-label">Product</label>
 														<div class="col-sm-9">
-													 	 <input type="email" class="form-control" id="inputEmail3" placeholder="Product Name">
+													 	 <input type="text" class="form-control" id="ptitle" placeholder="Product Name">
 												 		</div>
-														<label for="text3" class="col-sm-3 control-label">Description</label>
+														<label for="pdescription" class="col-sm-3 control-label">Description</label>
 														<div class="col-sm-9">
-															<textarea class="form-control" rows="2" placeholder="Description"></textarea>
+															<textarea class="form-control" rows="2" id="pdescription"  placeholder="Description"></textarea>
 														</div>
 
-														<label for="text3" class="col-sm-3 control-label">Price</label>
+														<label for="pprice" class="col-sm-3 control-label">Price</label>
 
 														<div class="col-sm-9">
-													 	 <input type="email" class="form-control" id="inputEmail3" placeholder="Price">
+													 	 <input type="number" class="form-control" id="pprice" placeholder="Price">
 												 		</div>
-														<label for="text3" class="col-sm-3 control-label">Image</label>
+														<label for="pimage" class="col-sm-3 control-label">Image</label>
 														<div class="col-sm-9">
 																<select class="form-control">
 																	<option>None</option>
@@ -185,15 +186,15 @@
 													</div>
 												</form>
 											</div>
+										</div>
 										<!-- /Product-->
 
-									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				<!-- /Product Page -->
-				<br>
+				
 				<!-- image page -->
 
 					<div class="tab-pane fade" id="images">
@@ -202,26 +203,24 @@
 						<div style="background-color:#cccccc;padding:10px;">
 						 	<div class="jumbotron">
 						 		add new image and stuff<br>
-								<form class="form-inline" role="form" action="/my-handling-form-page" method="post">
-						 
-									<button type="submit" class="btn btn-primary">New image</button>
-								</form>
+												 
+									<button type="button" class="btn btn-primary newImage">New image</button>
+								
 
 							</div>
-							<div class="row marketing">
-								<div class="col-lg-6">
+							<div class="row" id="imagesContent" >
 									<!-- Image-->
-										<div style="background-color:#aaaaaa;padding:10px;margin:5px"><button type="button" class="close" aria-hidden="true">&times;</button><br>
-											<form class="form-horizontal" role="form"">
-											<form class="form-horizontal" role="form"">
+									<div class="col-sm-6 imageBox">
+										<div style="background-color:#aaaaaa;padding:10px;margin:10px 5px" ><button type="button" class="close deleteImage" aria-hidden="true">&times;</button><br>
+											<form class="form-horizontal" role="form">
 												<div class="form-group">
-													<label for="text3" class="col-sm-3 control-label">Name</label>
+													<label for="imname" class="col-sm-3 control-label">Name</label>
 													<div class="col-sm-9">
-												 	 <input type="email" class="form-control" id="inputEmail3" placeholder="Product Name">
+												 	 <input type="name" class="form-control" id="imname" placeholder="Product Name">
 											 		</div>
-													<label for="text3" class="col-sm-3 control-label">Description</label>
+													<label for="imdescription" class="col-sm-3 control-label">Description</label>
 													<div class="col-sm-9">
-														<textarea class="form-control" rows="2" placeholder="Description"></textarea>
+														<textarea class="form-control" rows="2" id="imdescription" placeholder="Description" style="resize:none"></textarea>
 													</div>
 	
 													<div>
@@ -231,15 +230,16 @@
 												</div>
 											</form>
 										</div>
+									</div>
 									<!-- /Image-->
-
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				</div>
+				
+
 				<!-- /image Page -->
-				<br>
+				
 				<!-- settings page -->
 
 				<div class="tab-pane fade" id="settings">
@@ -252,7 +252,7 @@
 										<div style="background-color:#aaaaaa;padding:10px;margin:5px">
 											<form class="form-horizontal" role="form"">
 												<div class="form-group">
-													<label for="text3" class="col-sm-3 control-label">Currency</label>
+													<label for="currency" class="col-sm-3 control-label">Currency</label>
 
 													<div class="col-sm-9">
 												 	 <select class="form-control">
@@ -263,45 +263,45 @@
 														<option>5</option>
 													 </select>
 											 		</div>
-													<label for="text3" class="col-sm-3 control-label">Background color</label>
+													<label for="bgcolour" class="col-sm-3 control-label">Background color</label>
 
 													<div class="col-sm-9">
 												 	 <select class="form-control">
 														<option>$</option>
-														<option>stuff</option>
+														<option>stuf</option>
 														<option>3</option>
 														<option>4</option>
 														<option>5</option>
 													 </select>
 											 		</div>
-													<label for="text3" class="col-sm-3 control-label">Font color</label>
+													<label for="fontcolour" class="col-sm-3 control-label">Font color</label>
 
 													<div class="col-sm-9">
 												 	 <select class="form-control">
 														<option>$</option>
-														<option>stuff</option>
+														<option>stff</option>
 														<option>3</option>
 														<option>4</option>
 														<option>5</option>
 													 </select>
 											 		</div>
-													<label for="text3" class="col-sm-3 control-label">navbar color</label>
+													<label for="navcolour" class="col-sm-3 control-label">navbar color</label>
 
 													<div class="col-sm-9">
 												 	 <select class="form-control">
 														<option>$</option>
-														<option>stuff</option>
+														<option>suff</option>
 														<option>3</option>
 														<option>4</option>
 														<option>5</option>
 													 </select>
 											 		</div>
-													<label for="text3" class="col-sm-3 control-label">Font </label>
+													<label for="font" class="col-sm-3 control-label">Font </label>
 
 													<div class="col-sm-9">
 												 	 <select class="form-control">
 														<option>$</option>
-														<option>stuff</option>
+														<option>tuff</option>
 														<option>3</option>
 														<option>4</option>
 														<option>5</option>
@@ -333,5 +333,44 @@
     <!-- Placed at the end of the document so the pages load faster -->
         <script type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
         <script type='text/javascript' src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<!-- using http://learn.jquery.com/events/event-delegation/ for first script-->		
+		<script>
+			$(document).on('click','.deleteImage', function(){if(confirm("Delete image?")){$(this).closest('.imageBox').remove();}}
+			);
+
+			$(document).on('click','.deleteProduct', function(){if(confirm("Delete product?")){$(this).closest('.productBox').remove();}}
+			);
+			$(document).on('click','.deleteTextblock', function(){if(confirm("Delete textBlock?")){$(this).closest('.textblockBox').remove();}}
+			);
+			$(document).on('click','.deleteImageblock', function(){if(confirm("Delete imageBlock?")){$(this).closest('.imageblockBox').remove();}}
+			);
+
+			$("ul.newElement > li#TextBlock").click(
+				function(){var textblockform = '<div class="col-lg-6 textblockBox"><div style="background-color:#aaaaaa;padding:10px;margin:5px">Textblock<button type="button" class="close deleteTextblock" aria-hidden="true">&times;</button><form class="form-horizontal" role="form""> <div class="form-group"><label for="ttitle" class="col-sm-2 control-label">Title</label><div class="col-sm-10"><input type="text" class="form-control" id="ttitle" placeholder="Title"></div><label for="tdescription" class="col-sm-2 control-label">Description</label><div class="col-sm-10"><textarea class="form-control" rows="2" columns="3" id="tdescription" placeholder="Description"></textarea></div><div><center><button type="submit" class="btn btn-default">Save</button></center></div></div></form></div></div>';
+
+$("#elementContent").append(textblockform)});
+
+$("ul.newElement > li#ImageBlock").click(
+				function(){var imageblockform = '<div class="col-lg-6 imageblockBox"><div style="background-color:#aaaaaa;padding:10px;margin:5px">Imageblock<button type="button" class="close deleteImageblock" aria-hidden="true">&times;</button><form class="form-horizontal" role="form"><div class="form-group"><label for="ititle" class="col-sm-2 control-label">Title</label><div class="col-sm-10"><input type="text" class="form-control" id="ititle" placeholder="Title"></div><label for="idescription" class="col-sm-2 control-label">Description</label><div class="col-sm-10"><textarea class="form-control" rows="2" id="idescription" placeholder="Description"></textarea></div><label for="iimage" class="col-sm-2 control-label">Image</label><div class="col-sm-10"><select class="form-control" id="iimage"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><div><center><button type="submit" class="btn btn-default">Save</button></center></div></div></form></div></div>';
+
+$("#elementContent").append(imageblockform)});
+
+			$(".newImage").click(
+				function(){var imageform = '<div class="col-sm-6 imageBox"><div style="background-color:#aaaaaa;padding:10px;margin:10px 5px" ><button type="button" class="close deleteImage" aria-hidden="true">&times;</button><br><form class="form-horizontal" role="form"><div class="form-group"><label for="imname" class="col-sm-3 control-label">Name</label><div class="col-sm-9"><input type="name" class="form-control" id="imname" placeholder="Product Name"></div><label for="imdescription" class="col-sm-3 control-label">Description</label><div class="col-sm-9"><textarea class="form-control" rows="2" id="imdescription" placeholder="Description" style="resize:none"></textarea></div><div><center><button type="submit" class="btn btn-default">Save</button></center></div></div></form></div></div>';
+$("#imagesContent").append(imageform);}
+			);
+
+		$(".newProduct").click(
+				function(){var productform = '<div class="col-lg-6 productBox"><div style="background-color:#aaaaaa;padding:10px;margin:5px" ><button type="button" class="close deleteProduct" aria-hidden="true">&times;</button><br><form class="form-horizontal" role="form""><div class="form-group"><label for="ptitle" class="col-sm-3 control-label">Product</label><div class="col-sm-9"><input type="text" class="form-control" id="ptitle" placeholder="Product Name"></div><label for="pdescription" class="col-sm-3 control-label">Description</label><div class="col-sm-9"><textarea class="form-control" rows="2" id="pdescription"placeholder="Description"></textarea></div><label for="pprice" class="col-sm-3 control-label">Price</label><div class="col-sm-9"><input type="number" class="form-control" id="pprice" placeholder="Price"></div><label for="pimage" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><div><center><button type="submit" class="btn btn-default">Save</button></center></div></div></form></div></div>';
+$("#productContent").append(productform);}
+			);
+		$(".toTop").click(
+			function(){$("html,body").animate({scrollTop:0});});
+		$(window).scroll(function(){
+												var notTop = $(window).scrollTop();
+												if (notTop) {$(".toTop").show()}
+												else {$(".toTop").hide()}
+									});
+		</script>
   </body>
 </html>
