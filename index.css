@@ -11,3 +11,7 @@ html {
   font-style: italic;
   color: #555555;
 }
+
+.jumbotron li {
+    font-size: 17px;
+}
