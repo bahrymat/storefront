@@ -12,6 +12,7 @@
     <!-- Custom styles for this template -->
     <link href="index.css" rel="stylesheet">
     <link href="settings.css" rel="stylesheet">
+    <script type='text/javascript' src="index.js"></script>
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -23,7 +24,7 @@
   </head>
 
 
-  <body>
+  <body onClick="hideLogin();">
 <!-- link to top -->
     <div style="position:fixed;width:50px;height:50px;bottom:0;right:0;background-color:grey;padding:0.5em; z-index: 10;" class="toTop" style="display:none">Back to top</div>
 <!-- /link to top -->
@@ -60,7 +61,7 @@
 		
 		
 						<!-- element Page -->
-						<div class="container">
+						<div class="container settings_container">
 
 <div class="bs-example bs-example-tabs">
 		  <ul id="myTab" class="nav nav-tabs">
