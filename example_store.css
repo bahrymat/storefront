@@ -136,4 +136,10 @@ body {
 
 /* end custom navbar */
 
-.img-center {margin:0 auto;}
+.img-center {
+  margin:0 auto;
+}
+
+.jumbotron {
+  background-color: white;
+}
