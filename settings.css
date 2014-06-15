@@ -105,3 +105,11 @@ ul#myTab{
 	border-radius:8px;
 }
 * {z-index: 9;} 
+
+.nav-tabs > li > a, .nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
+  /* can change styling of inactive tabs here */
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+  /* can change styling of active tab here */
+}
