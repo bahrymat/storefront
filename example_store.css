@@ -150,6 +150,7 @@ html {
 
 .button_label {
   display: inline-block;
+  padding-right: 3px;
 }
 
 .tags {
