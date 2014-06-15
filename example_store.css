@@ -147,3 +147,15 @@ body {
 html { 
   overflow-y: scroll; 
 }
+
+.button_label {
+  display: inline-block;
+}
+
+.tags {
+  margin-top: 24px;
+}
+
+.jumbotron_lesspadding {
+  padding-bottom: 24px;
+}
