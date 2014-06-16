@@ -26,7 +26,7 @@
 
   <body onClick="hideLogin();">
 <!-- link to top -->
-    <div style="position:fixed;width:50px;height:50px;bottom:0;right:0;background-color:grey;padding:0.5em; z-index: 10;" class="toTop" style="display:none">Back to top</div>
+    <div class="toTop"><span>Top</span><span class="glyphicon glyphicon-chevron-up"></span></div>
 <!-- /link to top -->
 
 		
@@ -78,7 +78,7 @@
 							
 						 <div class="back">
 							 <div class="jumbotron big">
-							 add new elements and stuff<br>
+							 <div class="titles">Customize your home page</div><br>
 								<div class="btn-group">
   								<button type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown">
     									New Element <span class="caret"></span>
@@ -98,8 +98,8 @@
 							<div class="row" id="elementContent">
 								<!-- Textblock-->
 									<div class="col-sm-6 textblockBox">
-										<div class="block"><h4>Text Block
-											<button type="button" class="close deleteTextblock" aria-hidden="true">&times;</button></h4>
+										<div class="block"><div class="titles">Text Block
+											<button type="button" class="close deleteTextblock" aria-hidden="true">&times;</button></div>
 											<form class="form-horizontal" role="form""> 
 												<div class="form-group">
 													<label for="ttitle" class="col-sm-3 control-label">Title</label>
@@ -120,8 +120,8 @@
 
 									<!-- Imageblock-->
 									<div class="col-sm-6 imageblockBox">
-										<div class="block"><h4>Image Block
-											<button type="button" class="close deleteImageblock" aria-hidden="true">&times;</button></h4>
+										<div class="block"><div class="titles">Image Block
+											<button type="button" class="close deleteImageblock" aria-hidden="true">&times;</button></div>
 											<form class="form-horizontal" role="form">
 												<div class="form-group">
 													<label for="ititle" class="col-sm-3 control-label">Title</label>
@@ -152,8 +152,8 @@
 
 									<!-- productlist -->
 									<div class="col-sm-6 productblockBox">
-										<div class="block"><h4>Product List
-											<button type="button" class="close deleteProductblock" aria-hidden="true">&times;</button></h4>
+										<div class="block"><div class="titles">Product List
+											<button type="button" class="close deleteProductblock" aria-hidden="true">&times;</button></div>
 											<form class="form-horizontal" role="form">
 												<div class="form-group">
 
@@ -255,11 +255,11 @@
 							
 							<div class="back">
 							 	<div class="jumbotron">
-							 		add new products and stuff<br>
+							 		<div class="titles">Add, modify and delete products</div><br>
 									<button type="submit" class="btn btn-primary newProduct">New Product</button>
 									<button type="submit" class="btn btn-primary">Save Changes</button>
 									<div class="input-group searchbar">
-										<input type="text" class="form-control" placeholder="Search products...">
+										<input type="text" class="form-control searchbar" placeholder="Search products...">
 										<span class="input-group-btn">
 											<button class="btn btn-default glyphicon glyphicon-search" type="button"></button>
 										</span>
@@ -277,9 +277,13 @@
 														<div class="col-sm-9">
 													 	 <input type="text" class="form-control" id="ptitle" placeholder="Product Name">
 												 		</div>
-														<label for="pdescription" class="col-sm-3 control-label">Description</label>
+														<label for="psdescription" class="col-sm-3 control-label">Short Description</label>
 														<div class="col-sm-9">
-															<textarea class="form-control" rows="2" id="pdescription"  placeholder="Description"></textarea>
+															<textarea class="form-control" rows="2" id="psdescription"  placeholder="Short Description"></textarea>
+														</div>
+														<label for="pldescription" class="col-sm-3 control-label">Long Description</label>
+														<div class="col-sm-9">
+															<textarea class="form-control" rows="2" id="pldescription"  placeholder="Long Description"></textarea>
 														</div>
 
 														<label for="pprice" class="col-sm-3 control-label">Price</label>
@@ -300,7 +304,7 @@
 														</div>
 														<label for="ptags" class="col-sm-3 control-label">Tags</label>
 														<div class="col-sm-9">
-															<textarea class="form-control" rows="2" id="pdescription"  placeholder="Description"></textarea>
+															<textarea class="form-control" rows="2" id="pdescription"  placeholder="Tags (comma separated)"></textarea>
 														</div>
 													</div>
 												</form>
@@ -319,12 +323,12 @@
 							
 						<div class="back">
 						 	<div class="jumbotron">
-						 		add new image and stuff<br>
+							 		<div class="titles">Add, modify and delete images</div><br>
 												 
 									<button type="button" class="btn btn-primary newImage">New Image</button>
 									<button type="button" class="btn btn-primary">Save Changes</button>
 								<div class="input-group searchbar">
-										<input type="text" class="form-control" placeholder="Search images...">
+										<input type="text" class="form-control searchbar" placeholder="Search images...">
 										<span class="input-group-btn">
 											<button class="btn btn-default glyphicon glyphicon-search" type="button"></button>
 										</span>
@@ -335,13 +339,23 @@
 									<!-- Image-->
 									<div class="col-sm-6 imageBox">
 										<div class="block"><button type="button" class="close deleteImage" aria-hidden="true">&times;</button><br>
-<div class="col-sm-12"><img class="img-thumbnail" src="http://placehold.it/200x200&text=Drag+and+Drop" alt="200x200" style="max-width: 200px; max-height: 200px;display:block;margin:auto;margin-bottom:10px;"></img></div>
+											<div class="col-sm-12"><img class="img-thumbnail imagethumb" src="http://placehold.it/200x200&text=Thumbnail" alt="200x200"></img></div>
 											<form class="form-horizontal" role="form">
-												<div class="form-group">
-													<label for="imname" class="col-sm-3 control-label">Name</label>
-													<div class="col-sm-9">
-												 	 <input type="name" class="form-control" id="imname" placeholder="Image name">
-											 		</div>	
+												<div class="form-group"><div>
+													<label for="imname" class="col-sm-4 control-label">Name</label>
+													<div class="col-sm-8">
+												 	 <input type="text" class="form-control" id="imname" placeholder="Image name">
+											 		</div>
+													<label for="imfile" class="col-sm-4 control-label">Image File</label>
+													<div class="col-sm-8">
+												 	 <input type="file" class="form-control" id="imfile" >
+														<input type="text" id="filename">
+														<div class="button-group"> 
+															<a href="#" id="browse">Browse</a>
+														</div>
+														</div>
+													</div>
+														
 												</div>
 											</form>
 										</div>
@@ -359,52 +373,163 @@
 				<div class="tab-pane" id="settings">
 							<div class="back">
 						 	<div class="jumbotron">
-						 		Change the look of your store.<br>
+							 	<div class="titles">Change settings of your store page</div><br>
 												 
-								<button type="button" class="btn btn-primary newImage">Saves changes</button>
+								<button type="button" class="btn btn-primary newImage">Save Changes</button>
 								<button type="button" class="btn btn-primary newImage">Revert Changes</button>
 								<button type="button" class="btn btn-primary newImage">Preview</button>
 							</div>
 							<div class="row">
 								<div class="col-lg-12">
 									<!-- setting block-->
-										<div class="block">
-											<form class="form-horizontal" role="form"">
+										<div class="setblock">
+											<form class="form-horizontal" role="form">
+												<div class="titles">General</div>
 												<div class="form-group">
-													<label for="currency" class="col-sm-4 control-label">Currency</label>
+													<label for="pageTitle" class="col-sm-3 control-label">Page Title</label>
+														<div class="col-sm-9">
+													 	 <input type="text" class="form-control" id="pageTitle" placeholder="Page Title">
+												 		</div>
+													<label for="currency" class="col-sm-3 control-label">Currency</label>
 
-													<div class="col-sm-8">
+													<div class="col-sm-9">
 												 	 <select class="form-control">
 														<option>$</option>
-														<option>stuff</option>
-														<option>3</option>
-														<option>4</option>
-														<option>5</option>
+														<option>£</option>
+														<option>¥</option>
+														<option>etc.</option>
 													 </select>
 											 		</div>
-													<label for="bgcolour" class="col-sm-4 control-label">Background colour</label>
-														<div class="col-sm-8">
+													<div class="col-sm-6">
+														<div class="checkbox">
+															<label>
+																Display website online<input type="checkbox">
+															</label>
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="checkbox">
+															<label>
+																Opt-in to home page search <input type="checkbox">
+															</label>
+														</div>
+													</div>
+												</div>
+											</form>
+										</div>
+										<div class="setblock">
+											<form class="form-horizontal" role="form">
+												<div class="titles">Style</div>
+												<div class="form-group">
+													<label for="bgcolour" class="col-sm-3 control-label">Background colour</label>
+														<div class="col-sm-9">
 													 	 <input type="text" class="form-control" id="bgcolour" placeholder="000000">
 												 		</div>
-													<label for="fontcolour" class="col-sm-4 control-label">Font colour</label>
-														<div class="col-sm-8">
+													<label for="fontcolour" class="col-sm-3 control-label">Font colour</label>
+														<div class="col-sm-9">
 													 	 <input type="text" class="form-control" id="fontcolour" placeholder="ffffff">
 												 		</div>
-													<label for="navcolour" class="col-sm-4 control-label">Navbar colour</label>
-														<div class="col-sm-8">
-													 	 <input type="text" class="form-control" id="pprice" placeholder="aaaaaa">
-												 		</div>
-													
-													<label for="font" class="col-sm-4 control-label">Font </label>
+													<label for="font" class="col-sm-3 control-label">Font</label>
 
-													<div class="col-sm-8">
+													<div class="col-sm-9">
 												 	 <select class="form-control">
 														<option>Courier</option>
 														<option>Times New Roman</option>
-														<option>Ariel</option>
+														<option>Arial</option>
 														<option>Verdana</option>
 														<option>etc.</option>
 													 </select>
+											 		</div>
+													<label for="navcolour" class="col-sm-3 control-label">Navbar colour</label>
+													<div class="col-sm-9">
+												 	 <input type="text" class="form-control" id="pprice" placeholder="aaaaaa">
+											 		</div>
+													
+													
+												</div>
+											</form>
+										</div>
+										<div class="setblock">
+											<div class="titles">Navbar</div>
+											<form class="form-horizontal" role="form"">
+												<div class="form-group">
+													<label for="logo" class="col-sm-3 control-label">Logo Image</label>
+													<div class="col-sm-9">
+													 	 <select class="form-control">
+															<option>None</option>
+															<option>image1.jpg</option>
+															<option>image2.jpg</option>
+															<option>image3.jpg</option>
+															<option>image4.jpg</option>
+															<option>etc.</option>
+														 </select>
+											 		</div>
+												</div>
+											</form>
+										</div>
+										<div class="setblock">
+											<div class="titles">Splash Page</div>
+											<form class="form-horizontal" role="form">
+												<div class="form-group">
+													<div class="col-sm-6">
+														<div class="checkbox">
+															<label>
+																Include Splash page for your site <input type="checkbox">
+															</label>
+														</div>
+													</div><br><br>
+													<label for="splashHead" class="col-sm-3 control-label">Heading</label>
+													<div class="col-sm-9">
+													 	 <input type="text" class="form-control" id="stAdd" placeholder="Heading">
+											 		</div>
+													<label for="splashSubHead" class="col-sm-3 control-label">Subheading</label>
+													<div class="col-sm-9">
+													 	 <input type="text" class="form-control" id="stAdd" placeholder="Subheading">
+											 		</div>
+													<label for="splashImage" class="col-sm-3 control-label">Splash Image</label>
+													<div class="col-sm-9">
+													 	 <select class="form-control">
+															<option>None</option>
+															<option>image1.jpg</option>
+															<option>image2.jpg</option>
+															<option>image3.jpg</option>
+															<option>image4.jpg</option>
+															<option>etc.</option>
+														 </select>
+											 		</div>
+													<label for="splashCaption" class="col-sm-3 control-label">Caption</label>
+													<div class="col-sm-9">
+													 	 <input type="text" class="form-control" id="stAdd" placeholder="Caption">
+											 		</div>
+											</div></form>
+										</div>
+										<div class="setblock">
+											<div class="titles">Location and Contact Information</div>
+											<form class="form-horizontal" role="form">
+												<div class="form-group">
+													<label for="stAdd" class="col-sm-3 control-label">Street Address</label>
+													<div class="col-sm-9">
+													 	 <input type="text" class="form-control" id="stAdd" placeholder="0000 Street St.">
+											 		</div>
+													<label for="city" class="col-sm-3 control-label">City</label>
+													<div class="col-sm-9">
+													 	 <input type="text" class="form-control" id="city" placeholder="Toronto">
+											 		</div>
+													<label for="province" class="col-sm-3 control-label">Province/State</label>
+													<div class="col-sm-9">
+													 	 <input type="text" class="form-control" id="province" placeholder="ON">
+											 		</div>
+													<label for="country" class="col-sm-3 control-label">Country</label>
+													<div class="col-sm-9">
+													 	 <input type="text" class="form-control" id="country" placeholder="Canada">
+											 		</div>
+													<label for="phone" class="col-sm-3 control-label">Phone Number</label>
+													<div class="col-sm-9">
+													 	 <input type="phone" class="form-control" id="phone" placeholder="(123) 456-7890">
+											 		</div>
+													<label for="emailAdd" class="col-sm-3 control-label">Contact Email</label>
+													<div class="col-sm-9">
+													 	 <input type="email" class="form-control" id="emailAdd" placeholder="contact@somedomain.com">
 											 		</div>
 												</div>
 											</form>
