@@ -15,40 +15,151 @@ html {
 /* main page content*/
 .intro {
   background-color: #0099CC;
-  padding: 200px;
+  padding-top: 200px;
+  padding-bottom: 200px;
+  padding-right: 5%;
+  padding-left: 5%;
   text-align: center;
   position:relative;
 }
 
+@media screen and (max-width: 768px){
+  .intro {
+  background-color: #0099CC;
+  padding-top: 200px;
+  padding-bottom: 200px;
+  text-align: center;
+  position:relative;
+  }
+}
+
 .introbox {
-  margin-left: auto;
-  margin-right: auto;
-  width: 900px;
-  height: 300px;
+  height: 100%;
+  width: 100%;
+  max-width:750px;
+  margin:auto;
 }
 
 /* create a space for the 3 input boxes*/
 .input3box{
   background-color: #fff;
-  width:900px;
-  height:70px;
-  padding-top:15px;
-  padding-bottom:0px;
-  border-radius: 5px;
+  max-width:900px;
+  height:75px;
+  padding-top:10px;
+  border-radius:5px;
+  margin-bottom:5px;
+  margin-right:auto;
+  margin-left:auto;
 }
 
-/* input box*/
-.box{
+.signup-store{
   box-sizing: border-box;
-  width:290px;
+  width:240px;
   height:34px;
-  margin-left: 5px;
-  margin-right: 5px;
+  margin-top: 8px;
+  margin-right:5px;
+  margin-left:5px;
   float:left;
+}
+
+.signup-email{
+  box-sizing: border-box;
+  width:240px;
+  height:34px;
+  margin-top: 8px;
+  margin-right:5px;
+  margin-left:5px;
+  float:left;
+}
+
+.signup-password{
+  box-sizing: border-box;
+  width:240px;
+  height:34px;
+  margin-top: 8px;
+  margin-right:5px;
+  margin-left:5px;
+  float:left;
+}
+
+@media screen and (max-width: 1000px){
+  .input3box{
+    max-width: 500px;
+    height: 150px;
+    padding-left: 5px;
+    padding-right:5px;
+  }
+
+  .signup-store{
+    box-sizing: content-box;
+    width:100%;
+    height:34px;
+    float:center;
+    margin-right:0px;
+    margin-left:0px;
+  }
+
+  .signup-email{
+    box-sizing: border-box;
+    width:50%;
+    height:34px;
+    margin-right:0px;
+    margin-left:0px;
+    float:left;
+  }
+
+  .signup-password{
+    box-sizing: border-box;
+    width:50%;
+    height:34px;
+    margin-right:0px;
+    margin-left:0px;
+    float:left;
+  }
+}
+
+@media screen and (max-width: 500px){
+  .input3box{
+    max-width: 300px;
+    height: 205px;
+    padding-left: 5px;
+    padding-right:5px;
+  }
+
+  .signup-store{
+    box-sizing: content-box;
+    width:100%;
+    height:34px;
+    float:center;
+    margin-right:0px;
+    margin-left:0px;
+  }
+
+  .signup-email{
+    box-sizing: content-box;
+    width:100%;
+    height:34px;
+    float:center;
+    margin-right:0px;
+    margin-left:0px;
+  }
+
+  .signup-password{
+    box-sizing: content-box;
+    width:100%;
+    height:34px;
+    float:center;
+    margin-right:0px;
+    margin-left:0px;
+  }
 }
 
 .whitetext {
   color: #FFF;
+}
+
+.bluetext{
+  color:#0099CC;
 }
 
 .blurb {
@@ -56,4 +167,3 @@ html {
   text-align: center;
   position: relative;
 }
-
