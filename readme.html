@@ -1,3 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Readme</title>
+
+</head>
+
+<body>
+
 --this is not actual html yet. backlogs are also not final
 
 <h1>product name</h1>
@@ -13,18 +27,97 @@
 --should this be elaborated on more?
 
 <ul>
-<li>Jason - store creation page</li>
-<li>Keegan - about us page</li>
-<li>Matt - example store</li>
-<li>Yuwei - index page</li>
+<li>Matthew
+<ul>
+<!-- Stuff Matthew did -->
+<li>Brainstormed layout of site and pages</li>
+<li>Created example store</li>
+<li>Bug fixing</li>
+<li>Miscellaneous tweaks (e.g. login box)</li>
+<!-- /Stuff Matthew did -->
+</ul></li>
+<li>Keegan<ul>
+<!-- Stuff Keegan did -->
+<li>Brainstormed layout of site and pages</li>
+<li>About us page design</li>
+<li>Bug fixing</li>
+<!-- /Stuff Keegan did -->
+</ul></li>
+<li>
+Jason<ul>
+<!-- Stuff Jason did -->
+<li>Came up with idea</li>
+<li>Brainstormed layout of site and pages</li>
+<li>Designed and implmented settings.html, including writing settings.css and settings.js</li>
+<li>Drew initial drafts for settings.html, and storepages</li>
+<li>Wrote draft for presentation</li>
+<li>Bug fixing</li>
+<!-- /Stuff Jason did -->
 </ul>
+</li>
+<li>Yuwei<ul>
+<!-- Stuff Yuwei did -->
+<li>Brainstormed layout of site and pages</li>
+<li>Index page design</li>
+<li>Bug Fixing</li>
+<!-- /Stuff Yuwei did -->
+</ul></li>
+</ul>
+
+<h2>
+Navigation for A1
+</h2>
+<p>
+Front page of the product website: index.html<br>
+ This includes the account creation and login functionality, which will be inplemented for the second assignment.
+</p>
+<p>
+Examples page: examples.html<br>
+
+This page will include links to user's pages, if they choose to opt-in to the page.
+</p>
+<p>
+About us: aboutus.html<br>
+The about us page, including pictures and bios/roles. Linked to from the navbar as shown in index.html
+</p>
+<p>
+Store Page settings page: settings.html<br>
+This is the page that allows the user to modify their store page. Linked from index.html in the nacbar under the Create Store! button, and is the page the user will be sent to upon login.
+</p>
+<p>
+Example store page: example_store_*.html<br>
+These pages show a page as it could be created using our product, albeit roughly customized. 
+
+<br>Subpages:
+<ul>
+
+<li>example_store_home.html: an optional splash page</li>
+<li>example_store_products.html: this showcases the Text Block and Product List elements from the settings page</li>
+<li>example_store_searchresults.html: the page that the a consumer is directed to after querying a search using the search bar.</li>
+</ul>
+<h2>General layout</h2>
+<p>
+The root of the webpage is index.html. It includes a short introduction explaining the purpose of the site (easy online storefront) and includes an account creation form. In the navbar at the top, there are links to the about us page, the list of example store made using the product (to be filled for the second assignment, once account/page creation is implemented), and the Create Store! button, which goes to the page for store customization (settings.html) if the user is logged in (not yet implemented).
+</p>
+<p>
+The various preview buttons in settings.html will open a preview tab/window showing current changes.
+</p>
+<p>
+Store pages are entirely separate from our main page, barring the link back in the footer, unless the user opts-in to being linked from the examples page. The stores are separate entities, just created with our product.
+</p>
+
+<h2>
+Final Navigation
+</h2>
+<p>
+Once the server is implemented, index.html will be the root, whose working title is easystorefront.com. Any stoe page will use the user's store name as the subdirectory (i.e. easystorefront.com/storename) and will have subdirectories for home, search, etc. (i.e. easystorefront.com/storename/search). 
 
 <h2>Product backlog</h2>
 <h3>Front page</h3>
 <pre>Uncomplicated design
 Blurb explaining the idea behind the website
 Account creation and login pages
-Portal to other people’s stores, e.g. search for ones in the local area</pre>
+Portal to other people's stores, e.g. search for ones in the local area</pre>
 
 <h3>Storefront and Customizations</h3>
 <pre>Product list with images for each product
@@ -34,7 +127,7 @@ Stores may have contact info or other general information
 Products can be tagged to allow searches for specific kinds of products
 May include a blog with dated entries</pre>
 
-<h3>“The Database”</h3>
+<h3>The Database</h3>
 <pre>customizable fields = schema of the tables, maybe several tables for different kinds of stuff
 insert/update/delete a specific type of entry
 needs to have image uploading and entry fields for all required attributes
@@ -46,3 +139,6 @@ page that neatly displays all fields of a single product and maybe similar produ
 <pre>* setup files on cdf server, using RESTful api
 * create logic to dynamically generate store pages, instead of having them static
 * implement logins and connect it to store creation</pre>
+
+</body>
+</html>
