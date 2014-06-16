@@ -1,11 +1,4 @@
-storefrunt
+Online Storefront Creator
 ==========
 
-wow, such readme
-things
-
-
-Features to implement, first stage:
-Generic text
-Generic image
-Product list
+see readme.html for info
