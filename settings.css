@@ -1,4 +1,4 @@
-/*From the bootstrap demo narrow-jumbotron*/
+/*From the bootstrap demo narrow-jumbotron, some modifications made. Independent work below.*/
 /* Space out content a bit */
 body {
   padding-bottom: 20px;
@@ -84,8 +84,12 @@ background-color:#9cd7eb;
 
 /* end of demo css, below is own work*/
 
+
+/*drop-down menu*/
 .btn-group  ul li{cursor:pointer} 
 .btn-group  ul li:hover{background-color:#b0b0b0} 
+
+
 ul#myTab{
 	margin:auto;
 	width: fit-content; 
@@ -99,7 +103,7 @@ ul#myTab{
 	margin:10px 5px;
 	min-height:240px;
 	border-radius:8px;
-  border-bottom: 1px solid #5E818D;
+  	border-bottom: 1px solid #5E818D;
 }
 
 .back {
@@ -125,15 +129,16 @@ ul#myTab{
 	padding:10px;
 	margin:10px 5px;
 	border-radius:8px;
-  border-bottom: 1px solid #5E818D;
+  	border-bottom: 1px solid #5E818D;
 }
+
 .titles {
 	font-size:18px;
 	margin-bottom:5px;
 }
 
 .checkbox {
-margin-left:50px;
+	margin-left:50px;
 }
 .glyphicon-chevron-up {
 	font-size:2.1em;
