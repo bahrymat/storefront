@@ -14,21 +14,20 @@
 
 --this is not actual html yet. backlogs are also not final
 
-<h1>product name</h1>
+<h1>easyStorefront</h1>
 
 <p>What we have here is a website that allows users to create and customize a storefront where they can sell products of their choice. In particular, our store creation page allows them to build their store out of individual components without touching a line of code.</p>
 
 <p>To view our website, start from index.html and follow the links from there. As we are not running on a server yet, logging in and signing up is not yet implemented. The store creation page is accessible and functional, but actually saving/generating the store does not work yet.</p>
 
-<p>Because of this, we have prepared an example of what a generated store would look like in the Examples tab. Note that once the example store is entered, there are no links back to the main website - this is an intentional design choice, to keep shoppers concentrated on the goods themselves.</p>
+<p>Because of this, we have prepared an example of what a generated store would look like in the Examples tab. Note that once the example store is entered, there are no links back to the main website - this is an intentional design choice, our product is simply the backend to an individual's store page and does not effect the consumer.</p>
 
 <h2>Who did what</h2>
 
 --should this be elaborated on more?
 
 <ul>
-<li>Matthew
-<ul>
+<li>Matthew<ul>
 <!-- Stuff Matthew did -->
 <li>Brainstormed layout of site and pages</li>
 <li>Created example store</li>
@@ -43,8 +42,7 @@
 <li>Bug fixing</li>
 <!-- /Stuff Keegan did -->
 </ul></li>
-<li>
-Jason<ul>
+<li>Jason<ul>
 <!-- Stuff Jason did -->
 <li>Came up with idea</li>
 <li>Brainstormed layout of site and pages</li>
@@ -53,8 +51,7 @@ Jason<ul>
 <li>Wrote draft for presentation</li>
 <li>Bug fixing</li>
 <!-- /Stuff Jason did -->
-</ul>
-</li>
+</ul></li>
 <li>Yuwei<ul>
 <!-- Stuff Yuwei did -->
 <li>Brainstormed layout of site and pages</li>
@@ -104,37 +101,47 @@ The root of the webpage is index.html. It includes a short introduction explaini
 The various preview buttons in settings.html will open a preview tab/window showing current changes.
 </p>
 <p>
-Store pages are entirely separate from our main page, barring the link back in the footer, unless the user opts-in to being linked from the examples page. The stores are separate entities, just created with our product.
+Store pages are entirely separate from our main page, unless the user opts-in to being linked from the examples page in which case there is a link into their store page. The stores are separate entities, just created with our product.
 </p>
 
 <h2>
 Final Navigation
 </h2>
 <p>
-Once the server is implemented, index.html will be the root, whose working title is easystorefront.com. Any stoe page will use the user's store name as the subdirectory (i.e. easystorefront.com/storename) and will have subdirectories for home, search, etc. (i.e. easystorefront.com/storename/search). 
+Once the server is implemented, index.html will be the root, which for the purposes of this explanation will be refered to as easystorefront.com. Any store page will use the user's store name as the subdirectory (i.e. easystorefront.com/storename) and will have subdirectories for home, search, etc. (i.e. easystorefront.com/storename/search). The Create Store! page will likely go under easystorefront.com/storename/settings, and would only be accessible if the user is logged in on the correct account.
 
 <h2>Product backlog</h2>
-<h3>Front page</h3>
-<pre>Uncomplicated design
-Blurb explaining the idea behind the website
-Account creation and login pages
-Portal to other people's stores, e.g. search for ones in the local area</pre>
+<h3>Set up Server</h3>
+<ul><li>Setup files on cdf server, using RESTful api</li></ul>
+<h3>Server integration</h3>
+<ul>
+<li>Account Creation</li>
+<li>Database table construction on account creation</li>
+<li>Synch settings changes with server</li>
+<li>Dynamic form table insertion/deletion with respect to changes made by users in their elements/products/images menu.</li>
+</ul>
+<h3>Dynamic Page Generation</h3>
+<ul>
+<li>Generate pages on request from store's database</li>
+<li>Dynamic searches, by product name and/or tag</li>
+</ul>
 
-<h3>Storefront and Customizations</h3>
-<pre>Product list with images for each product
-Header/footer with links to other pages on the site
-Hours open/avail/etc.
-Stores may have contact info or other general information
-Products can be tagged to allow searches for specific kinds of products
-May include a blog with dated entries</pre>
+<h3>General store page features</h3>
+<ul>
+<li>Contact Us page</li>
+<li>Email form to send email for the store page to the store owner</li>
+<li>Link tags on individual product page to searches for that tag</li>
+<li>More navbar/footer customisation</li>
+</ul>
 
-<h3>The Database</h3>
-<pre>customizable fields = schema of the tables, maybe several tables for different kinds of stuff
-insert/update/delete a specific type of entry
-needs to have image uploading and entry fields for all required attributes
-(possible hidden) tag system (check all that apply/ add new tag/remove tag)
-search bar somewhere
-page that neatly displays all fields of a single product and maybe similar products at the bottom</pre>
+<h3>More Features in Element tab</h3>
+<ul>
+<li>Carousel or revolving picture display</li>
+<li>Location display (google maps integration)</li>
+<li>Hard coded product searches, by product name and tag</li>
+<li>'Message of the day' type display</li>
+<li>Whatever come to mind</li>
+</ul>
 
 <h2>Sprint backlog</h2>
 <pre>* setup files on cdf server, using RESTful api
