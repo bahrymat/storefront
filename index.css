@@ -12,6 +12,7 @@ html {
   color: #555555;
 }
 
+/* main page content*/
 .intro {
   background-color: #0099CC;
   padding: 200px;
@@ -26,13 +27,15 @@ html {
   height: 300px;
 }
 
+/* create a space for the 3 input boxes*/
 .input3box{
   width:900px;
-  height:60px;
-  padding-top:13px;
-  padding-bottom:13px;
+  height:64px;
+  padding-top:15px;
+  padding-bottom:0px;
 }
 
+/* input box*/
 .box{
   box-sizing: border-box;
   width:290px;
@@ -46,8 +49,9 @@ html {
   color: #FFF;
 }
 
-.section2 {
+.blurb {
   padding: 100px;
   text-align: center;
   position: relative;
 }
+

@@ -9,6 +9,7 @@
 	<link href="index.css" rel="stylesheet">
 	<script type='text/javascript' src="index.js"></script>
 
+
 </head>
 
 <!-- code adapted from bootstrap's basic template -->
@@ -34,8 +35,8 @@
 				<div class="navbar-right" onClick="event.stopPropagation();">
 					<ul class="nav navbar-nav"><li><a href="#" id="login_button" onClick="showLogin();">Login</a></li></ul>
 					<form id="hidden_login" class="navbar-form sorta_hidden" role="form">
-						<div class="form-group"><input class="form-control" type="text" placeholder="Email"></div>
-						<div class="form-group"><input class="form-control" type="password" placeholder="Password"></div>
+						<div class="form-group"><input class="form-control" type="text" placeholder="Email" name="email"></div>
+						<div class="form-group"><input class="form-control" type="password" placeholder="Password" name="password"></div>
 						<button class="btn btn-success" type="submit">Login</button>
 					</form>
 				</div>
@@ -44,27 +45,35 @@
 	</div>
 
 	<main id="start" class="intro">
-		<div class="introbox">
-			<h1 class="whitetext">Webstore building made easy</h1>
-			<h3 class="whitetext">Product Name will help you create and maintain your own store without a hassle!</h3>
-			<div class="input3box">
-				<div class="box">
-					<input type="text" placeholder="Store Name" class="form-control">
+		<form class="introbox">
+			<h1 class="whitetext">Create a web store in minutes with Product Name!</h1>
+			<div class="input3box form-group">
+				<div class="box form-group">
+					<input type="text" placeholder="Store Name" class="form-control" name="storeName">
 				</div>
-				<div class="box">
-					<input type="text" placeholder="Email" class="form-control">
+				<div class="box form-group">
+					<input type="text" placeholder="Email" class="form-control" name="email2">
 				</div>
-				<div class="box">
-					<input type="password" placeholder="Password" class="form-control">
+				<div class="box form-group">
+					<input type="password" placeholder="Password" class="form-control" name="signUpPass">
 				</div>
 			</div>
-			<a role="button" href="#" class="btn btn-lg btn-primary">Try it FREE! »</a>
-		</div>
+			<p class="whitetext">Store name can be changed later.<p>
+			<input type="submit" value="Try it FREE! »" role="button" href="#" class="btn btn-lg btn-primary">
+		</form>
 	</main>
 
+	<div class="section2">
+		<div class="blurb">
+			<h1>Webstore building made simple</h1>
+			<p>Mark your place in the world of ecommerce by hosting your store on our website. Just sign up above and create your store with our simple to use webstore creator.</p>
+		</div>
+	</div>
 
 	<script type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 	<script type='text/javascript' src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/h/u13/g2/00/g2skyrim/csc309/git/storefront/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js"></script>
+
 
 </body>
 </html>
