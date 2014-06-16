@@ -45,17 +45,33 @@
 	</div>
 
 	<main id="start" class="intro">
-		<form class="introbox">
+		<form id="attributeForm" class="introbox"
+			data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+    	data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+    	data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
 			<h1 class="whitetext">Create a web store in minutes with Product Name!</h1>
-			<div class="input3box form-group">
+			<div class="input3box">
 				<div class="box form-group">
-					<input type="text" placeholder="Store Name" class="form-control" name="storeName">
+					<input type="text" placeholder="Store Name" class="form-control" name="signupStoreName"
+						data-bv-notempty="true"
+            data-bv-notempty-message="Please enter a store name."
+            style="box-shadow: 0px 0px 0px #fff;">
 				</div>
 				<div class="box form-group">
-					<input type="text" placeholder="Email" class="form-control" name="email2">
+					<input type="email" placeholder="Email" class="form-control" name="signupEmail"
+						data-bv-notempty="true"
+            data-bv-notempty-message="Please enter an email address."
+						data-bv-emailaddress="true"
+						data-bv-emailaddress-message="This email address is not valid."
+						style="box-shadow: 0px 0px 0px #fff;">
 				</div>
 				<div class="box form-group">
-					<input type="password" placeholder="Password" class="form-control" name="signUpPass">
+					<input type="password" placeholder="Password" class="form-control" name="signupPass"
+						data-bv-notempty="true"
+						data-bv-stringlength="true"
+	          data-bv-stringlength-min="6"
+	          data-bv-stringlength-message="The password must be at least 6 characters long."
+	          style="box-shadow: 0px 0px 0px #fff;">
 				</div>
 			</div>
 			<p class="whitetext">Store name can be changed later.<p>
@@ -66,14 +82,18 @@
 	<div class="section2">
 		<div class="blurb">
 			<h1>Webstore building made simple</h1>
-			<p>Mark your place in the world of ecommerce by hosting your store on our website. Just sign up above and create your store with our simple to use webstore creator.</p>
+			<p>Mark your place in the world of ecommerce by hosting your store on our servers. Just sign up above and create your store with our simple to use webstore creator.</p>
 		</div>
 	</div>
 
 	<script type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 	<script type='text/javascript' src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/h/u13/g2/00/g2skyrim/csc309/git/storefront/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js"></script>
-
+	<script>
+	$(document).ready(function() {
+	    $('#attributeForm').bootstrapValidator();
+	});
+	</script>
 
 </body>
 </html>

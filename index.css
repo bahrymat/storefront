@@ -29,10 +29,12 @@ html {
 
 /* create a space for the 3 input boxes*/
 .input3box{
+  background-color: #fff;
   width:900px;
-  height:64px;
+  height:70px;
   padding-top:15px;
   padding-bottom:0px;
+  border-radius: 5px;
 }
 
 /* input box*/
