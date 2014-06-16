@@ -46,8 +46,9 @@ body {
   text-align: center;
   padding-top:25px;
   padding-bottom:25px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #6D96A4;
   min-height:220px;
+background-color:#9cd7eb;
 }
 .jumbotron .btn {
   padding: 10px 24px;
@@ -93,15 +94,16 @@ ul#myTab{
   	margin-left: 15px;}  
 
 .block{
-	background-color:#aaaaaa;
+	background-color:#9cd7eb;
 	padding:10px;
 	margin:10px 5px;
 	min-height:240px;
 	border-radius:8px;
+  border-bottom: 1px solid #5E818D;
 }
 
 .back {
- 	background-color:#cccccc;
+ 	background-color:#0099CC;
 	padding:10px;
 	border-radius:8px;
 }
@@ -119,10 +121,11 @@ ul#myTab{
 }
 
 .setblock{
-	background-color:#aaaaaa;
+	background-color:#9cd7eb;
 	padding:10px;
 	margin:10px 5px;
 	border-radius:8px;
+  border-bottom: 1px solid #5E818D;
 }
 .titles {
 	font-size:18px;
@@ -160,11 +163,12 @@ font-size:30px;}
 input[type="file"]{display:none;}
 .nav-tabs > li > a, .nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
   /* can change styling of inactive tabs here */
-  border: 1px solid #ddd;
+  border: 1px solid #bbb;
   border-bottom: none;
 }
 
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
   /* can change styling of active tab here */
-	background-color:#ccc;
+	background-color:#0099CC;
+color:white;
 }
