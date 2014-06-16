@@ -135,3 +135,28 @@ body {
 }
 
 /* end custom navbar */
+
+.img-center {
+  margin:0 auto;
+}
+
+.jumbotron {
+  background-color: white;
+}
+
+html { 
+  overflow-y: scroll; 
+}
+
+.button_label {
+  display: inline-block;
+  padding-right: 3px;
+}
+
+.tags {
+  margin-top: 24px;
+}
+
+.jumbotron_lesspadding {
+  padding-bottom: 24px;
+}

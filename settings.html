@@ -10,7 +10,9 @@
     <!-- Bootstrap core CSS -->
         <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
-    <link href="jumbotron-narrow.css" rel="stylesheet">
+    <link href="index.css" rel="stylesheet">
+    <link href="settings.css" rel="stylesheet">
+    <script type='text/javascript' src="index.js"></script>
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -18,15 +20,50 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-		<style> .btn-group  ul li{cursor:pointer} .btn-group  ul li:hover{background-color:#b0b0b0}</style>
+		
   </head>
 
 
-  <body>
+  <body onClick="hideLogin();">
 <!-- link to top -->
-    <div style="position:fixed;width:50px;height:50px;bottom:0;right:0;background-color:grey" class="toTop" style="display:none"></div>
+    <div style="position:fixed;width:50px;height:50px;bottom:0;right:0;background-color:grey;padding:0.5em; z-index: 10;" class="toTop" style="display:none">Back to top</div>
 <!-- /link to top -->
-		<div class="bs-example bs-example-tabs">
+
+		
+        <div class="navbar navbar-inverse">
+		  <div class="container">   
+		    <div class="navbar-header">
+			  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+			    <span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			  </button>
+			  <a class="navbar-brand" href="index.html">Product Name</a>
+			</div>
+			<div class="collapse navbar-collapse">
+			  <ul class="nav navbar-nav">
+			    <li><a href="index.html">Home</a></li>
+				<li><a href="aboutus.html">About Us</a></li>
+				<li><a href="examples.html">Examples</a></li>
+				<li class="active"><a href="settings.html">Create Store!</a></li>
+			  </ul>
+			  <div class="navbar-right" onClick="event.stopPropagation();">
+				<ul class="nav navbar-nav"><li><a href="#" id="login_button" onClick="showLogin();">Login</a></li></ul>
+			    <form id="hidden_login" class="navbar-form sorta_hidden" role="form">
+				    <div class="form-group"><input class="form-control" type="text" placeholder="Email"></div>
+				    <div class="form-group"><input class="form-control" type="password" placeholder="Password"></div>
+				    <button class="btn btn-success" type="submit">Login</button>
+			    </form>
+			  </div>
+			</div>
+		  </div>
+		</div>
+		
+		
+						<!-- element Page -->
+						<div class="container settings_container">
+
+<div class="bs-example bs-example-tabs">
 		  <ul id="myTab" class="nav nav-tabs">
 		    <li class="active"><a href="#elements" data-toggle="tab">Elements</a></li>
 		    <li><a href="#products" data-toggle="tab">Products</a></li>
@@ -37,51 +74,41 @@
 		    
 		  </ul>
 		<div id="myTabContent" class="tab-content">
-    	<div class="tab-pane fade in active" id="elements">
-
-		
-						<!-- element Page -->
-						<div class="container">
+    	<div class="tab-pane in active" id="elements">
 							
-						 <div style="background-color:#cccccc;padding:10px">
+						 <div class="back">
 							 <div class="jumbotron big">
 							 add new elements and stuff<br>
 								<div class="btn-group">
   								<button type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown">
-    									New element <span class="caret"></span>
-  								</button>
+    									New Element <span class="caret"></span>
+  								</button><br>
   								<ul class="dropdown-menu newElement" role="menu">
     								<li id="TextBlock">Text Block</li>
     								<li id="ImageBlock">Image Block</li>
-    								<li id="Logo">Logo</li>
+    								<li id="ProductList">Product List</li>
   								</ul>
 								</div>
-									<form class="form-inline" role="form" action="/my-handling-form-page" method="post">
-										<button type="submit" class="btn btn-primary">Save</button>
-										<button type="submit" class="btn btn-primary">Save Draft</button>
-										<button type="submit" class="btn btn-primary">Restore Default</button>
-										<button type="submit" class="btn btn-primary">Preview</button>
-								</form>
+<br>
+								<button type="submit" class="btn btn-primary">Save</button>
+								<button type="submit" class="btn btn-primary">Save Draft</button>
+								<button type="submit" class="btn btn-primary">Restore Default</button>
+								<button type="submit" class="btn btn-primary">Preview</button>
 							</div>
-							<div class="row marketing" id="elementContent">
+							<div class="row" id="elementContent">
 								<!-- Textblock-->
-									<div class="col-lg-6 textblockBox">
-										<div style="background-color:#aaaaaa;padding:10px;margin:5px">Textblock
-											<button type="button" class="close deleteTextblock" aria-hidden="true">&times;</button>
+									<div class="col-sm-6 textblockBox">
+										<div class="block"><h4>Text Block
+											<button type="button" class="close deleteTextblock" aria-hidden="true">&times;</button></h4>
 											<form class="form-horizontal" role="form""> 
 												<div class="form-group">
-													<label for="ttitle" class="col-sm-2 control-label">Title</label>
-													<div class="col-sm-10">
+													<label for="ttitle" class="col-sm-3 control-label">Title</label>
+													<div class="col-sm-9">
 												 	 	<input type="text" class="form-control" id="ttitle" placeholder="Title">
 											 		</div>
-													<label for="tdescription" class="col-sm-2 control-label">Description</label>
-													<div class="col-sm-10">
+													<label for="tdescription" class="col-sm-3 control-label">Description</label>
+													<div class="col-sm-9">
 														<textarea class="form-control" rows="2" columns="3" id="tdescription" placeholder="Description"></textarea>
-													</div>
-													<div>
-														<center>
-															<button type="submit" class="btn btn-default">Save</button>
-														</center>
 													</div>
 												</div>
 
@@ -92,22 +119,22 @@
 									<!-- /Textblock-->
 
 									<!-- Imageblock-->
-									<div class="col-lg-6 imageblockBox">
-										<div style="background-color:#aaaaaa;padding:10px;margin:5px">Imageblock
-											<button type="button" class="close deleteImageblock" aria-hidden="true">&times;</button>
+									<div class="col-sm-6 imageblockBox">
+										<div class="block"><h4>Image Block
+											<button type="button" class="close deleteImageblock" aria-hidden="true">&times;</button></h4>
 											<form class="form-horizontal" role="form">
 												<div class="form-group">
-													<label for="ititle" class="col-sm-2 control-label">Title</label>
-													<div class="col-sm-10">
+													<label for="ititle" class="col-sm-3 control-label">Title</label>
+													<div class="col-sm-9">
 												 	 <input type="text" class="form-control" id="ititle" placeholder="Title">
 											 		</div>
-													<label for="idescription" class="col-sm-2 control-label">Description</label>
-													<div class="col-sm-10">
+													<label for="idescription" class="col-sm-3 control-label">Description</label>
+													<div class="col-sm-9">
 														<textarea class="form-control" rows="2" id="idescription" placeholder="Description"></textarea>
 													</div>
 			
-													<label for="iimage" class="col-sm-2 control-label">Image</label>
-													<div class="col-sm-10">
+													<label for="iimage" class="col-sm-3 control-label">Image</label>
+													<div class="col-sm-9">
 															<select class="form-control" id="iimage">
 																<option>None</option>
 																<option>image1.jpg</option>
@@ -117,38 +144,132 @@
 																<option>image5.jpg</option>
 															</select>
 													</div>
-													<div>
-														<center>
-															<button type="submit" class="btn btn-default">Save</button>
-														</center>
-													</div>
 												</div>
 											</form>
 										</div>
 									</div>
 									<!-- /Imageblock-->
 
+									<!-- productlist -->
+									<div class="col-sm-6 productblockBox">
+										<div class="block"><h4>Product List
+											<button type="button" class="close deleteProductblock" aria-hidden="true">&times;</button></h4>
+											<form class="form-horizontal" role="form">
+												<div class="form-group">
+
+													<div class="col-sm-6">
+														<select class="form-control" id="prodList1">
+															<option>None</option>
+															<option>product1</option>
+															<option>product2</option>
+															<option>product3</option>
+															<option>product4</option>
+															<option>product5</option>
+														</select>
+													</div>
+													<div class="col-sm-6">
+														<select class="form-control" id="prodList1">
+															<option>None</option>
+															<option>product1</option>
+															<option>product2</option>
+															<option>product3</option>
+															<option>product4</option>
+															<option>product5</option>
+														</select>
+													</div>
+													<div class="col-sm-6">
+														<select class="form-control" id="prodList1">
+															<option>None</option>
+															<option>product1</option>
+															<option>product2</option>
+															<option>product3</option>
+															<option>product4</option>
+															<option>product5</option>
+														</select>
+													</div>
+													<div class="col-sm-6">
+														<select class="form-control" id="prodList1">
+															<option>None</option>
+															<option>product1</option>
+															<option>product2</option>
+															<option>product3</option>
+															<option>product4</option>
+															<option>product5</option>
+														</select>
+													</div>
+													<div class="col-sm-6">
+														<select class="form-control" id="prodList1">
+															<option>None</option>
+															<option>product1</option>
+															<option>product2</option>
+															<option>product3</option>
+															<option>product4</option>
+															<option>product5</option>
+														</select>
+													</div>
+													<div class="col-sm-6">
+														<select class="form-control" id="prodList1">
+															<option>None</option>
+															<option>product1</option>
+															<option>product2</option>
+															<option>product3</option>
+															<option>product4</option>
+															<option>product5</option>
+														</select>
+													</div>
+													<div class="col-sm-6">
+														<select class="form-control" id="prodList1">
+															<option>None</option>
+															<option>product1</option>
+															<option>product2</option>
+															<option>product3</option>
+															<option>product4</option>
+															<option>product5</option>
+														</select>
+													</div>
+													<div class="col-sm-6">
+														<select class="form-control" id="prodList1">
+															<option>None</option>
+															<option>product1</option>
+															<option>product2</option>
+															<option>product3</option>
+															<option>product4</option>
+															<option>product5</option>
+														</select>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+									<!-- /productlist -->
+
 								</div>
 							</div>
 						</div>
-					</div>
 				<!-- element Page -->	
 	
 				
 				<!-- product page -->
 
-					<div class="tab-pane fade" id="products">
-						<div class="container">
+					<div class="tab-pane" id="products">
 							
-							<div style="background-color:#cccccc;padding:10px;"><!-- stuff -->
+							<div class="back">
 							 	<div class="jumbotron">
 							 		add new products and stuff<br>
 									<button type="submit" class="btn btn-primary newProduct">New Product</button>
+									<button type="submit" class="btn btn-primary">Save Changes</button>
+									<div class="input-group searchbar">
+										<input type="text" class="form-control" placeholder="Search products...">
+										<span class="input-group-btn">
+											<button class="btn btn-default glyphicon glyphicon-search" type="button"></button>
+										</span>
+									</div>
+
 								</div>
 								<div class="row" id="productContent" margin>
 										<!-- Product-->
-										<div class="col-lg-6 productBox">
-											<div style="background-color:#aaaaaa;padding:10px;margin:5px" >
+										<div class="col-sm-6 productBox">
+											<div class="block" >
 												<button type="button" class="close deleteProduct" aria-hidden="true">&times;</button><br>
 												<form class="form-horizontal" role="form"">
 													<div class="form-group">
@@ -177,10 +298,9 @@
 																	<option>image5.jpg</option>
 																</select>
 														</div>
-														<div>
-															<center>
-																<button type="submit" class="btn btn-default">Save</button>
-															</center>
+														<label for="ptags" class="col-sm-3 control-label">Tags</label>
+														<div class="col-sm-9">
+															<textarea class="form-control" rows="2" id="pdescription"  placeholder="Description"></textarea>
 														</div>
 													</div>
 												</form>
@@ -190,42 +310,38 @@
 
 								</div>
 							</div>
-						</div>
 					</div>
 				<!-- /Product Page -->
 				
 				<!-- image page -->
 
-					<div class="tab-pane fade" id="images">
-						<div class="container">
+					<div class="tab-pane" id="images">
 							
-						<div style="background-color:#cccccc;padding:10px;">
+						<div class="back">
 						 	<div class="jumbotron">
 						 		add new image and stuff<br>
 												 
-									<button type="button" class="btn btn-primary newImage">New image</button>
-								
+									<button type="button" class="btn btn-primary newImage">New Image</button>
+									<button type="button" class="btn btn-primary">Save Changes</button>
+								<div class="input-group searchbar">
+										<input type="text" class="form-control" placeholder="Search images...">
+										<span class="input-group-btn">
+											<button class="btn btn-default glyphicon glyphicon-search" type="button"></button>
+										</span>
+									</div>
 
 							</div>
 							<div class="row" id="imagesContent" >
 									<!-- Image-->
 									<div class="col-sm-6 imageBox">
-										<div style="background-color:#aaaaaa;padding:10px;margin:10px 5px" ><button type="button" class="close deleteImage" aria-hidden="true">&times;</button><br>
+										<div class="block"><button type="button" class="close deleteImage" aria-hidden="true">&times;</button><br>
+<div class="col-sm-12"><img class="img-thumbnail" src="http://placehold.it/200x200&text=Drag+and+Drop" alt="200x200" style="max-width: 200px; max-height: 200px;display:block;margin:auto;margin-bottom:10px;"></img></div>
 											<form class="form-horizontal" role="form">
 												<div class="form-group">
 													<label for="imname" class="col-sm-3 control-label">Name</label>
 													<div class="col-sm-9">
-												 	 <input type="name" class="form-control" id="imname" placeholder="Product Name">
-											 		</div>
-													<label for="imdescription" class="col-sm-3 control-label">Description</label>
-													<div class="col-sm-9">
-														<textarea class="form-control" rows="2" id="imdescription" placeholder="Description" style="resize:none"></textarea>
-													</div>
-	
-													<div>
-													<center>
-														<button type="submit" class="btn btn-default">Save</button>
-													</center></div>
+												 	 <input type="name" class="form-control" id="imname" placeholder="Image name">
+											 		</div>	
 												</div>
 											</form>
 										</div>
@@ -233,7 +349,6 @@
 									<!-- /Image-->
 								</div>
 							</div>
-						</div>
 					</div>
 				
 
@@ -241,19 +356,24 @@
 				
 				<!-- settings page -->
 
-				<div class="tab-pane fade" id="settings">
-					<div class="container">
-							
-						<div style="background-color:#cccccc;padding:10px;">
-							<div class="row marketing">
-								<div class="col-lg-6">
+				<div class="tab-pane" id="settings">
+							<div class="back">
+						 	<div class="jumbotron">
+						 		Change the look of your store.<br>
+												 
+								<button type="button" class="btn btn-primary newImage">Saves changes</button>
+								<button type="button" class="btn btn-primary newImage">Revert Changes</button>
+								<button type="button" class="btn btn-primary newImage">Preview</button>
+							</div>
+							<div class="row">
+								<div class="col-lg-12">
 									<!-- setting block-->
-										<div style="background-color:#aaaaaa;padding:10px;margin:5px">
+										<div class="block">
 											<form class="form-horizontal" role="form"">
 												<div class="form-group">
-													<label for="currency" class="col-sm-3 control-label">Currency</label>
+													<label for="currency" class="col-sm-4 control-label">Currency</label>
 
-													<div class="col-sm-9">
+													<div class="col-sm-8">
 												 	 <select class="form-control">
 														<option>$</option>
 														<option>stuff</option>
@@ -262,66 +382,42 @@
 														<option>5</option>
 													 </select>
 											 		</div>
-													<label for="bgcolour" class="col-sm-3 control-label">Background color</label>
+													<label for="bgcolour" class="col-sm-4 control-label">Background colour</label>
+														<div class="col-sm-8">
+													 	 <input type="text" class="form-control" id="bgcolour" placeholder="000000">
+												 		</div>
+													<label for="fontcolour" class="col-sm-4 control-label">Font colour</label>
+														<div class="col-sm-8">
+													 	 <input type="text" class="form-control" id="fontcolour" placeholder="ffffff">
+												 		</div>
+													<label for="navcolour" class="col-sm-4 control-label">Navbar colour</label>
+														<div class="col-sm-8">
+													 	 <input type="text" class="form-control" id="pprice" placeholder="aaaaaa">
+												 		</div>
+													
+													<label for="font" class="col-sm-4 control-label">Font </label>
 
-													<div class="col-sm-9">
+													<div class="col-sm-8">
 												 	 <select class="form-control">
-														<option>$</option>
-														<option>stuf</option>
-														<option>3</option>
-														<option>4</option>
-														<option>5</option>
+														<option>Courier</option>
+														<option>Times New Roman</option>
+														<option>Ariel</option>
+														<option>Verdana</option>
+														<option>etc.</option>
 													 </select>
 											 		</div>
-													<label for="fontcolour" class="col-sm-3 control-label">Font color</label>
-
-													<div class="col-sm-9">
-												 	 <select class="form-control">
-														<option>$</option>
-														<option>stff</option>
-														<option>3</option>
-														<option>4</option>
-														<option>5</option>
-													 </select>
-											 		</div>
-													<label for="navcolour" class="col-sm-3 control-label">navbar color</label>
-
-													<div class="col-sm-9">
-												 	 <select class="form-control">
-														<option>$</option>
-														<option>suff</option>
-														<option>3</option>
-														<option>4</option>
-														<option>5</option>
-													 </select>
-											 		</div>
-													<label for="font" class="col-sm-3 control-label">Font </label>
-
-													<div class="col-sm-9">
-												 	 <select class="form-control">
-														<option>$</option>
-														<option>tuff</option>
-														<option>3</option>
-														<option>4</option>
-														<option>5</option>
-													 </select>
-											 		</div>
-													<div>	
-														<center>
-															<button type="submit" class="btn btn-default">Save</button>
-														</center>
-													</div>
 												</div>
 											</form>
 										</div>
 									<!-- /setting block-->
 							</div>
-						</div>
-					</div>
 				<!-- /settings Page -->
+
+
 				</div>
 			</div>
 </div>
+
 		</p>
       <div class="footer">
         <p>&copy; Company 2014</p>
@@ -333,43 +429,8 @@
         <script type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
         <script type='text/javascript' src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	<!-- using http://learn.jquery.com/events/event-delegation/ for first script-->		
-		<script>
-			$(document).on('click','.deleteImage', function(){if(confirm("Delete image?")){$(this).closest('.imageBox').remove();}}
-			);
-
-			$(document).on('click','.deleteProduct', function(){if(confirm("Delete product?")){$(this).closest('.productBox').remove();}}
-			);
-			$(document).on('click','.deleteTextblock', function(){if(confirm("Delete textBlock?")){$(this).closest('.textblockBox').remove();}}
-			);
-			$(document).on('click','.deleteImageblock', function(){if(confirm("Delete imageBlock?")){$(this).closest('.imageblockBox').remove();}}
-			);
-
-			$("ul.newElement > li#TextBlock").click(
-				function(){var textblockform = '<div class="col-lg-6 textblockBox"><div style="background-color:#aaaaaa;padding:10px;margin:5px">Textblock<button type="button" class="close deleteTextblock" aria-hidden="true">&times;</button><form class="form-horizontal" role="form""> <div class="form-group"><label for="ttitle" class="col-sm-2 control-label">Title</label><div class="col-sm-10"><input type="text" class="form-control" id="ttitle" placeholder="Title"></div><label for="tdescription" class="col-sm-2 control-label">Description</label><div class="col-sm-10"><textarea class="form-control" rows="2" columns="3" id="tdescription" placeholder="Description"></textarea></div><div><center><button type="submit" class="btn btn-default">Save</button></center></div></div></form></div></div>';
-
-$("#elementContent").append(textblockform)});
-
-$("ul.newElement > li#ImageBlock").click(
-				function(){var imageblockform = '<div class="col-lg-6 imageblockBox"><div style="background-color:#aaaaaa;padding:10px;margin:5px">Imageblock<button type="button" class="close deleteImageblock" aria-hidden="true">&times;</button><form class="form-horizontal" role="form"><div class="form-group"><label for="ititle" class="col-sm-2 control-label">Title</label><div class="col-sm-10"><input type="text" class="form-control" id="ititle" placeholder="Title"></div><label for="idescription" class="col-sm-2 control-label">Description</label><div class="col-sm-10"><textarea class="form-control" rows="2" id="idescription" placeholder="Description"></textarea></div><label for="iimage" class="col-sm-2 control-label">Image</label><div class="col-sm-10"><select class="form-control" id="iimage"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><div><center><button type="submit" class="btn btn-default">Save</button></center></div></div></form></div></div>';
-
-$("#elementContent").append(imageblockform)});
-
-			$(".newImage").click(
-				function(){var imageform = '<div class="col-sm-6 imageBox"><div style="background-color:#aaaaaa;padding:10px;margin:10px 5px" ><button type="button" class="close deleteImage" aria-hidden="true">&times;</button><br><form class="form-horizontal" role="form"><div class="form-group"><label for="imname" class="col-sm-3 control-label">Name</label><div class="col-sm-9"><input type="name" class="form-control" id="imname" placeholder="Product Name"></div><label for="imdescription" class="col-sm-3 control-label">Description</label><div class="col-sm-9"><textarea class="form-control" rows="2" id="imdescription" placeholder="Description" style="resize:none"></textarea></div><div><center><button type="submit" class="btn btn-default">Save</button></center></div></div></form></div></div>';
-$("#imagesContent").append(imageform);}
-			);
-
-		$(".newProduct").click(
-				function(){var productform = '<div class="col-lg-6 productBox"><div style="background-color:#aaaaaa;padding:10px;margin:5px" ><button type="button" class="close deleteProduct" aria-hidden="true">&times;</button><br><form class="form-horizontal" role="form""><div class="form-group"><label for="ptitle" class="col-sm-3 control-label">Product</label><div class="col-sm-9"><input type="text" class="form-control" id="ptitle" placeholder="Product Name"></div><label for="pdescription" class="col-sm-3 control-label">Description</label><div class="col-sm-9"><textarea class="form-control" rows="2" id="pdescription"placeholder="Description"></textarea></div><label for="pprice" class="col-sm-3 control-label">Price</label><div class="col-sm-9"><input type="number" class="form-control" id="pprice" placeholder="Price"></div><label for="pimage" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><div><center><button type="submit" class="btn btn-default">Save</button></center></div></div></form></div></div>';
-$("#productContent").append(productform);}
-			);
-		$(".toTop").click(
-			function(){$("html,body").animate({scrollTop:0});});
-		$(window).scroll(function(){
-												var notTop = $(window).scrollTop();
-												if (notTop) {$(".toTop").show()}
-												else {$(".toTop").hide()}
-									});
+		<script type="text/javascript" src="settings.js">
+			
 		</script>
   </body>
 </html>
