@@ -11,3 +11,43 @@ html {
   font-style: italic;
   color: #555555;
 }
+
+.intro {
+  background-color: #0099CC;
+  padding: 200px;
+  text-align: center;
+  position:relative;
+}
+
+.introbox {
+  margin-left: auto;
+  margin-right: auto;
+  width: 900px;
+  height: 300px;
+}
+
+.input3box{
+  width:900px;
+  height:60px;
+  padding-top:13px;
+  padding-bottom:13px;
+}
+
+.box{
+  box-sizing: border-box;
+  width:290px;
+  height:34px;
+  margin-left: 5px;
+  margin-right: 5px;
+  float:left;
+}
+
+.whitetext {
+  color: #FFF;
+}
+
+.section2 {
+  padding: 100px;
+  text-align: center;
+  position: relative;
+}
