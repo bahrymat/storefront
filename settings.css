@@ -160,6 +160,8 @@ font-size:30px;}
 input[type="file"]{display:none;}
 .nav-tabs > li > a, .nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
   /* can change styling of inactive tabs here */
+  border: 1px solid #ddd;
+  border-bottom: none;
 }
 
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
