@@ -12,6 +12,48 @@ html {
   color: #555555;
 }
 
-.jumbotron li {
-    font-size: 17px;
+/* main page content*/
+.intro {
+  background-color: #0099CC;
+  padding: 200px;
+  text-align: center;
+  position:relative;
 }
+
+.introbox {
+  margin-left: auto;
+  margin-right: auto;
+  width: 900px;
+  height: 300px;
+}
+
+/* create a space for the 3 input boxes*/
+.input3box{
+  background-color: #fff;
+  width:900px;
+  height:70px;
+  padding-top:15px;
+  padding-bottom:0px;
+  border-radius: 5px;
+}
+
+/* input box*/
+.box{
+  box-sizing: border-box;
+  width:290px;
+  height:34px;
+  margin-left: 5px;
+  margin-right: 5px;
+  float:left;
+}
+
+.whitetext {
+  color: #FFF;
+}
+
+.blurb {
+  padding: 100px;
+  text-align: center;
+  position: relative;
+}
+
