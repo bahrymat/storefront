@@ -27,7 +27,7 @@
 <!-- Stuff Matthew did -->
 <li>Brainstormed layout of site and pages</li>
 <li>Created example store</li>
-<li>Product/Sprint Backlog</li>
+<li>Created product/sprint Backlog</li>
 <li>Presentation powerpoint</li>
 <li>Bug fixing</li>
 <li>Wrote readme.html</li>
@@ -45,10 +45,10 @@
 <!-- Stuff Jason did -->
 <li>Came up with idea</li>
 <li>Brainstormed layout of site and pages</li>
-<li>Designed and implmented settings.html, including writing settings.css and settings.js</li>
-<li>Product Backlog</li>
+<li>Designed and implemented settings.html, including writing settings.css and settings.js</li>
+<li>Created product/sprint Backlog</li>
 <li>Drew initial drafts for settings.html, and storepages</li>
-<li>Polishing (fixing page titles, etc.)</li>
+<li>General polishing (fixing page titles, etc.)</li>
 <li>Wrote draft for presentation</li>
 <li>Wrote readme.html</li>
 <li>Bug fixing</li>
@@ -58,7 +58,7 @@
 <!-- Stuff Yuwei did -->
 <li>Brainstormed layout of site and pages</li>
 <li>Designed the home (index) page and wrote the blurb</li>
-<li>Added form validation for sign up</li>
+<li>Added form validation for sign-up</li>
 <li>Bug Fixing</li>
 <!-- /Stuff Yuwei did -->
 </ul></li>
@@ -67,6 +67,9 @@
 <h2>
 Navigation for A1
 </h2>
+
+The majority of links are in place, but the following describes the interaction:
+
 <p>
 <h4>Front page of the easyStorefront website: <em>index.html</em></h4>
  This includes the account creation and login functionality, which will be inplemented for the second assignment.
@@ -150,12 +153,12 @@ Once the server is implemented, index.html will be the root, which for the purpo
 </ul>
 <h3> Scalability and Security</h3>
 <ul>
-<li>Plug and sql injection and other such vulnerabilities</li>
+<li>Plug any sql injection and other such vulnerabilities</li>
 <li>Make sure account creation/logins are secure, likewise for a user's site</li>
 <li>Make sure server code is scalable</li>
 </ul>
 
-<h2>Sprint backlog, for Assignment 2</h2>
+<h2>Sprint backlog, to be completed during Assignment 2</h2>
 <h3>Set up Server</h3>
 <ul><li>Setup files on cdf server, using RESTful api</li></ul>
 <h3>Server integration</h3>
@@ -170,7 +173,42 @@ Once the server is implemented, index.html will be the root, which for the purpo
 <li>Generate pages on request from store's database</li>
 <li>Dynamic searches, by product name and/or tag</li>
 </ul>
+<h3>General store page features</h3>
+<ul>
+<li>Contact Us page</li>
+<li>Email form to send email for the store page to the store owner</li>
+<li>Link tags on individual product page to searches for that tag</li>
+<li>More navbar/footer customisation</li>
+</ul>
 
+<h3>More Features in Element tab</h3>
+<ul>
+<li>Carousel or revolving picture display</li>
+<li>Location display (google maps integration)</li>
+<li>Hard coded product searches, by product name and tag</li>
+<li>'Message of the day' type display</li>
+<li>Whatever comes to mind</li>
+</ul>
+<h2>Code Resources</h2>
+<ul>
+<li>
+http://stackoverflow.com/questions/3226167/how-to-style-input-file-with-css3-javascript as answered by user981027
+<ul><li>
+Image input field adapted from user981027's answer to that question</li>
+<li> Found in settings.js, lines 51 through 56, settings.html lines 363 through 367</li></ul></li>
+<li>
+http://learn.jquery.com/events/event-delegation/
+<ul><li> Adapted code from the first example to create the delete element javascript forthe settings page
+<li> Found in settings.js, lines 4 through 14</li>
+</li></ul></li>
+<li>Bootstrap Resources<ul>
+<li>Bootstrap Framework used throughout the building of the site</li>
+<li>
+Several bootstrap example pages were used and modified</li></ul>
+<li>BootstrapValidator, a jquery form field validator
+<ul><li>http://bootstrapvalidator.com</li><li>designed by github:@nghuuphuoc, twitter:@nghuuphuoc</li>
+<li>Used to verify form fields in index.html</li>
+</ul></ul>
 
 </body>
 </html>
