@@ -43,38 +43,44 @@ function registerUser(email, password, url, callback) {
 				callback(false, "");
 			}
 		});
-// Create dir/.json files on account creation
-//used http://stackoverflow.com/questions/13696148/node-js-create-folder-or-use-existing for dir creation
-fs.mkdirSync(email,function(e){
-    if(!e.code == 'EEXIST'){
-			//http://stackoverflow.com/questions/2496710/writing-files-in-nodejs fro file creation
-			fs.writeFile(("./" + email + "/images.json"), "", function(err) {
-					if(err) {
-						  console.log(err);
+		// Create dir/.json files on account creation
+		fs.mkdir(email,function(uerr){
+		  if(err){
+				//debug
+		     console.log(uerr);
+			
+		  } else {
+		    fs.writeFile(("./" + email + "/images.json"), "", function(ierr) {
+					if(ierr) {
+						console.log(ierr);
 					} else {
-						  console.log(util.format("%s file was saved!", ("/" + email + "/images.json")));
+						console.log(util.format("/%s/images.json file was saved!", email));
 					}
-			}); 
-						  fs.writeFile(("./" + email + "/products.json"), "", function(err) {
-					if(err) {
-						  console.log(err);
+				}); 
+				fs.writeFile(("./" + email + "/products.json"), "", function(perr) {
+					if(perr) {
+						console.log(perr);
 					} else {
-						  console.log(util.format("%s file was saved!", ("/" + email + "/products.json")));
+						console.log(util.format("/%s/products.json file was saved!", email));
 					}
-			}); 
-						  fs.writeFile(("./" + email + "/front.json"), "", function(err) {
-					if(err) {
-						  console.log(err);
+				}); 
+				fs.writeFile(("./" + email + "/front.json"), "", function(ierr) {
+					if(ierr) {
+						console.log(ierr);
 					} else {
-						  console.log(util.format("%s file was saved!", ("/" + email + "/front.json")));
+						console.log(util.format("/%s/front.json file was saved!", email));
 					}
-			}); 
-    } else {
-        //debug
-        console.log(e);
-    }
-});
-//end_cite
+				}); 
+
+				fs.mkdir(("./" + email + "/images"), function(iderr){
+					if (iderr){
+						console.log(iderr);
+					}else {
+						console.log(util.format("/%s/images directory was saved!", email));
+					}
+				});
+		  }
+		});
 	});
 }
 
