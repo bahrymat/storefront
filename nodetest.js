@@ -32,6 +32,7 @@ function registerUser(email, password, url, callback) {
 			return;
 		}
 		data.users[email] = {"password": password, "url": url};
+
 		var data_str = JSON.stringify(data, null, "\t");
 		fs.writeFile("database.json", data_str, function(err2) {
 			if(err2) {
@@ -42,6 +43,38 @@ function registerUser(email, password, url, callback) {
 				callback(false, "");
 			}
 		});
+// Create dir/.json files on account creation
+//used http://stackoverflow.com/questions/13696148/node-js-create-folder-or-use-existing for dir creation
+fs.mkdirSync(email,function(e){
+    if(!e.code == 'EEXIST'){
+			//http://stackoverflow.com/questions/2496710/writing-files-in-nodejs fro file creation
+			fs.writeFile(("./" + email + "/images.json"), "", function(err) {
+					if(err) {
+						  console.log(err);
+					} else {
+						  console.log(util.format("%s file was saved!", ("/" + email + "/images.json")));
+					}
+			}); 
+						  fs.writeFile(("./" + email + "/products.json"), "", function(err) {
+					if(err) {
+						  console.log(err);
+					} else {
+						  console.log(util.format("%s file was saved!", ("/" + email + "/products.json")));
+					}
+			}); 
+						  fs.writeFile(("./" + email + "/front.json"), "", function(err) {
+					if(err) {
+						  console.log(err);
+					} else {
+						  console.log(util.format("%s file was saved!", ("/" + email + "/front.json")));
+					}
+			}); 
+    } else {
+        //debug
+        console.log(e);
+    }
+});
+//end_cite
 	});
 }
 
