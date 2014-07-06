@@ -1,4 +1,4 @@
-var http = require('http'), fs = require('fs');
+var http = require('http'), fs = require('fs'), util = require('util');;
 
 
 
@@ -17,6 +17,31 @@ function url_parse(query) {
 }
 
 
+function registerUser(email, password, url) {
+	fs.readFile("database.json", function (err,data) {
+		if (err) {
+			console.log("cannot open user database");
+			return;
+		}
+		var data = JSON.parse(data);
+		if (data.users[email]) {
+			console.log("user with that name already registered!");
+			return;
+		}
+		data.users[email] = {"password": password, "url": url};
+		var data_str = JSON.stringify(data, null, "\t");
+		fs.writeFile("database.json", data_str, function(err2) {
+			if(err2) {
+				console.log(err2);
+			} else {
+				console.log(util.format("user %s has been registered", email));
+			}
+		}); 
+	});
+}
+
+
+
 
 http.createServer(function (req, res) {
 	var url = req.url
@@ -32,9 +57,11 @@ http.createServer(function (req, res) {
 
 		req.on('end', function() {
 			var urlParams = url_parse(data);
+
 			if (url == "/register") {
-				/* (urlParams.signupEmail, urlParams.signupPass, urlParams.signupStoreName); */
+				registerUser(urlParams.signupEmail, urlParams.signupPass, urlParams.signupStoreName);
 			}
+
 		});
 
 	} else {
