@@ -17,15 +17,18 @@ function url_parse(query) {
 }
 
 
-function registerUser(email, password, url) {
+function registerUser(email, password, url, callback) {
+	return_value = undefined;
 	fs.readFile("database.json", function (err,data) {
 		if (err) {
 			console.log("cannot open user database");
+			callback(true, "We're having some issues, try again later.");
 			return;
 		}
 		var data = JSON.parse(data);
 		if (data.users[email]) {
-			console.log("user with that name already registered!");
+			console.log("user with that email already registered!");
+			callback(true, "Sorry, that email is already in use.");
 			return;
 		}
 		data.users[email] = {"password": password, "url": url};
@@ -33,10 +36,12 @@ function registerUser(email, password, url) {
 		fs.writeFile("database.json", data_str, function(err2) {
 			if(err2) {
 				console.log(err2);
+				callback(true, "We're having some issues, try again later.");
 			} else {
 				console.log(util.format("user %s has been registered", email));
+				callback(false, "");
 			}
-		}); 
+		});
 	});
 }
 
@@ -59,7 +64,15 @@ http.createServer(function (req, res) {
 			var urlParams = url_parse(data);
 
 			if (url == "/register") {
-				registerUser(urlParams.signupEmail, urlParams.signupPass, urlParams.signupStoreName);
+				reg = registerUser(urlParams.signupEmail, urlParams.signupPass, urlParams.signupStoreName, function (err, err_message) {
+					if (err) {
+						res.writeHead(200);
+						res.end(err_message);
+					} else {
+						res.writeHead(200);
+						res.end("You have registered!");
+					}
+				});
 			}
 
 		});
