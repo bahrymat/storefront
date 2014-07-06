@@ -43,41 +43,75 @@ function registerUser(email, password, url, callback) {
 				callback(false, "");
 			}
 		});
-// Create dir/.json files on account creation
-//used http://stackoverflow.com/questions/13696148/node-js-create-folder-or-use-existing for dir creation
-fs.mkdirSync(email,function(e){
-    if(!e.code == 'EEXIST'){
-			//http://stackoverflow.com/questions/2496710/writing-files-in-nodejs fro file creation
-			fs.writeFile(("./" + email + "/images.json"), "", function(err) {
-					if(err) {
-						  console.log(err);
+		// Create dir/.json files on account creation
+		fs.mkdir(email,function(uerr){
+		  if(err){
+				//debug
+		     console.log(uerr);
+			
+		  } else {
+		    fs.writeFile(("./" + email + "/images.json"), "", function(ierr) {
+					if(ierr) {
+						console.log(ierr);
 					} else {
-						  console.log(util.format("%s file was saved!", ("/" + email + "/images.json")));
+						console.log(util.format("/%s/images.json file was saved!", email));
 					}
-			}); 
-						  fs.writeFile(("./" + email + "/products.json"), "", function(err) {
-					if(err) {
-						  console.log(err);
+				}); 
+				fs.writeFile(("./" + email + "/products.json"), "", function(perr) {
+					if(perr) {
+						console.log(perr);
 					} else {
-						  console.log(util.format("%s file was saved!", ("/" + email + "/products.json")));
+						console.log(util.format("/%s/products.json file was saved!", email));
 					}
-			}); 
-						  fs.writeFile(("./" + email + "/front.json"), "", function(err) {
-					if(err) {
-						  console.log(err);
+				}); 
+				fs.writeFile(("./" + email + "/front.json"), "", function(ierr) {
+					if(ierr) {
+						console.log(ierr);
 					} else {
-						  console.log(util.format("%s file was saved!", ("/" + email + "/front.json")));
+						console.log(util.format("/%s/front.json file was saved!", email));
 					}
-			}); 
-    } else {
-        //debug
-        console.log(e);
-    }
-});
-//end_cite
+				}); 
+
+				fs.mkdir(("./" + email + "/images"), function(iderr){
+					if (iderr){
+						console.log(iderr);
+					}else {
+						console.log(util.format("/%s/images directory was saved!", email));
+					}
+				});
+		  }
+		});
 	});
 }
 
+
+function login(email, password, callback) {
+	fs.readFile("database.json", function (err,data) {
+		var data = JSON.parse(data);
+		if (!data.users[email]) {
+			callback(true, "No user with that email exists!");
+			return;
+		}
+		if (data.users[email].password != password) {
+			callback(true, "Wrong password!");
+			return;
+		}
+		callback(false, "");
+	});
+}
+
+
+
+function four_oh_four(res) {
+	res.writeHead(404);
+	fs.readFile(__dirname + "/404.html", function (err,data) {
+		if (err) {
+			res.end("404 error - 404 page not found");
+		} else {
+			res.end(data);
+		}
+	});
+}
 
 
 
@@ -97,7 +131,7 @@ http.createServer(function (req, res) {
 			var urlParams = url_parse(data);
 
 			if (url == "/register") {
-				reg = registerUser(urlParams.signupEmail, urlParams.signupPass, urlParams.signupStoreName, function (err, err_message) {
+				registerUser(urlParams.signupEmail, urlParams.signupPass, urlParams.signupStoreName, function (err, err_message) {
 					if (err) {
 						res.writeHead(200);
 						res.end(err_message);
@@ -106,6 +140,22 @@ http.createServer(function (req, res) {
 						res.end("You have registered!");
 					}
 				});
+
+			} else if (url == "/login") {
+				login(urlParams.email, urlParams.password, function (err, err_message) {
+					if (err) {
+						res.writeHead(200);
+						res.end(err_message);
+					} else {
+						res.writeHead(200);
+						res.end(util.format("<script src='login.js'></script>You have logged in.<script>setLoginCookie('%s');</script>", urlParams.email));
+					}
+				});
+
+			} else {
+				console.log("unknown POST request. url params:");
+				console.log(urlParams);
+				four_oh_four(res);
 			}
 
 		});
@@ -113,14 +163,7 @@ http.createServer(function (req, res) {
 	} else {
 		fs.readFile(__dirname + url, function (err,data) {
 			if (err) {
-				res.writeHead(404);
-				fs.readFile(__dirname + "/404.html", function (err,data) {
-					if (err) {
-						res.end("404 error - 404 page not found");
-					} else {
-						res.end(data);
-					}
-				});
+				four_oh_four(res);
 			} else {
 				res.writeHead(200);
 				res.end(data);

@@ -12,7 +12,6 @@
     <!-- Custom styles for this template -->
     <link href="index.css" rel="stylesheet">
     <link href="settings.css" rel="stylesheet">
-    <script type='text/javascript' src="index.js"></script>
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -45,23 +44,29 @@
 			    <li><a href="index.html">Home</a></li>
 				<li><a href="aboutus.html">About Us</a></li>
 				<li><a href="examples.html">Examples</a></li>
-				<li class="active"><a href="settings.html">Create Store!</a></li>
+				<li class="active hidden loggedin"><a href="settings.html">Create Store!</a></li>
 			  </ul>
-			  <div class="navbar-right" onClick="event.stopPropagation();">
-				<ul class="nav navbar-nav"><li><a href="#" id="login_button" onClick="showLogin();">Login</a></li></ul>
-			    <form id="hidden_login" class="navbar-form sorta_hidden" role="form">
-				    <div class="form-group"><input class="form-control" type="text" placeholder="Email"></div>
-				    <div class="form-group"><input class="form-control" type="password" placeholder="Password"></div>
-				    <button class="btn btn-success" type="button">Login</button>
-			    </form>
-			  </div>
+				<div class="navbar-right" onClick="event.stopPropagation();">
+					<ul class="nav navbar-nav hidden loggedout"><li><a href="#" id="login_button" onClick="showLogin();">Login</a></li></ul>
+					<ul class="nav navbar-nav hidden loggedin"><li><a href="logout.html">Log Out</a></li></ul>
+					<form id="hidden_login" class="navbar-form sorta_hidden" role="form" action="login" method="post">
+						<div class="form-group"><input class="form-control" type="text" placeholder="Email" name="email"></div>
+						<div class="form-group"><input class="form-control" type="password" placeholder="Password" name="password"></div>
+						<input class="btn btn-success" type="submit" value="Login"/>
+					</form>
+				</div>
 			</div>
 		  </div>
 		</div>
 		
+		<div class="container hidden loggedout">
+		  <div class="jumbotron">
+		      	<h3>You must be logged in to see this page!</h3>
+			</div>
+		  </div>
 		
 						<!-- element Page -->
-						<div class="container settings_container">
+						<div class="container settings_container hidden loggedin">
 
 <div class="bs-example bs-example-tabs">
 		  <ul id="myTab" class="nav nav-tabs">
@@ -397,6 +402,10 @@
 											<form class="form-horizontal" role="form">
 												<div class="titles">General</div>
 												<div class="form-group">
+													<label for="pageURL" class="col-sm-3 control-label">URL</label>
+														<div class="col-sm-9">
+													 	 <input type="text" class="form-control" id="pageURL" placeholder="URL">
+												 		</div>
 													<label for="pageTitle" class="col-sm-3 control-label">Page Title</label>
 														<div class="col-sm-9">
 													 	 <input type="text" class="form-control" id="pageTitle" placeholder="Page Title">
@@ -619,6 +628,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
 	<script type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 	<script type='text/javascript' src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<script type='text/javascript' src="index.js"></script>
 	<script type="text/javascript" src="settings.js"></script>
   </body>
 </html>

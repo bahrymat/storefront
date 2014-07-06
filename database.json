@@ -3,6 +3,10 @@
 		"sdfgsdf@wohgr.com": {
 			"password": "sdfgsdfgdfjg",
 			"url": "sgsdfg"
+		},
+		"foo@bar.com": {
+			"password": "bar",
+			"url": "foo"
 		}
 	}
 }

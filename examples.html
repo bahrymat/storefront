@@ -7,7 +7,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 		<link href="index.css" rel="stylesheet">
-        <script type='text/javascript' src="index.js"></script>
 		
     </head>
     
@@ -30,16 +29,17 @@
 			    <li><a href="index.html">Home</a></li>
 				<li><a href="aboutus.html">About Us</a></li>
 				<li class="active"><a href="examples.html">Examples</a></li>
-				<li><a href="settings.html">Create Store!</a></li>
+				<li class="hidden loggedin"><a href="settings.html">Create Store!</a></li>
 			  </ul>
-			  <div class="navbar-right" onClick="event.stopPropagation();">
-				<ul class="nav navbar-nav"><li><a href="#" id="login_button" onClick="showLogin();">Login</a></li></ul>
-			    <form id="hidden_login" class="navbar-form sorta_hidden" role="form">
-				    <div class="form-group"><input class="form-control" type="text" placeholder="Email"></div>
-				    <div class="form-group"><input class="form-control" type="password" placeholder="Password"></div>
-				    <button class="btn btn-success" type="button">Login</button>
-			    </form>
-			  </div>
+				<div class="navbar-right" onClick="event.stopPropagation();">
+					<ul class="nav navbar-nav hidden loggedout"><li><a href="#" id="login_button" onClick="showLogin();">Login</a></li></ul>
+					<ul class="nav navbar-nav hidden loggedin"><li><a href="logout.html">Log Out</a></li></ul>
+					<form id="hidden_login" class="navbar-form sorta_hidden" role="form" action="login" method="post">
+						<div class="form-group"><input class="form-control" type="text" placeholder="Email" name="email"></div>
+						<div class="form-group"><input class="form-control" type="password" placeholder="Password" name="password"></div>
+						<input class="btn btn-success" type="submit" value="Login"/>
+					</form>
+				</div>
 			</div>
 		  </div>
 		</div>
@@ -57,6 +57,7 @@
 		
         <script type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
         <script type='text/javascript' src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script type='text/javascript' src="index.js"></script>
     
     </body>
 </html>
