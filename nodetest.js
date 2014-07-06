@@ -79,6 +79,34 @@ fs.mkdirSync(email,function(e){
 }
 
 
+function login(email, password, callback) {
+	fs.readFile("database.json", function (err,data) {
+		var data = JSON.parse(data);
+		if (!data.users[email]) {
+			callback(true, "No user with that email exists!");
+			return;
+		}
+		if (data.users[email].password != password) {
+			callback(true, "Wrong password!");
+			return;
+		}
+		callback(false, "");
+	});
+}
+
+
+
+function four_oh_four(res) {
+	res.writeHead(404);
+	fs.readFile(__dirname + "/404.html", function (err,data) {
+		if (err) {
+			res.end("404 error - 404 page not found");
+		} else {
+			res.end(data);
+		}
+	});
+}
+
 
 
 http.createServer(function (req, res) {
@@ -97,7 +125,7 @@ http.createServer(function (req, res) {
 			var urlParams = url_parse(data);
 
 			if (url == "/register") {
-				reg = registerUser(urlParams.signupEmail, urlParams.signupPass, urlParams.signupStoreName, function (err, err_message) {
+				registerUser(urlParams.signupEmail, urlParams.signupPass, urlParams.signupStoreName, function (err, err_message) {
 					if (err) {
 						res.writeHead(200);
 						res.end(err_message);
@@ -106,6 +134,22 @@ http.createServer(function (req, res) {
 						res.end("You have registered!");
 					}
 				});
+
+			} else if (url == "/login") {
+				login(urlParams.email, urlParams.password, function (err, err_message) {
+					if (err) {
+						res.writeHead(200);
+						res.end(err_message);
+					} else {
+						res.writeHead(200);
+						res.end(util.format("<script src='login.js'></script>You have logged in.<script>setLoginCookie('%s');</script>", urlParams.email));
+					}
+				});
+
+			} else {
+				console.log("unknown POST request. url params:");
+				console.log(urlParams);
+				four_oh_four(res);
 			}
 
 		});
@@ -113,14 +157,7 @@ http.createServer(function (req, res) {
 	} else {
 		fs.readFile(__dirname + url, function (err,data) {
 			if (err) {
-				res.writeHead(404);
-				fs.readFile(__dirname + "/404.html", function (err,data) {
-					if (err) {
-						res.end("404 error - 404 page not found");
-					} else {
-						res.end(data);
-					}
-				});
+				four_oh_four(res);
 			} else {
 				res.writeHead(200);
 				res.end(data);
