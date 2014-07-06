@@ -44,46 +44,43 @@ function registerUser(email, password, url, callback) {
 			}
 		});
 		// Create dir/.json files on account creation
-		//used http://stackoverflow.com/questions/13696148/node-js-create-folder-or-use-existing for dir creation
-		fs.mkdir(email,function(err){
+		fs.mkdir(email,function(uerr){
 		  if(err){
 				//debug
-		     console.log(e);
+		     console.log(uerr);
 			
 		  } else {
-		      //http://stackoverflow.com/questions/2496710/writing-files-in-nodejs fro file creation
-				fs.writeFile(("./" + email + "/images.json"), "", function(err) {
-					if(err) {
-						console.log(err);
+		    fs.writeFile(("./" + email + "/images.json"), "", function(ierr) {
+					if(ierr) {
+						console.log(ierr);
 					} else {
 						console.log(util.format("/%s/images.json file was saved!", email));
 					}
 				}); 
-				fs.writeFile(("./" + email + "/products.json"), "", function(err) {
-					if(err) {
-						console.log(err);
+				fs.writeFile(("./" + email + "/products.json"), "", function(perr) {
+					if(perr) {
+						console.log(perr);
 					} else {
 						console.log(util.format("/%s/products.json file was saved!", email));
 					}
 				}); 
-				fs.writeFile(("./" + email + "/front.json"), "", function(err) {
-					if(err) {
-						console.log(err);
+				fs.writeFile(("./" + email + "/front.json"), "", function(ierr) {
+					if(ierr) {
+						console.log(ierr);
 					} else {
 						console.log(util.format("/%s/front.json file was saved!", email));
 					}
 				}); 
 
-				fs.mkdir(("./" + email + "/images"), function(err){
-					if (err){
-						console.log(err);
+				fs.mkdir(("./" + email + "/images"), function(iderr){
+					if (iderr){
+						console.log(iderr);
 					}else {
 						console.log(util.format("/%s/images directory was saved!", email));
 					}
 				});
 		  }
 		});
-//end_cite
 	});
 }
 
