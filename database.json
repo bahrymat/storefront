@@ -1,4 +1,4 @@
-{"users": {
-	"greg": {"password": "123"},
-	"greg2": {"password": "124"}
-}}
+{"users": [
+	{"email": "greg@gmail.com", "password": "123", "url": "party"},
+	{"email": "greg2@gmail.com", "password": "124", "url": "gregstore"}
+]}

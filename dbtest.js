@@ -6,7 +6,8 @@ fs.readFile("database.json", function (err,data) {
 	}
 	var data = JSON.parse(data);
 	for (user in data.users) {
+		email = pw = data.users[user].email;
 		pw = data.users[user].password;
-		console.log(util.format("user %s has password %s", user, pw));
+		console.log(util.format("user %s has password %s", email, pw));
 	}
 });
