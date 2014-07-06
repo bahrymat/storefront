@@ -43,37 +43,46 @@ function registerUser(email, password, url, callback) {
 				callback(false, "");
 			}
 		});
-// Create dir/.json files on account creation
-//used http://stackoverflow.com/questions/13696148/node-js-create-folder-or-use-existing for dir creation
-fs.mkdirSync(email,function(e){
-    if(!e.code == 'EEXIST'){
-			//http://stackoverflow.com/questions/2496710/writing-files-in-nodejs fro file creation
-			fs.writeFile(("./" + email + "/images.json"), "", function(err) {
+		// Create dir/.json files on account creation
+		//used http://stackoverflow.com/questions/13696148/node-js-create-folder-or-use-existing for dir creation
+		fs.mkdir(email,function(err){
+		  if(err){
+				//debug
+		     console.log(e);
+			
+		  } else {
+		      //http://stackoverflow.com/questions/2496710/writing-files-in-nodejs fro file creation
+				fs.writeFile(("./" + email + "/images.json"), "", function(err) {
 					if(err) {
-						  console.log(err);
+						console.log(err);
 					} else {
-						  console.log(util.format("%s file was saved!", ("/" + email + "/images.json")));
+						console.log(util.format("/%s/images.json file was saved!", email));
 					}
-			}); 
-						  fs.writeFile(("./" + email + "/products.json"), "", function(err) {
+				}); 
+				fs.writeFile(("./" + email + "/products.json"), "", function(err) {
 					if(err) {
-						  console.log(err);
+						console.log(err);
 					} else {
-						  console.log(util.format("%s file was saved!", ("/" + email + "/products.json")));
+						console.log(util.format("/%s/products.json file was saved!", email));
 					}
-			}); 
-						  fs.writeFile(("./" + email + "/front.json"), "", function(err) {
+				}); 
+				fs.writeFile(("./" + email + "/front.json"), "", function(err) {
 					if(err) {
-						  console.log(err);
+						console.log(err);
 					} else {
-						  console.log(util.format("%s file was saved!", ("/" + email + "/front.json")));
+						console.log(util.format("/%s/front.json file was saved!", email));
 					}
-			}); 
-    } else {
-        //debug
-        console.log(e);
-    }
-});
+				}); 
+
+				fs.mkdir(("./" + email + "/images"), function(err){
+					if (err){
+						console.log(err);
+					}else {
+						console.log(util.format("/%s/images directory was saved!", email));
+					}
+				});
+		  }
+		});
 //end_cite
 	});
 }
