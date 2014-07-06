@@ -7,6 +7,14 @@
 		"foo@bar.com": {
 			"password": "bar",
 			"url": "foo"
+		},
+		"foo@bar.comdsfg": {
+			"password": "bardsf",
+			"url": "sdfgsdfgagd"
+		},
+		"fodo@bar.com": {
+			"password": "barasdf",
+			"url": "asdfasdf"
 		}
 	}
 }

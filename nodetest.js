@@ -114,6 +114,17 @@ function four_oh_four(res) {
 }
 
 
+function sendPageWithSubstitutions(res, url, message) {
+	fs.readFile(__dirname + "/" + url, function (err,data) {
+		if (err) {;
+			four_oh_four(res);
+		} else {
+			res.writeHead(200);
+			res.end(data.toString().replace("%s", message));
+		}
+	});
+}
+
 
 http.createServer(function (req, res) {
 	var url = req.url
@@ -133,22 +144,18 @@ http.createServer(function (req, res) {
 			if (url == "/register") {
 				registerUser(urlParams.signupEmail, urlParams.signupPass, urlParams.signupStoreName, function (err, err_message) {
 					if (err) {
-						res.writeHead(200);
-						res.end(err_message);
+						sendPageWithSubstitutions(res, "error.html", err_message);
 					} else {
-						res.writeHead(200);
-						res.end("You have registered!");
+						sendPageWithSubstitutions(res, "registered.html", urlParams.signupEmail);
 					}
 				});
 
 			} else if (url == "/login") {
 				login(urlParams.email, urlParams.password, function (err, err_message) {
 					if (err) {
-						res.writeHead(200);
-						res.end(err_message);
+						sendPageWithSubstitutions(res, "error.html", err_message);
 					} else {
-						res.writeHead(200);
-						res.end(util.format("<script src='login.js'></script>You have logged in.<script>setLoginCookie('%s');</script>", urlParams.email));
+						sendPageWithSubstitutions(res, "login.html", urlParams.email);
 					}
 				});
 
