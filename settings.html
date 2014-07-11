@@ -107,6 +107,7 @@
 											<button type="button" class="close deleteTextblock" aria-hidden="true">&times;</button></div>
 											<form class="form-horizontal element-container" role="form"> 
 												<div class="form-group">
+													<input type="hidden" class="form-control storeform" id="type" value="text">
 													<label for="ttitle" class="col-sm-3 control-label">Title</label>
 													<div class="col-sm-9">
 												 	 	<input type="text" class="form-control storeform" id="ttitle" placeholder="Title">
@@ -133,6 +134,7 @@
 											<button type="button" class="close deleteImageblock" aria-hidden="true">&times;</button></div>
 											<form class="form-horizontal element-container" role="form">
 												<div class="form-group">
+													<input type="hidden" class="form-control storeform" id="type" value="image">
 													<label for="ititle" class="col-sm-3 control-label">Title</label>
 													<div class="col-sm-9">
 												 	 <input type="text" class="form-control storeform" id="ititle" placeholder="Title">
@@ -168,88 +170,9 @@
 										<div class="block"><div class="titles">Product List
 											<button type="button" class="close deleteProductblock" aria-hidden="true">&times;</button></div>
 											<form class="form-horizontal element-container" role="form">
+													<input type="hidden" class="form-control storeform" id="type" value="productlist">
 												<div class="form-group">
 
-													<div class="col-sm-6">
-														<select class="form-control storeform" id="prodList1">
-															<option>None</option>
-															<option>product1</option>
-															<option>product2</option>
-															<option>product3</option>
-															<option>product4</option>
-															<option>product5</option>
-														</select>
-													</div>
-													<div class="col-sm-6">
-														<select class="form-control storeform" id="prodList2">
-															<option>None</option>
-															<option>product1</option>
-															<option>product2</option>
-															<option>product3</option>
-															<option>product4</option>
-															<option>product5</option>
-														</select>
-													</div>
-													<div class="col-sm-6">
-														<select class="form-control storeform" id="prodList3">
-															<option>None</option>
-															<option>product1</option>
-															<option>product2</option>
-															<option>product3</option>
-															<option>product4</option>
-															<option>product5</option>
-														</select>
-													</div>
-													<div class="col-sm-6">
-														<select class="form-control storeform" id="prodList4">
-															<option>None</option>
-															<option>product1</option>
-															<option>product2</option>
-															<option>product3</option>
-															<option>product4</option>
-															<option>product5</option>
-														</select>
-													</div>
-													<div class="col-sm-6">
-														<select class="form-control storeform" id="prodList5">
-															<option>None</option>
-															<option>product1</option>
-															<option>product2</option>
-															<option>product3</option>
-															<option>product4</option>
-															<option>product5</option>
-														</select>
-													</div>
-													<div class="col-sm-6">
-														<select class="form-control storeform" id="prodList6">
-															<option>None</option>
-															<option>product1</option>
-															<option>product2</option>
-															<option>product3</option>
-															<option>product4</option>
-															<option>product5</option>
-														</select>
-													</div>
-													<div class="col-sm-6">
-														<select class="form-control storeform" id="prodList7">
-															<option>None</option>
-															<option>product1</option>
-															<option>product2</option>
-															<option>product3</option>
-															<option>product4</option>
-															<option>product5</option>
-														</select>
-													</div>
-													<div class="col-sm-6">
-														<select class="form-control storeform" id="prodList8">
-															<option>None</option>
-															<option>product1</option>
-															<option>product2</option>
-															<option>product3</option>
-															<option>product4</option>
-															<option>product5</option>
-														</select>
-													</div>
 													<label for="pos" class="col-sm-3 control-label">Position</label>
 													<div class="col-sm-9">
 												 	 <input type="number" class="form-control storeform" id="pos" placeholder="3">
@@ -452,7 +375,7 @@
 													<label for="font" class="col-sm-3 control-label">Font</label>
 
 													<div class="col-sm-9">
-												 	 <select class="form-control storeform">
+												 	 <select class="form-control storeform" id="fontface">
 														<option>Courier</option>
 														<option>Times New Roman</option>
 														<option>Arial</option>
@@ -460,9 +383,25 @@
 														<option>etc.</option>
 													 </select>
 											 		</div>
-													<label for="navcolour" class="col-sm-3 control-label">Navbar colour</label>
+													<label for="navcolor" class="col-sm-3 control-label">Navbar colour</label>
 													<div class="col-sm-9">
-												 	 <input type="text" class="form-control storeform" id="pprice" placeholder="#aaaaaa">
+												 	 <input type="text" class="form-control storeform" id="navbarcolor" placeholder="#aaaaaa">
+											 		</div>
+													<label for="navbarhighlight" class="col-sm-3 control-label">Navbar highlight colour</label>
+													<div class="col-sm-9">
+												 	 <input type="text" class="form-control storeform" id="navbarhighlight" placeholder="#aaaaaa">
+											 		</div>
+													<label for="navbartextcolor" class="col-sm-3 control-label">Navbar text colour</label>
+													<div class="col-sm-9">
+												 	 <input type="text" class="form-control storeform" id="navbartextcolor" placeholder="#aaaaaa">
+											 		</div>
+													<label for="footercolor" class="col-sm-3 control-label">Footer colour</label>
+													<div class="col-sm-9">
+												 	 <input type="text" class="form-control storeform" id="footercolor" placeholder="#aaaaaa">
+											 		</div>
+													<label for="footertext" class="col-sm-3 control-label">Footer text colour</label>
+													<div class="col-sm-9">
+												 	 <input type="text" class="form-control storeform" id="footertext" placeholder="#aaaaaa">
 											 		</div>
 												</div>
 											</form>

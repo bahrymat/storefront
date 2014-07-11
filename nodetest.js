@@ -1,4 +1,4 @@
-var http = require('http'), fs = require('fs'), util = require('util');;
+var http = require('http'), fs = require('fs'), util = require('util');
 
 
 
