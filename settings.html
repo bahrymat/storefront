@@ -95,7 +95,7 @@
   								</ul>
 								</div>
 <br>
-								<button type="submit" class="btn btn-primary" id="storesubmit">Save</button>
+								<button type="submit" class="btn btn-primary storesubmit">Save</button>
 								<button type="submit" class="btn btn-primary">Save Draft</button>
 								<button type="submit" class="btn btn-primary">Restore Default</button>
 								<button type="submit" class="btn btn-primary">Preview</button>
@@ -105,7 +105,7 @@
 									<div class="col-sm-6 textblockBox">
 										<div class="block"><div class="titles">Text Block
 											<button type="button" class="close deleteTextblock" aria-hidden="true">&times;</button></div>
-											<form class="form-horizontal storeform-container" role="form"> 
+											<form class="form-horizontal element-container" role="form"> 
 												<div class="form-group">
 													<label for="ttitle" class="col-sm-3 control-label">Title</label>
 													<div class="col-sm-9">
@@ -115,9 +115,9 @@
 													<div class="col-sm-9">
 														<textarea class="form-control storeform" rows="2" columns="3" id="tdescription" placeholder="Description"></textarea>
 													</div>
-													<label for="tbpos" class="col-sm-3 control-label">Position</label>
+													<label for="pos" class="col-sm-3 control-label">Position</label>
 													<div class="col-sm-9">
-												 	 <input type="number" class="form-control storeform" id="tbpos" placeholder="1">
+												 	 <input type="number" class="form-control storeform" id="pos" placeholder="1">
 											 		</div>
 												</div>
 
@@ -131,7 +131,7 @@
 									<div class="col-sm-6 imageblockBox">
 										<div class="block"><div class="titles">Image Block
 											<button type="button" class="close deleteImageblock" aria-hidden="true">&times;</button></div>
-											<form class="form-horizontal storeform-container" role="form">
+											<form class="form-horizontal element-container" role="form">
 												<div class="form-group">
 													<label for="ititle" class="col-sm-3 control-label">Title</label>
 													<div class="col-sm-9">
@@ -153,9 +153,9 @@
 																<option>image5.jpg</option>
 															</select>
 													</div>
-													<label for="ibpos" class="col-sm-3 control-label">Position</label>
+													<label for="pos" class="col-sm-3 control-label">Position</label>
 													<div class="col-sm-9">
-												 	 <input type="number" class="form-control storeform" id="ibpos" placeholder="2">
+												 	 <input type="number" class="form-control storeform" id="pos" placeholder="2">
 											 		</div>
 												</div>
 											</form>
@@ -167,7 +167,7 @@
 									<div class="col-sm-6 productblockBox">
 										<div class="block"><div class="titles">Product List
 											<button type="button" class="close deleteProductblock" aria-hidden="true">&times;</button></div>
-											<form class="form-horizontal storeform-container" role="form">
+											<form class="form-horizontal element-container" role="form">
 												<div class="form-group">
 
 													<div class="col-sm-6">
@@ -181,7 +181,7 @@
 														</select>
 													</div>
 													<div class="col-sm-6">
-														<select class="form-control storeform" id="prodList1">
+														<select class="form-control storeform" id="prodList2">
 															<option>None</option>
 															<option>product1</option>
 															<option>product2</option>
@@ -191,7 +191,7 @@
 														</select>
 													</div>
 													<div class="col-sm-6">
-														<select class="form-control storeform" id="prodList1">
+														<select class="form-control storeform" id="prodList3">
 															<option>None</option>
 															<option>product1</option>
 															<option>product2</option>
@@ -201,7 +201,7 @@
 														</select>
 													</div>
 													<div class="col-sm-6">
-														<select class="form-control storeform" id="prodList1">
+														<select class="form-control storeform" id="prodList4">
 															<option>None</option>
 															<option>product1</option>
 															<option>product2</option>
@@ -211,7 +211,7 @@
 														</select>
 													</div>
 													<div class="col-sm-6">
-														<select class="form-control storeform" id="prodList1">
+														<select class="form-control storeform" id="prodList5">
 															<option>None</option>
 															<option>product1</option>
 															<option>product2</option>
@@ -221,7 +221,7 @@
 														</select>
 													</div>
 													<div class="col-sm-6">
-														<select class="form-control storeform" id="prodList1">
+														<select class="form-control storeform" id="prodList6">
 															<option>None</option>
 															<option>product1</option>
 															<option>product2</option>
@@ -231,7 +231,7 @@
 														</select>
 													</div>
 													<div class="col-sm-6">
-														<select class="form-control storeform" id="prodList1">
+														<select class="form-control storeform" id="prodList7">
 															<option>None</option>
 															<option>product1</option>
 															<option>product2</option>
@@ -241,7 +241,7 @@
 														</select>
 													</div>
 													<div class="col-sm-6">
-														<select class="form-control storeform" id="prodList1">
+														<select class="form-control storeform" id="prodList8">
 															<option>None</option>
 															<option>product1</option>
 															<option>product2</option>
@@ -250,9 +250,9 @@
 															<option>product5</option>
 														</select>
 													</div>
-													<label for="pbpos" class="col-sm-3 control-label">Position</label>
+													<label for="pos" class="col-sm-3 control-label">Position</label>
 													<div class="col-sm-9">
-												 	 <input type="number" class="form-control storeform" id="pbpos" placeholder="3">
+												 	 <input type="number" class="form-control storeform" id="pos" placeholder="3">
 											 		</div>
 												</div>
 											</form>
@@ -274,7 +274,7 @@
 							 	<div class="jumbotron">
 							 		<div class="titles">Add, modify and delete products</div><br>
 									<button type="submit" class="btn btn-primary newProduct">New Product</button>
-									<button type="submit" class="btn btn-primary">Save Changes</button>
+									<button type="submit" class="btn btn-primary storesubmit">Save Changes</button>
 									<div class="input-group searchbar">
 										<input type="text" class="form-control searchbar" placeholder="Search products...">
 										<span class="input-group-btn">
@@ -288,7 +288,7 @@
 										<div class="col-sm-6 productBox">
 											<div class="block" >
 												<button type="button" class="close deleteProduct" aria-hidden="true">&times;</button><br>
-												<form class="form-horizontal storeform-container" role="form">
+												<form class="form-horizontal product-container" role="form">
 													<div class="form-group">
 														<label for="ptitle" class="col-sm-3 control-label">Product</label>
 														<div class="col-sm-9">
@@ -310,7 +310,7 @@
 												 		</div>
 														<label for="pimage" class="col-sm-3 control-label">Image</label>
 														<div class="col-sm-9">
-																<select class="form-control storeform">
+																<select class="form-control storeform" id="pimage">
 																	<option>None</option>
 																	<option>image1.jpg</option>
 																	<option>image2.jpg</option>
@@ -357,15 +357,15 @@
 									<div class="col-sm-6 imageBox">
 										<div class="block"><button type="button" class="close deleteImage" aria-hidden="true">&times;</button><br>
 											<div class="col-sm-12"><img class="img-thumbnail imagethumb" src="http://placehold.it/200x200&text=Thumbnail" alt="200x200"></img></div>
-											<form class="form-horizontal imageform-container" role="form">
+											<form class="form-horizontal image-container" role="form">
 												<div class="form-group"><div>
 													<label for="imname" class="col-sm-4 control-label">Name</label>
 													<div class="col-sm-8">
-												 	 <input type="text" class="form-control imageform" id="imname" placeholder="Image name">
+												 	 <input type="text" class="form-control storeform" id="imname" placeholder="Image name">
 											 		</div>
 													<label for="imfile" class="col-sm-4 control-label">Image File</label>
 													<div class="col-sm-8">
-												 	 <input type="file" class="form-control imageform" id="imfile" >
+												 	 <input type="file" class="form-control storeform" id="imfile" >
 														<input type="text" id="filename">
 														<div class="button-group"> 
 															<a href="#" id="browse">Browse</a>
@@ -391,7 +391,7 @@
 						 	<div class="jumbotron">
 							 	<div class="titles">Change settings of your store page</div><br>
 												 
-								<button type="button" class="btn btn-primary newImage">Save Changes</button>
+								<button type="button" class="btn btn-primary newImage storesubmit">Save Changes</button>
 								<button type="button" class="btn btn-primary newImage">Revert Changes</button>
 								<button type="button" class="btn btn-primary newImage">Preview</button>
 							</div>
@@ -399,7 +399,7 @@
 								<div class="col-lg-12">
 									<!-- settings blocks-->
 										<div class="setblock">
-											<form class="form-horizontal storeform-container" role="form">
+											<form class="form-horizontal settings-container" role="form" id="page">
 												<div class="titles">General</div>
 												<div class="form-group">
 													<label for="pageURL" class="col-sm-3 control-label">URL</label>
@@ -413,7 +413,7 @@
 													<label for="currency" class="col-sm-3 control-label">Currency</label>
 
 													<div class="col-sm-9">
-												 	 <select class="form-control storeform">
+												 	 <select class="form-control storeform" id="pageCurrency">
 														<option>$</option>
 														<option>£</option>
 														<option>¥</option>
@@ -423,14 +423,14 @@
 													<div class="col-sm-6">
 														<div class="checkbox">
 															<label>
-																Display website online<input type="checkbox" class="storeform" />
+																Display website online<input type="checkbox" class="storeform" id="pageDisplayOnline"/>
 															</label>
 														</div>
 													</div>
 													<div class="col-sm-6">
 														<div class="checkbox">
 															<label>
-																Opt-in to home page listing<input type="checkbox" class="storeform" />
+																Opt-in to home page listing<input type="checkbox" class="storeform"  id="pageHomepageListing"/>
 															</label>
 														</div>
 													</div>
@@ -438,7 +438,7 @@
 											</form>
 										</div>
 										<div class="setblock">
-											<form class="form-horizontal storeform-container" role="form">
+											<form class="form-horizontal settings-container" role="form" id="style">
 												<div class="titles">Style</div>
 												<div class="form-group">
 													<label for="bgcolour" class="col-sm-3 control-label">Background colour</label>
@@ -469,11 +469,11 @@
 										</div>
 										<div class="setblock">
 											<div class="titles">Navbar</div>
-											<form class="form-horizontal storeform-container" role="form">
+											<form class="form-horizontal settings-container" role="form" id="navbar">
 												<div class="form-group">
 													<label for="logo" class="col-sm-3 control-label">Logo Image</label>
 													<div class="col-sm-9">
-													 	 <select class="form-control storeform">
+													 	 <select class="form-control storeform" id="navbarLogo">
 															<option>None</option>
 															<option>image1.jpg</option>
 															<option>image2.jpg</option>
@@ -487,26 +487,26 @@
 										</div>
 										<div class="setblock">
 											<div class="titles">Splash Page</div>
-											<form class="form-horizontal storeform-container" role="form">
+											<form class="form-horizontal settings-container" role="form" id="splash">
 												<div class="form-group">
 													<div class="col-sm-6">
 														<div class="checkbox">
 															<label>
-																Include a Splash page for your site <input type="checkbox" class="storeform" />
+																Include a Splash page for your site <input type="checkbox" class="storeform"  id="splashUse"/>
 															</label>
 														</div>
 													</div><br><br>
 													<label for="splashHead" class="col-sm-3 control-label">Heading</label>
 													<div class="col-sm-9">
-													 	 <input type="text" class="form-control storeform" id="stAdd" placeholder="Heading">
+													 	 <input type="text" class="form-control storeform" id="splashHead" placeholder="Heading">
 											 		</div>
 													<label for="splashSubHead" class="col-sm-3 control-label">Subheading</label>
 													<div class="col-sm-9">
-													 	 <input type="text" class="form-control storeform" id="stAdd" placeholder="Subheading">
+													 	 <input type="text" class="form-control storeform" id="splashSubHead" placeholder="Subheading">
 											 		</div>
 													<label for="splashImage" class="col-sm-3 control-label">Splash Image</label>
 													<div class="col-sm-9">
-													 	 <select class="form-control storeform">
+													 	 <select class="form-control storeform" id="splashImage">
 															<option>None</option>
 															<option>image1.jpg</option>
 															<option>image2.jpg</option>
@@ -517,13 +517,13 @@
 											 		</div>
 													<label for="splashCaption" class="col-sm-3 control-label">Caption</label>
 													<div class="col-sm-9">
-													 	 <input type="text" class="form-control storeform" id="stAdd" placeholder="Caption">
+													 	 <input type="text" class="form-control storeform" id="splashCaption" placeholder="Caption">
 											 		</div>
 											</div></form>
 										</div>
 										<div class="setblock">
 											<div class="titles">Location and Contact Information</div>
-											<form class="form-horizontal storeform-container" role="form">
+											<form class="form-horizontal settings-container" role="form" id="contact">
 												<div class="form-group">
 													<label for="stAdd" class="col-sm-3 control-label">Street Address</label>
 													<div class="col-sm-9">
@@ -553,7 +553,7 @@
 											</form>
 										</div>
                     <div class="setblock">
-											<form class="form-horizontal storeform-container" role="form">
+											<form class="form-horizontal settings-container" role="form" id="hours">
 												<div class="titles">Hours of Operation</div>
 												<div class="form-group">
                             <label for="sunstart sunend" class="col-sm-4 control-label col-xs-12">Sunday</label>
