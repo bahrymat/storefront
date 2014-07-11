@@ -1,6 +1,13 @@
 var http = require('http'), fs = require('fs'), util = require('util');
 
 
+var redirected_urls = {"/": "/index.html", "/about": "/aboutus.html", "/examples": "/examples.html", "/edit": "/settings.html", "/logout": "/logout.html"}
+var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js", "/settings.css",
+                      "/yuwei.JPG", "/keegan.jpg", "/jason.jpg", "/matt.jpg"]
+/* Included for security purposes, as well as to create a RESTful API.
+   Static urls only - dynamic stuff like /login is handled separately. */
+
+
 
 /* converts url string in the form "email=foo@bar.com&password=abc123" into an object
    http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript */
@@ -132,9 +139,6 @@ function sendPageWithSubstitutions(res, url, message) {
 
 http.createServer(function (req, res) {
 	var url = req.url
-	if (url.slice(-1) == "/") {
-		url = url + "index.html";
-	}
 	if (req.method == "POST") {
 		var data = "";
 
@@ -172,14 +176,30 @@ http.createServer(function (req, res) {
 		});
 
 	} else {
-		fs.readFile(__dirname + url, function (err,data) {
-			if (err) {
-				four_oh_four(res);
-			} else {
-				res.writeHead(200);
-				res.end(data);
-			}
-		});
+		if (redirected_urls[url] != undefined) {
+			fs.readFile(__dirname + redirected_urls[url], function (err,data) {
+				if (err) {
+					console.log(redirected_urls[url] + " should have been found, but wasn't!");
+					four_oh_four(res);
+				} else {
+					res.writeHead(200);
+					res.end(data);
+				}
+			});
+		} else if (unchanged_urls.indexOf(url) >= 0) {
+			fs.readFile(__dirname + url, function (err,data) {
+				if (err) {
+					console.log(url + " should have been found, but wasn't!");
+					four_oh_four(res);
+				} else {
+					res.writeHead(200);
+					res.end(data);
+				}
+			});
+		} else {
+			console.log("user tried to request disallowed file: " + url);
+			four_oh_four(res);
+		}
 	}
 }).listen(8080);
 
