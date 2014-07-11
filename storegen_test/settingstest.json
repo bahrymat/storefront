@@ -38,10 +38,14 @@
 			"pageHomepageListing": true
 		},
 		"style": {
-			"bgcolour": "#FF0000",
+			"bgcolour": "#5599ff",
 			"fontcolour": "#0000FF",
-			"": "Courier",
-			"pprice": "#00aaaa"
+			"fontface": "Courier",
+			"navbarcolor": "#279191",
+			"navbarhighlight": "#207777",
+			"navbartextcolor": "#FFFFFF",
+			"footercolor": "#336666",
+			"footertext": "#99bbbb"
 		},
 		"navbar": {
 			"navbarLogo": "None"
