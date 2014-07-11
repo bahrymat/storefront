@@ -51,7 +51,7 @@
 			"navbarLogo": "None"
 		},
 		"splash": {
-			"splashUse": false,
+			"splashUse": true,
 			"splashHead": "Heading",
 			"splashSubHead": "Subheading",
 			"splashImage": "None",
