@@ -87,7 +87,11 @@ function registerUser(email, password, url, callback) {
 
 function login(email, password, callback) {
 	fs.readFile("database.json", function (err,data) {
-		var data = JSON.parse(data);
+		if (err) {
+			console.log(err);
+			return;
+		}
+		data = JSON.parse(data);
 		if (!data.users[email]) {
 			callback(true, "No user with that email exists!");
 			return;
