@@ -1,4 +1,11 @@
-var http = require('http'), fs = require('fs'), util = require('util');;
+var http = require('http'), fs = require('fs'), util = require('util');
+
+
+var redirected_urls = {"/": "/index.html", "/about": "/aboutus.html", "/examples": "/examples.html", "/edit": "/settings.html", "/logout": "/logout.html"}
+var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js", "/settings.css",
+                      "/yuwei.JPG", "/keegan.jpg", "/jason.jpg", "/matt.jpg"]
+/* Included for security purposes, as well as to create a RESTful API.
+   Static urls only - dynamic stuff like /login is handled separately. */
 
 
 
@@ -87,7 +94,11 @@ function registerUser(email, password, url, callback) {
 
 function login(email, password, callback) {
 	fs.readFile("database.json", function (err,data) {
-		var data = JSON.parse(data);
+		if (err) {
+			console.log(err);
+			return;
+		}
+		data = JSON.parse(data);
 		if (!data.users[email]) {
 			callback(true, "No user with that email exists!");
 			return;
@@ -114,12 +125,20 @@ function four_oh_four(res) {
 }
 
 
+function sendPageWithSubstitutions(res, url, message) {
+	fs.readFile(__dirname + "/" + url, function (err,data) {
+		if (err) {;
+			four_oh_four(res);
+		} else {
+			res.writeHead(200);
+			res.end(data.toString().replace("%s", message));
+		}
+	});
+}
+
 
 http.createServer(function (req, res) {
 	var url = req.url
-	if (url.slice(-1) == "/") {
-		url = url + "index.html";
-	}
 	if (req.method == "POST") {
 		var data = "";
 
@@ -133,22 +152,18 @@ http.createServer(function (req, res) {
 			if (url == "/register") {
 				registerUser(urlParams.signupEmail, urlParams.signupPass, urlParams.signupStoreName, function (err, err_message) {
 					if (err) {
-						res.writeHead(200);
-						res.end(err_message);
+						sendPageWithSubstitutions(res, "error.html", err_message);
 					} else {
-						res.writeHead(200);
-						res.end("You have registered!");
+						sendPageWithSubstitutions(res, "registered.html", urlParams.signupEmail);
 					}
 				});
 
 			} else if (url == "/login") {
 				login(urlParams.email, urlParams.password, function (err, err_message) {
 					if (err) {
-						res.writeHead(200);
-						res.end(err_message);
+						sendPageWithSubstitutions(res, "error.html", err_message);
 					} else {
-						res.writeHead(200);
-						res.end(util.format("<script src='login.js'></script>You have logged in.<script>setLoginCookie('%s');</script>", urlParams.email));
+						sendPageWithSubstitutions(res, "login.html", urlParams.email);
 					}
 				});
 
@@ -160,15 +175,34 @@ http.createServer(function (req, res) {
 
 		});
 
-	} else {
-		fs.readFile(__dirname + url, function (err,data) {
-			if (err) {
-				four_oh_four(res);
-			} else {
-				res.writeHead(200);
-				res.end(data);
-			}
-		});
+	} else if (req.method == "GET") {
+		if (redirected_urls[url] != undefined) {
+			fs.readFile(__dirname + redirected_urls[url], function (err,data) {
+				if (err) {
+					console.log(redirected_urls[url] + " should have been found, but wasn't!");
+					four_oh_four(res);
+				} else {
+					res.writeHead(200);
+					res.end(data);
+				}
+			});
+		} else if (unchanged_urls.indexOf(url) >= 0) {
+			fs.readFile(__dirname + url, function (err,data) {
+				if (err) {
+					console.log(url + " should have been found, but wasn't!");
+					four_oh_four(res);
+				} else {
+					res.writeHead(200);
+					res.end(data);
+				}
+			});
+		} else if (url.substring(0,6) == "/store") {
+			console.log("NOT YET IMPLEMENTED!! " + url)
+			four_oh_four(res);
+		} else {
+			console.log("user tried to request disallowed file: " + url);
+			four_oh_four(res);
+		}
 	}
 }).listen(8080);
 

@@ -1,0 +1,64 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 40px;
+}
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  min-height: 40px;
+}
+
+.container .text-muted {
+  margin: 10px 0;
+}
+
+.navbar-brand {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-right: 5px;
+}
+.navbar-brand img {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.img-center {
+  margin:0 auto;
+}
+
+html { 
+  overflow-y: scroll; 
+}
+
+.button_label {
+  display: inline-block;
+  padding-right: 3px;
+}
+
+.tags {
+  margin-top: 24px;
+}
+
+.jumbotron_lesspadding {
+  padding-bottom: 24px;
+}
+
+.navbar {
+  border-radius: 0;
+}
+
+.nav > li > a:hover, .nav > li > a:focus {
+  background: none;
+}
+
+.jumbotron {
+  background-color: white;
+}

@@ -1,0 +1,85 @@
+{
+	"elements": [
+		{
+			"type": "text",
+			"ttitle": "This is some text",
+			"tdescription": "I am writing things here",
+			"pos": "7"
+		},
+		{
+			"type": "productlist",
+			"pos": "-2"
+		}
+	],
+	"products": [
+		{
+			"ptitle": "product one",
+			"psdescription": "adfg",
+			"pldescription": "df",
+			"pprice": "4",
+			"pimage": "None",
+			"ptags": "adfgsfd, sdfgsdf, sdfg"
+		},
+		{
+			"ptitle": "dfg",
+			"psdescription": "sdfgsdfgsdf",
+			"pldescription": "sdfg",
+			"pprice": "5",
+			"pimage": "None",
+			"ptags": "sdfg, fgds"
+		}
+	],
+	"settings": {
+		"page": {
+			"pageURL": "whee",
+			"pageTitle": "this is the page title",
+			"pageCurrency": "£",
+			"pageDisplayOnline": true,
+			"pageHomepageListing": true
+		},
+		"style": {
+			"bgcolour": "#5599ff",
+			"fontcolour": "#515151",
+			"fontface": "Courier",
+			"navbarcolor": "#279191",
+			"navbarhighlight": "#207777",
+			"navbartextcolor": "#FFFFFF",
+			"footercolor": "#336666",
+			"footertext": "#99bbbb"
+		},
+		"navbar": {
+			"navbarLogo": "None"
+		},
+		"splash": {
+			"splashUse": true,
+			"splashHead": "Heading",
+			"splashSubHead": "Subheading",
+			"splashImage": "None",
+			"splashCaption": "Caption"
+		},
+		"contact": {
+			"stAdd": "123 fake st",
+			"city": "Toronto",
+			"province": "ON",
+			"country": "canada",
+			"phone": "123 456 7890",
+			"emailAdd": "oaisjdf@oishdgoi.com"
+		},
+		"hours": {
+			"sunstart": "Start Time",
+			"sunend": "End Time",
+			"monstart": "Start Time",
+			"monend": "End Time",
+			"tuestart": "Start Time",
+			"tueend": "End Time",
+			"wedstart": "Start Time",
+			"wedend": "End Time",
+			"thustart": "Start Time",
+			"thuend": "End Time",
+			"frstart": "Start Time",
+			"frend": "End Time",
+			"satstart": "Start Time",
+			"satend": "EndTime"
+		}
+	}
+}

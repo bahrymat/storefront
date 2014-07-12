@@ -37,18 +37,18 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			  </button>
-			  <a class="navbar-brand" href="index.html">easyStorefront</a>
+			  <a class="navbar-brand" href="/">easyStorefront</a>
 			</div>
 			<div class="collapse navbar-collapse">
 			  <ul class="nav navbar-nav">
-			    <li><a href="index.html">Home</a></li>
-				<li><a href="aboutus.html">About Us</a></li>
-				<li><a href="examples.html">Examples</a></li>
-				<li class="active hidden loggedin"><a href="settings.html">Create Store!</a></li>
+			    <li><a href="/">Home</a></li>
+				<li><a href="/about">About Us</a></li>
+				<li><a href="/examples">Examples</a></li>
+				<li class="active hidden loggedin"><a href="/edit">Create Store!</a></li>
 			  </ul>
 				<div class="navbar-right" onClick="event.stopPropagation();">
 					<ul class="nav navbar-nav hidden loggedout"><li><a href="#" id="login_button" onClick="showLogin();">Login</a></li></ul>
-					<ul class="nav navbar-nav hidden loggedin"><li><a href="logout.html">Log Out</a></li></ul>
+					<ul class="nav navbar-nav hidden loggedin"><li><a href="/logout">Log Out</a></li></ul>
 					<form id="hidden_login" class="navbar-form sorta_hidden" role="form" action="login" method="post">
 						<div class="form-group"><input class="form-control" type="text" placeholder="Email" name="email"></div>
 						<div class="form-group"><input class="form-control" type="password" placeholder="Password" name="password"></div>
@@ -95,7 +95,7 @@
   								</ul>
 								</div>
 <br>
-								<button type="submit" class="btn btn-primary">Save</button>
+								<button type="submit" class="btn btn-primary storesubmit">Save</button>
 								<button type="submit" class="btn btn-primary">Save Draft</button>
 								<button type="submit" class="btn btn-primary">Restore Default</button>
 								<button type="submit" class="btn btn-primary">Preview</button>
@@ -105,19 +105,20 @@
 									<div class="col-sm-6 textblockBox">
 										<div class="block"><div class="titles">Text Block
 											<button type="button" class="close deleteTextblock" aria-hidden="true">&times;</button></div>
-											<form class="form-horizontal" role="form"> 
+											<form class="form-horizontal element-container" role="form"> 
 												<div class="form-group">
+													<input type="hidden" class="form-control storeform" id="type" value="text">
 													<label for="ttitle" class="col-sm-3 control-label">Title</label>
 													<div class="col-sm-9">
-												 	 	<input type="text" class="form-control" id="ttitle" placeholder="Title">
+												 	 	<input type="text" class="form-control storeform" id="ttitle" placeholder="Title">
 											 		</div>
 													<label for="tdescription" class="col-sm-3 control-label">Description</label>
 													<div class="col-sm-9">
-														<textarea class="form-control" rows="2" columns="3" id="tdescription" placeholder="Description"></textarea>
+														<textarea class="form-control storeform" rows="2" columns="3" id="tdescription" placeholder="Description"></textarea>
 													</div>
-													<label for="tbpos" class="col-sm-3 control-label">Position</label>
+													<label for="pos" class="col-sm-3 control-label">Position</label>
 													<div class="col-sm-9">
-												 	 <input type="number" class="form-control" id="tbpos" placeholder="1">
+												 	 <input type="number" class="form-control storeform" id="pos" placeholder="1">
 											 		</div>
 												</div>
 
@@ -131,20 +132,21 @@
 									<div class="col-sm-6 imageblockBox">
 										<div class="block"><div class="titles">Image Block
 											<button type="button" class="close deleteImageblock" aria-hidden="true">&times;</button></div>
-											<form class="form-horizontal" role="form">
+											<form class="form-horizontal element-container" role="form">
 												<div class="form-group">
+													<input type="hidden" class="form-control storeform" id="type" value="image">
 													<label for="ititle" class="col-sm-3 control-label">Title</label>
 													<div class="col-sm-9">
-												 	 <input type="text" class="form-control" id="ititle" placeholder="Title">
+												 	 <input type="text" class="form-control storeform" id="ititle" placeholder="Title">
 											 		</div>
 													<label for="idescription" class="col-sm-3 control-label">Description</label>
 													<div class="col-sm-9">
-														<textarea class="form-control" rows="2" id="idescription" placeholder="Description"></textarea>
+														<textarea class="form-control storeform" rows="2" id="idescription" placeholder="Description"></textarea>
 													</div>
 			
 													<label for="iimage" class="col-sm-3 control-label">Image</label>
 													<div class="col-sm-9">
-															<select class="form-control" id="iimage">
+															<select class="form-control storeform" id="iimage">
 																<option>None</option>
 																<option>image1.jpg</option>
 																<option>image2.jpg</option>
@@ -153,9 +155,9 @@
 																<option>image5.jpg</option>
 															</select>
 													</div>
-													<label for="ibpos" class="col-sm-3 control-label">Position</label>
+													<label for="pos" class="col-sm-3 control-label">Position</label>
 													<div class="col-sm-9">
-												 	 <input type="number" class="form-control" id="ibpos" placeholder="2">
+												 	 <input type="number" class="form-control storeform" id="pos" placeholder="2">
 											 		</div>
 												</div>
 											</form>
@@ -167,92 +169,13 @@
 									<div class="col-sm-6 productblockBox">
 										<div class="block"><div class="titles">Product List
 											<button type="button" class="close deleteProductblock" aria-hidden="true">&times;</button></div>
-											<form class="form-horizontal" role="form">
+											<form class="form-horizontal element-container" role="form">
+													<input type="hidden" class="form-control storeform" id="type" value="productlist">
 												<div class="form-group">
 
-													<div class="col-sm-6">
-														<select class="form-control" id="prodList1">
-															<option>None</option>
-															<option>product1</option>
-															<option>product2</option>
-															<option>product3</option>
-															<option>product4</option>
-															<option>product5</option>
-														</select>
-													</div>
-													<div class="col-sm-6">
-														<select class="form-control" id="prodList1">
-															<option>None</option>
-															<option>product1</option>
-															<option>product2</option>
-															<option>product3</option>
-															<option>product4</option>
-															<option>product5</option>
-														</select>
-													</div>
-													<div class="col-sm-6">
-														<select class="form-control" id="prodList1">
-															<option>None</option>
-															<option>product1</option>
-															<option>product2</option>
-															<option>product3</option>
-															<option>product4</option>
-															<option>product5</option>
-														</select>
-													</div>
-													<div class="col-sm-6">
-														<select class="form-control" id="prodList1">
-															<option>None</option>
-															<option>product1</option>
-															<option>product2</option>
-															<option>product3</option>
-															<option>product4</option>
-															<option>product5</option>
-														</select>
-													</div>
-													<div class="col-sm-6">
-														<select class="form-control" id="prodList1">
-															<option>None</option>
-															<option>product1</option>
-															<option>product2</option>
-															<option>product3</option>
-															<option>product4</option>
-															<option>product5</option>
-														</select>
-													</div>
-													<div class="col-sm-6">
-														<select class="form-control" id="prodList1">
-															<option>None</option>
-															<option>product1</option>
-															<option>product2</option>
-															<option>product3</option>
-															<option>product4</option>
-															<option>product5</option>
-														</select>
-													</div>
-													<div class="col-sm-6">
-														<select class="form-control" id="prodList1">
-															<option>None</option>
-															<option>product1</option>
-															<option>product2</option>
-															<option>product3</option>
-															<option>product4</option>
-															<option>product5</option>
-														</select>
-													</div>
-													<div class="col-sm-6">
-														<select class="form-control" id="prodList1">
-															<option>None</option>
-															<option>product1</option>
-															<option>product2</option>
-															<option>product3</option>
-															<option>product4</option>
-															<option>product5</option>
-														</select>
-													</div>
-													<label for="pbpos" class="col-sm-3 control-label">Position</label>
+													<label for="pos" class="col-sm-3 control-label">Position</label>
 													<div class="col-sm-9">
-												 	 <input type="number" class="form-control" id="pbpos" placeholder="3">
+												 	 <input type="number" class="form-control storeform" id="pos" placeholder="3">
 											 		</div>
 												</div>
 											</form>
@@ -274,7 +197,7 @@
 							 	<div class="jumbotron">
 							 		<div class="titles">Add, modify and delete products</div><br>
 									<button type="submit" class="btn btn-primary newProduct">New Product</button>
-									<button type="submit" class="btn btn-primary">Save Changes</button>
+									<button type="submit" class="btn btn-primary storesubmit">Save Changes</button>
 									<div class="input-group searchbar">
 										<input type="text" class="form-control searchbar" placeholder="Search products...">
 										<span class="input-group-btn">
@@ -288,29 +211,29 @@
 										<div class="col-sm-6 productBox">
 											<div class="block" >
 												<button type="button" class="close deleteProduct" aria-hidden="true">&times;</button><br>
-												<form class="form-horizontal" role="form">
+												<form class="form-horizontal product-container" role="form">
 													<div class="form-group">
 														<label for="ptitle" class="col-sm-3 control-label">Product</label>
 														<div class="col-sm-9">
-													 	 <input type="text" class="form-control" id="ptitle" placeholder="Product Name">
+													 	 <input type="text" class="form-control storeform" id="ptitle" placeholder="Product Name">
 												 		</div>
 														<label for="psdescription" class="col-sm-3 control-label">Short Description</label>
 														<div class="col-sm-9">
-															<textarea class="form-control" rows="2" id="psdescription"  placeholder="Short Description"></textarea>
+															<textarea class="form-control storeform" rows="2" id="psdescription"  placeholder="Short Description"></textarea>
 														</div>
 														<label for="pldescription" class="col-sm-3 control-label">Long Description</label>
 														<div class="col-sm-9">
-															<textarea class="form-control" rows="2" id="pldescription"  placeholder="Long Description"></textarea>
+															<textarea class="form-control storeform" rows="2" id="pldescription"  placeholder="Long Description"></textarea>
 														</div>
 
 														<label for="pprice" class="col-sm-3 control-label">Price</label>
 
 														<div class="col-sm-9">
-													 	 <input type="number" class="form-control" id="pprice" placeholder="Price">
+													 	 <input type="number" class="form-control storeform" id="pprice" placeholder="Price">
 												 		</div>
 														<label for="pimage" class="col-sm-3 control-label">Image</label>
 														<div class="col-sm-9">
-																<select class="form-control">
+																<select class="form-control storeform" id="pimage">
 																	<option>None</option>
 																	<option>image1.jpg</option>
 																	<option>image2.jpg</option>
@@ -321,7 +244,7 @@
 														</div>
 														<label for="ptags" class="col-sm-3 control-label">Tags</label>
 														<div class="col-sm-9">
-															<textarea class="form-control" rows="2" id="pdescription"  placeholder="Tags (comma separated)"></textarea>
+															<textarea class="form-control storeform" rows="2" id="ptags"  placeholder="Tags (comma separated)"></textarea>
 														</div>
 													</div>
 												</form>
@@ -357,15 +280,15 @@
 									<div class="col-sm-6 imageBox">
 										<div class="block"><button type="button" class="close deleteImage" aria-hidden="true">&times;</button><br>
 											<div class="col-sm-12"><img class="img-thumbnail imagethumb" src="http://placehold.it/200x200&text=Thumbnail" alt="200x200"></img></div>
-											<form class="form-horizontal" role="form">
+											<form class="form-horizontal image-container" role="form">
 												<div class="form-group"><div>
 													<label for="imname" class="col-sm-4 control-label">Name</label>
 													<div class="col-sm-8">
-												 	 <input type="text" class="form-control" id="imname" placeholder="Image name">
+												 	 <input type="text" class="form-control storeform" id="imname" placeholder="Image name">
 											 		</div>
 													<label for="imfile" class="col-sm-4 control-label">Image File</label>
 													<div class="col-sm-8">
-												 	 <input type="file" class="form-control" id="imfile" >
+												 	 <input type="file" class="form-control storeform" id="imfile" >
 														<input type="text" id="filename">
 														<div class="button-group"> 
 															<a href="#" id="browse">Browse</a>
@@ -391,7 +314,7 @@
 						 	<div class="jumbotron">
 							 	<div class="titles">Change settings of your store page</div><br>
 												 
-								<button type="button" class="btn btn-primary newImage">Save Changes</button>
+								<button type="button" class="btn btn-primary newImage storesubmit">Save Changes</button>
 								<button type="button" class="btn btn-primary newImage">Revert Changes</button>
 								<button type="button" class="btn btn-primary newImage">Preview</button>
 							</div>
@@ -399,21 +322,21 @@
 								<div class="col-lg-12">
 									<!-- settings blocks-->
 										<div class="setblock">
-											<form class="form-horizontal" role="form">
+											<form class="form-horizontal settings-container" role="form" id="page">
 												<div class="titles">General</div>
 												<div class="form-group">
 													<label for="pageURL" class="col-sm-3 control-label">URL</label>
 														<div class="col-sm-9">
-													 	 <input type="text" class="form-control" id="pageURL" placeholder="URL">
+													 	 <input type="text" class="form-control storeform" id="pageURL" placeholder="URL">
 												 		</div>
 													<label for="pageTitle" class="col-sm-3 control-label">Page Title</label>
 														<div class="col-sm-9">
-													 	 <input type="text" class="form-control" id="pageTitle" placeholder="Page Title">
+													 	 <input type="text" class="form-control storeform" id="pageTitle" placeholder="Page Title">
 												 		</div>
 													<label for="currency" class="col-sm-3 control-label">Currency</label>
 
 													<div class="col-sm-9">
-												 	 <select class="form-control">
+												 	 <select class="form-control storeform" id="pageCurrency">
 														<option>$</option>
 														<option>£</option>
 														<option>¥</option>
@@ -423,14 +346,14 @@
 													<div class="col-sm-6">
 														<div class="checkbox">
 															<label>
-																Display website online<input type="checkbox">
+																Display website online<input type="checkbox" class="storeform" id="pageDisplayOnline"/>
 															</label>
 														</div>
 													</div>
 													<div class="col-sm-6">
 														<div class="checkbox">
 															<label>
-																Opt-in to home page listing<input type="checkbox">
+																Opt-in to home page listing<input type="checkbox" class="storeform"  id="pageHomepageListing"/>
 															</label>
 														</div>
 													</div>
@@ -438,42 +361,58 @@
 											</form>
 										</div>
 										<div class="setblock">
-											<form class="form-horizontal" role="form">
+											<form class="form-horizontal settings-container" role="form" id="style">
 												<div class="titles">Style</div>
 												<div class="form-group">
 													<label for="bgcolour" class="col-sm-3 control-label">Background colour</label>
 														<div class="col-sm-9">
-													 	 <input type="text" class="form-control" id="bgcolour" placeholder="000000">
+													 	 <input type="text" class="form-control storeform" id="bgcolour" placeholder="#5599ff">
 												 		</div>
 													<label for="fontcolour" class="col-sm-3 control-label">Font colour</label>
 														<div class="col-sm-9">
-													 	 <input type="text" class="form-control" id="fontcolour" placeholder="ffffff">
+													 	 <input type="text" class="form-control storeform" id="fontcolour" placeholder="#000000">
 												 		</div>
 													<label for="font" class="col-sm-3 control-label">Font</label>
 
 													<div class="col-sm-9">
-												 	 <select class="form-control">
-														<option>Courier</option>
-														<option>Times New Roman</option>
+												 	 <select class="form-control storeform" id="fontface">
 														<option>Arial</option>
+														<option>Times New Roman</option>
+														<option>Courier</option>
 														<option>Verdana</option>
 														<option>etc.</option>
 													 </select>
 											 		</div>
-													<label for="navcolour" class="col-sm-3 control-label">Navbar colour</label>
+													<label for="navcolor" class="col-sm-3 control-label">Navbar colour</label>
 													<div class="col-sm-9">
-												 	 <input type="text" class="form-control" id="pprice" placeholder="aaaaaa">
+												 	 <input type="text" class="form-control storeform" id="navbarcolor" placeholder="#279191">
+											 		</div>
+													<label for="navbarhighlight" class="col-sm-3 control-label">Navbar highlight colour</label>
+													<div class="col-sm-9">
+												 	 <input type="text" class="form-control storeform" id="navbarhighlight" placeholder="#207777">
+											 		</div>
+													<label for="navbartextcolor" class="col-sm-3 control-label">Navbar text colour</label>
+													<div class="col-sm-9">
+												 	 <input type="text" class="form-control storeform" id="navbartextcolor" placeholder="#FFFFFF">
+											 		</div>
+													<label for="footercolor" class="col-sm-3 control-label">Footer colour</label>
+													<div class="col-sm-9">
+												 	 <input type="text" class="form-control storeform" id="footercolor" placeholder="#336666">
+											 		</div>
+													<label for="footertext" class="col-sm-3 control-label">Footer text colour</label>
+													<div class="col-sm-9">
+												 	 <input type="text" class="form-control storeform" id="footertext" placeholder="#99bbbb">
 											 		</div>
 												</div>
 											</form>
 										</div>
 										<div class="setblock">
 											<div class="titles">Navbar</div>
-											<form class="form-horizontal" role="form">
+											<form class="form-horizontal settings-container" role="form" id="navbar">
 												<div class="form-group">
 													<label for="logo" class="col-sm-3 control-label">Logo Image</label>
 													<div class="col-sm-9">
-													 	 <select class="form-control">
+													 	 <select class="form-control storeform" id="navbarLogo">
 															<option>None</option>
 															<option>image1.jpg</option>
 															<option>image2.jpg</option>
@@ -487,26 +426,26 @@
 										</div>
 										<div class="setblock">
 											<div class="titles">Splash Page</div>
-											<form class="form-horizontal" role="form">
+											<form class="form-horizontal settings-container" role="form" id="splash">
 												<div class="form-group">
 													<div class="col-sm-6">
 														<div class="checkbox">
 															<label>
-																Include a Splash page for your site <input type="checkbox">
+																Include a Splash page for your site <input type="checkbox" class="storeform"  id="splashUse"/>
 															</label>
 														</div>
 													</div><br><br>
 													<label for="splashHead" class="col-sm-3 control-label">Heading</label>
 													<div class="col-sm-9">
-													 	 <input type="text" class="form-control" id="stAdd" placeholder="Heading">
+													 	 <input type="text" class="form-control storeform" id="splashHead" placeholder="Heading">
 											 		</div>
 													<label for="splashSubHead" class="col-sm-3 control-label">Subheading</label>
 													<div class="col-sm-9">
-													 	 <input type="text" class="form-control" id="stAdd" placeholder="Subheading">
+													 	 <input type="text" class="form-control storeform" id="splashSubHead" placeholder="Subheading">
 											 		</div>
 													<label for="splashImage" class="col-sm-3 control-label">Splash Image</label>
 													<div class="col-sm-9">
-													 	 <select class="form-control">
+													 	 <select class="form-control storeform" id="splashImage">
 															<option>None</option>
 															<option>image1.jpg</option>
 															<option>image2.jpg</option>
@@ -517,93 +456,93 @@
 											 		</div>
 													<label for="splashCaption" class="col-sm-3 control-label">Caption</label>
 													<div class="col-sm-9">
-													 	 <input type="text" class="form-control" id="stAdd" placeholder="Caption">
+													 	 <input type="text" class="form-control storeform" id="splashCaption" placeholder="Caption">
 											 		</div>
 											</div></form>
 										</div>
 										<div class="setblock">
 											<div class="titles">Location and Contact Information</div>
-											<form class="form-horizontal" role="form">
+											<form class="form-horizontal settings-container" role="form" id="contact">
 												<div class="form-group">
 													<label for="stAdd" class="col-sm-3 control-label">Street Address</label>
 													<div class="col-sm-9">
-													 	 <input type="text" class="form-control" id="stAdd" placeholder="0000 Street St.">
+													 	 <input type="text" class="form-control storeform" id="stAdd" placeholder="0000 Street St.">
 											 		</div>
 													<label for="city" class="col-sm-3 control-label">City</label>
 													<div class="col-sm-9">
-													 	 <input type="text" class="form-control" id="city" placeholder="Toronto">
+													 	 <input type="text" class="form-control storeform" id="city" placeholder="Toronto">
 											 		</div>
 													<label for="province" class="col-sm-3 control-label">Province/State</label>
 													<div class="col-sm-9">
-													 	 <input type="text" class="form-control" id="province" placeholder="ON">
+													 	 <input type="text" class="form-control storeform" id="province" placeholder="ON">
 											 		</div>
 													<label for="country" class="col-sm-3 control-label">Country</label>
 													<div class="col-sm-9">
-													 	 <input type="text" class="form-control" id="country" placeholder="Canada">
+													 	 <input type="text" class="form-control storeform" id="country" placeholder="Canada">
 											 		</div>
 													<label for="phone" class="col-sm-3 control-label">Phone Number</label>
 													<div class="col-sm-9">
-													 	 <input type="phone" class="form-control" id="phone" placeholder="(123) 456-7890">
+													 	 <input type="phone" class="form-control storeform" id="phone" placeholder="(123) 456-7890">
 											 		</div>
 													<label for="emailAdd" class="col-sm-3 control-label">Contact Email</label>
 													<div class="col-sm-9">
-													 	 <input type="email" class="form-control" id="emailAdd" placeholder="contact@somedomain.com">
+													 	 <input type="email" class="form-control storeform" id="emailAdd" placeholder="contact@somedomain.com">
 											 		</div>
 												</div>
 											</form>
 										</div>
                     <div class="setblock">
-											<form class="form-horizontal" role="form">
+											<form class="form-horizontal settings-container" role="form" id="hours">
 												<div class="titles">Hours of Operation</div>
 												<div class="form-group">
                             <label for="sunstart sunend" class="col-sm-4 control-label col-xs-12">Sunday</label>
 														<div class="col-sm-4 col-xs-6">
-													 	 <input type="text" class="form-control" id="sunstart" placeholder="Start Time">
+													 	 <input type="text" class="form-control storeform" id="sunstart" placeholder="Start Time">
 												 		</div>
                             <div class="col-sm-4 col-xs-6">
-													 	 <input type="text" class="form-control" id="sunend" placeholder="End Time">
+													 	 <input type="text" class="form-control storeform" id="sunend" placeholder="End Time">
 												 		</div>
 													  <label for="monstart monend" class="col-sm-4 control-label col-xs-12">Monday</label>
 														<div class="col-sm-4 col-xs-6">
-													 	 <input type="text" class="form-control" id="monstart" placeholder="Start Time">
+													 	 <input type="text" class="form-control storeform" id="monstart" placeholder="Start Time">
 												 		</div>
                             <div class="col-sm-4 col-xs-6">
-													 	 <input type="text" class="form-control" id="monend" placeholder="End Time">
+													 	 <input type="text" class="form-control storeform" id="monend" placeholder="End Time">
 												 		</div>
                             <label for="tuestart tueend" class="col-sm-4 control-label col-xs-12">Tuesday</label>
 														<div class="col-sm-4 col-xs-6">
-													 	 <input type="text" class="form-control" id="tuestart" placeholder="Start Time">
+													 	 <input type="text" class="form-control storeform" id="tuestart" placeholder="Start Time">
 												 		</div>
                             <div class="col-sm-4 col-xs-6">
-													 	 <input type="text" class="form-control" id="tueend" placeholder="End Time">
+													 	 <input type="text" class="form-control storeform" id="tueend" placeholder="End Time">
 												 		</div>
                             <label for="wedstart wedend" class="col-sm-4 control-label col-xs-12">Wednesday</label>
 														<div class="col-sm-4 col-xs-6">
-													 	 <input type="text" class="form-control" id="wedstart" placeholder="Start Time">
+													 	 <input type="text" class="form-control storeform" id="wedstart" placeholder="Start Time">
 												 		</div>
                             <div class="col-sm-4 col-xs-6">
-													 	 <input type="text" class="form-control" id="wedend" placeholder="End Time">
+													 	 <input type="text" class="form-control storeform" id="wedend" placeholder="End Time">
 												 		</div>
                             <label for="thustart thuend" class="col-sm-4 control-label col-xs-12">Thursday</label>
 														<div class="col-sm-4 col-xs-6">
-													 	 <input type="text" class="form-control" id="thustart" placeholder="Start Time">
+													 	 <input type="text" class="form-control storeform" id="thustart" placeholder="Start Time">
 												 		</div>
                             <div class="col-sm-4 col-xs-6">
-													 	 <input type="text" class="form-control" id="thuend" placeholder="End Time">
+													 	 <input type="text" class="form-control storeform" id="thuend" placeholder="End Time">
 												 		</div>
                             <label for="frstart frend" class="col-sm-4 control-label col-xs-12">Friday</label>
 														<div class="col-sm-4 col-xs-6">
-													 	 <input type="text" class="form-control" id="frstart" placeholder="Start Time">
+													 	 <input type="text" class="form-control storeform" id="frstart" placeholder="Start Time">
 												 		</div>
                             <div class="col-sm-4 col-xs-6">
-													 	 <input type="text" class="form-control" id="frend" placeholder="End Time">
+													 	 <input type="text" class="form-control storeform" id="frend" placeholder="End Time">
 												 		</div>
                             <label for="satstart satend" class="col-sm-4 control-label col-xs-12">Saturday</label>
 														<div class="col-sm-4 col-xs-6">
-													 	 <input type="text" class="form-control" id="satstart" placeholder="Start Time">
+													 	 <input type="text" class="form-control storeform" id="satstart" placeholder="Start Time">
 												 		</div>
                             <div class="col-sm-4 col-xs-6">
-													 	 <input type="text" class="form-control" id="satend" placeholder="EndTime">
+													 	 <input type="text" class="form-control storeform" id="satend" placeholder="EndTime">
 												 		</div>
 
                         </div>
