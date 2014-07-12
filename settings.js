@@ -91,8 +91,8 @@ function parseForms() {
 			}
 		});
 	});
-	document.write("<pre>"+JSON.stringify(formObject, null, "\t"));
-	document.close(); 
+	$.post("/changesettings", JSON.stringify(formObject), function (serverreply) {alert(serverreply);} );
+	
 }
 
 $('.storesubmit').click(parseForms);

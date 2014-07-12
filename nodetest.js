@@ -147,9 +147,9 @@ http.createServer(function (req, res) {
 		});
 
 		req.on('end', function() {
-			var urlParams = url_parse(data);
 
 			if (url == "/register") {
+				var urlParams = url_parse(data);
 				registerUser(urlParams.signupEmail, urlParams.signupPass, urlParams.signupStoreName, function (err, err_message) {
 					if (err) {
 						sendPageWithSubstitutions(res, "error.html", err_message);
@@ -159,6 +159,7 @@ http.createServer(function (req, res) {
 				});
 
 			} else if (url == "/login") {
+				var urlParams = url_parse(data);
 				login(urlParams.email, urlParams.password, function (err, err_message) {
 					if (err) {
 						sendPageWithSubstitutions(res, "error.html", err_message);
@@ -166,6 +167,11 @@ http.createServer(function (req, res) {
 						sendPageWithSubstitutions(res, "login.html", urlParams.email);
 					}
 				});
+
+			} else if (url == "/changesettings") {
+				console.log("received store edit request. this hasn't been implemented yet."); //"data" currently contains the json for the store settings
+				res.writeHead(200);
+				res.end("Your changes have been saved!\n...actually, we haven't implemented that.");
 
 			} else {
 				console.log("unknown POST request. url params:");
