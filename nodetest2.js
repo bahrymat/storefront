@@ -34,36 +34,52 @@ function registerUser(email, password, url, callback) {
     console.log('Connected to MongoDB');
   });
 
-
-  var users = mongoose.model('users', userSchema);
-  var newUser = new users({user:email, pass:password, url:url});
-  newUser.save(function (err) {  
-    if (err) {
-      console.log(err);
+	//first check if email in use
+	var users = mongoose.model('users', userSchema);
+	users.findOne({user:email}, function (err,data) {
+		if (err) {
+			console.log(err);
 			callback(true, "We're having some issues, try again later.");
-      return;
-    }
+			db.close()
+			return;
+		}
+		if (data == null){
+     	
+			var newUser = new users({user:email, pass:password, url:url});
+			newUser.save(function (err) {  
+				if (err) {
+				  console.log(err);
+					callback(true, "We're having some issues, try again later.");
+				  return;
+				}
 
-    users.findById(newUser._id, function(err, u) {
-		  if (err) {
-		    //User not created properly
-		    console.log(err);
-				callback(true, "We're having some issues, try again later.");
-		    return;
-		  }
-		  console.log('Created user: ' + u.user);
-      callback(false, "");
-  	});
-	});
+				users.findById(newUser._id, function(err, u) {
+					if (err) {
+						//User not created properly
+						console.log(err);
+						callback(true, "We're having some issues, try again later.");
+						return;
+					}
+					console.log('Created user: ' + u.user);
+				  callback(false, "");
+				});
+			});
 
-	// Create dir on account creation
-	fs.mkdir(email,function(uerr){
-	  if(uerr){
-			//debug
-			callback(true, "We're having some issues, try again later.");
-	    console.log(uerr);
+			// Create dir on account creation
+			fs.mkdir(email,function(uerr){
+				if(uerr){
+					//debug
+					callback(true, "We're having some issues, try again later.");
+					console.log(uerr);
 		
-	  }
+				}
+			db.close();
+		});}
+		else {
+		console.log(data);
+		db.close()
+		callback(true, "Email already in use");
+}
 	});
 }
 
