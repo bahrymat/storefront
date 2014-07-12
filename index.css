@@ -12,13 +12,36 @@ html {
   color: #555555;
 }
 
-/* main page content*/
-.intro {
+.bluebg {
   background-color: #0099CC;
+}
+
+.whitebox {
+  background-color:#FFF;
+}
+
+.intro {
   padding-top: 100px;
   padding-bottom: 100px;
   text-align: center;
   position:relative;
+}
+
+.whitetext {
+  color: #FFF;
+}
+
+.bluetext{
+  color:#0099CC;
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 20px;
+  text-align: right;
 }
 
 @media screen and (min-width: 800px){
@@ -113,18 +136,11 @@ html {
 }
 
 
-.whitetext {
-  color: #FFF;
-}
-
-.bluetext{
-  color:#0099CC;
-}
-
 .footer{
 color:#aaa;
 text-align:right;
 }
+
 .blurb {
   padding: 100px;
   text-align: center;
