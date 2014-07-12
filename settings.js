@@ -92,6 +92,7 @@ function parseForms() {
 		});
 	});
 	document.write("<pre>"+JSON.stringify(formObject, null, "\t"));
+	document.close(); 
 }
 
 $('.storesubmit').click(parseForms);

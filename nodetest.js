@@ -175,7 +175,7 @@ http.createServer(function (req, res) {
 
 		});
 
-	} else {
+	} else if (req.method == "GET") {
 		if (redirected_urls[url] != undefined) {
 			fs.readFile(__dirname + redirected_urls[url], function (err,data) {
 				if (err) {
@@ -196,6 +196,9 @@ http.createServer(function (req, res) {
 					res.end(data);
 				}
 			});
+		} else if (url.substring(0,6) == "/store") {
+			console.log("NOT YET IMPLEMENTED!! " + url)
+			four_oh_four(res);
 		} else {
 			console.log("user tried to request disallowed file: " + url);
 			four_oh_four(res);
