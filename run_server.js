@@ -1,5 +1,82 @@
 var http = require('http'), fs = require('fs'), util = require('util'), mongoose = require('mongoose');;
 
+var frontSchema = mongoose.Schema({
+  position: Number,
+  type: String,
+  fields: [
+    {
+      entry: String,
+    }
+  ]
+});
+
+var imageSchema = mongoose.Schema({
+        ititle:  String,
+        iimage: String
+});
+var productSchema = mongoose.Schema({
+		ptitle: String,
+		psdescription: String,
+		pldescription: String,
+		pprice: Number,
+		pimage: String,
+		ptags: String
+	});
+
+var settingsSchema = mongoose.Schema({
+	page: {
+		pageURL: String,
+		pageTitle: String,
+		pageCurrency: String,
+		pageDisplayOnline: Boolean,
+		pageHomepageListing: Boolean
+	},
+	style: {
+		bgcolour: String,
+		fontcolour: String,
+		fontface: String,
+		navbarcolor: String,
+		navbarhighlight: String,
+		navbartextcolor: String,
+		footercolor: String,
+		footertext: String
+	},
+	navbar: {
+		navbarLogo: String
+	},
+	splash: {
+		splashUse: Boolean,
+		splashHead: String,
+		splashSubHead: String,
+		splashImage: String,
+		splashCaption: String
+	},
+	contact: {
+		stAdd: String,
+		city: String,
+		province: String,
+		country: String,
+		phone:String,
+		emailAdd: String
+	},
+	hours: {
+		sunstart: String,
+		sunend: String,
+		monstart: String,
+		monend: String,
+		tuestart: String,
+		tueend: String,
+		wedstart: String,
+		wedend: String,
+		thustart: String,
+		thuend: String,
+		frstart: String,
+		frend: String,
+		satstart: String,
+		satend: String
+	}
+
+});
 
 var redirected_urls = {"/": "/index.html", "/about": "/aboutus.html", "/examples": "/examples.html", "/edit": "/settings.html", "/logout": "/logout.html"}
 var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js", "/settings.css",
@@ -66,7 +143,7 @@ function registerUser(email, password, url, callback) {
 			});
 
 			// Create dir on account creation
-			fs.mkdir(email,function(uerr){
+			fs.mkdir(('users/' + email),function(uerr){
 				if(uerr){
 					//debug
 					callback(true, "We're having some issues, try again later.");
