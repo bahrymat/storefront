@@ -197,7 +197,25 @@ http.createServer(function (req, res) {
 				}
 			});
 		} else if (url.substring(0,6) == "/store") {
-			console.log("NOT YET IMPLEMENTED!! " + url)
+			if (url.slice(-1) == "/") {
+				url = url.slice(0, -1);
+			}
+
+			thirdslash = url.indexOf("/", 7);
+			if (thirdslash == -1) {
+				store_url = url.substring(7);
+				page_url = "";
+			} else {
+				store_url = url.substring(7, thirdslash);
+				page_url = url.substring(thirdslash + 1);
+			}
+
+			if (store_url == "") {
+				four_oh_four(res);
+				return;
+			}
+
+			console.log(util.format("user tried to request page '%s' from store '%s'. but we haven't implemented this yet!!", page_url, store_url));
 			four_oh_four(res);
 		} else {
 			console.log("user tried to request disallowed file: " + url);
