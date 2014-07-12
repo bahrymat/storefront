@@ -40,6 +40,7 @@ function registerUser(email, password, url, callback) {
   newUser.save(function (err) {  
     if (err) {
       console.log(err);
+			callback(true, "We're having some issues, try again later.");
       return;
     }
 
@@ -47,9 +48,11 @@ function registerUser(email, password, url, callback) {
 		  if (err) {
 		    //User not created properly
 		    console.log(err);
+				callback(true, "We're having some issues, try again later.");
 		    return;
 		  }
 		  console.log('Created user: ' + u.user);
+      callback(false, "");
   	});
 	});
 
@@ -57,19 +60,9 @@ function registerUser(email, password, url, callback) {
 	fs.mkdir(email,function(uerr){
 	  if(uerr){
 			//debug
+			callback(true, "We're having some issues, try again later.");
 	    console.log(uerr);
 		
-	  } else {
-/*var imageSchema = mongoose.Schema({
-        ititle:  String,
-        iimage: String
-}); 
-var images = mongoose.model((email + "Images"), imageSchema);
-	      var prods = mongoose.model((email + "Products"), productSchema);
-       
-        var settings = mongoose.model((email + "Settings"), settingsSchema);
-        var front = mongoose.model((email + "Front"), FrontSchema);*/
-
 	  }
 	});
 }
