@@ -76,10 +76,10 @@ function registerUser(email, password, url, callback) {
 			db.close();
 		});}
 		else {
-		console.log(data);
-		db.close()
-		callback(true, "Email already in use");
-}
+			console.log(data);
+			db.close()
+			callback(true, "Email already in use");
+		}
 	});
 }
 
@@ -104,12 +104,11 @@ function login(email, password, callback) {
 			return;
 		}
 		else {
-		console.log(data);
-		db.close()
-		callback(false, "");
-}
+			console.log(data);
+			db.close()
+			callback(false, "");
+		}
 	});
-
 }
 
 
@@ -148,9 +147,9 @@ http.createServer(function (req, res) {
 		});
 
 		req.on('end', function() {
-			var urlParams = url_parse(data);
 
 			if (url == "/register") {
+				var urlParams = url_parse(data);
 				registerUser(urlParams.signupEmail, urlParams.signupPass, urlParams.signupStoreName, function (err, err_message) {
 					if (err) {
 						sendPageWithSubstitutions(res, "error.html", err_message);
@@ -160,6 +159,7 @@ http.createServer(function (req, res) {
 				});
 
 			} else if (url == "/login") {
+				var urlParams = url_parse(data);
 				login(urlParams.email, urlParams.password, function (err, err_message) {
 					if (err) {
 						sendPageWithSubstitutions(res, "error.html", err_message);
@@ -167,6 +167,11 @@ http.createServer(function (req, res) {
 						sendPageWithSubstitutions(res, "login.html", urlParams.email);
 					}
 				});
+
+			} else if (url == "/changesettings") {
+				console.log("received store edit request. this hasn't been implemented yet."); //"data" currently contains the json for the store settings
+				res.writeHead(200);
+				res.end("Your changes have been saved!\n...actually, we haven't implemented that.");
 
 			} else {
 				console.log("unknown POST request. url params:");
@@ -198,7 +203,25 @@ http.createServer(function (req, res) {
 				}
 			});
 		} else if (url.substring(0,6) == "/store") {
-			console.log("NOT YET IMPLEMENTED!! " + url)
+			if (url.slice(-1) == "/") {
+				url = url.slice(0, -1);
+			}
+
+			thirdslash = url.indexOf("/", 7);
+			if (thirdslash == -1) {
+				store_url = url.substring(7);
+				page_url = "";
+			} else {
+				store_url = url.substring(7, thirdslash);
+				page_url = url.substring(thirdslash + 1);
+			}
+
+			if (store_url == "") {
+				four_oh_four(res);
+				return;
+			}
+
+			console.log(util.format("user tried to request page '%s' from store '%s'. but we haven't implemented this yet!!", page_url, store_url));
 			four_oh_four(res);
 		} else {
 			console.log("user tried to request disallowed file: " + url);
