@@ -145,10 +145,16 @@ function registerUser(email, password, url, callback) {
 			// Create dir on account creation
 			fs.mkdir(('users/' + email),function(uerr){
 				if(uerr){
-					//debug
+					//users/email not created
 					callback(true, "We're having some issues, try again later.");
-					console.log(uerr);
-		
+					console.log(uerr);		
+				} else {
+          fs.mkdir(('users/' + email + '/images'),function(uerr){
+				    if(uerr){
+					    //users/email/images not created
+					    callback(true, "We're having some issues, try again later.");
+					    console.log(uerr);}
+          });	
 				}
 			db.close();
 		});}
