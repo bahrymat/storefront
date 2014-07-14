@@ -181,7 +181,7 @@ function login(email, password, callback) {
 			db.close()
 			return;
 		}
-		if (data == null){
+		else if (data == null){
      	db.close();
 			callback(true, "Username or password incorrect");
 			return;
@@ -254,7 +254,94 @@ http.createServer(function (req, res) {
 			} else if (url == "/changesettings") {
 				console.log("received store edit request. this hasn't been implemented yet."); //"data" currently contains the json for the store settings
 				res.writeHead(200);
-				res.end("Your changes have been saved!\n...actually, we haven't implemented that.");
+				var pdata =JSON.parse(data);
+				console.log('Updating ' + pdata.user);
+				mongoose.connect('mongodb://localhost:8081/easyStorefront');
+				var db = mongoose.connection;
+				db.on('error', console.error.bind(console, 'connection error:'));
+				db.once('open', function callback () {
+					console.log('Connected to MongoDB');
+				});
+				var settings = mongoose.model(((pdata.user).trim()) + 'settings', settingsSchema);
+				var sdata = pdata.settings;
+				var new_settings = new settings (
+					{page: {
+						pageURL: sdata.page.pageURL,
+						pageTitle: sdata.page.pageTitle,
+						pageCurrency: sdata.page.pageCurrency,
+						pageDisplayOnline: sdata.page.pageDisplayOnline,
+						pageHomepageListing: sdata.page.pageHomepageListing
+					},
+					style: {
+						bgcolour: sdata.style.bgcolour,
+						fontcolour: sdata.style.fontcolour,
+						fontface: sdata.style.fontface,
+						navbarcolor: sdata.style.navbarcolor,
+						navbarhighlight: sdata.style.navbarhighlight,
+						navbartextcolor: sdata.style.navbartextcolor,
+						footercolor: sdata.style.footercolor,
+						footertext: sdata.style.footertext
+					},
+					navbar: {
+						navbarLogo: sdata.navbar.navbarLogo
+					},
+					splash: {
+						splashUse: sdata.splash.splashUse,
+						splashHead: sdata.splash.splashHead,
+						splashSubHead: sdata.splash.splashSubHead,
+						splashImage: sdata.splash.splashImage,
+						splashCaption: sdata.splash.splashCaption
+					},
+					contact: {
+						stAdd: sdata.contact.stAdd,
+						city: sdata.contact.city,
+						province: sdata.contact.province,
+						country: sdata.contact.province,
+						phone: sdata.contact.phone,
+						emailAdd: sdata.contact.emailAdd
+					},
+					hours: {
+						sunstart: sdata.hours.sunstart,
+						sunend: sdata.hours.sunend,
+						monstart: sdata.hours.monstart,
+						monend: sdata.hours.monend,
+						tuestart: sdata.hours.tuestart,
+						tueend: sdata.hours.tueend,
+						wedstart: sdata.hours.wedstart,
+						wedend: sdata.hours.wedend,
+						thustart: sdata.hours.thustart,
+						thuend: sdata.hours.thuend,
+						frstart: sdata.hours.frstart,
+						frend: sdata.hours.frend,
+						satstart: sdata.hours.satstart,
+						satend: sdata.hours.satend
+					}
+
+				});
+				//clear the stored settings before saving new ones, kinda sketchy right now
+				//will probably add a timestamp, 
+				//then delete the entry with the oldest timestamp after new on is saved
+				mongoose.connection.collections[(pdata.user) + 'settings'].drop( function(err) { 
+					if (err) {
+						console.log(err);
+						db.close();
+						return;
+					} else {
+						console.log(pdata.user + 'settings dropped');  
+						new_settings.save(function (err) {  
+							if (err) {
+								console.log(err);
+								db.close();
+								return;
+							} else {
+								console.log("settings saved sucessfully");
+								db.close();
+							}
+						});
+					}
+				});
+				
+				res.end("Your changes have been saved!\n...actually, we haven't implemented (most of) that.");
 
 			} else {
 				console.log("unknown POST request. url params:");

@@ -117,11 +117,13 @@ refreshImageEvents();
 
 function parseForms() {
 	var forms = $('.storeform-container');
+	var logged = document.cookie.slice(6);
 	var formObject = {
 		elements: [],
 		products: [],
 		settings: {}
 	};
+	formObject.user = logged.replace(".", "_").replace("@", "_");
 	var fields;
 	$('.element-container').each(function (i) {
 		formObject.elements[i] = {};
