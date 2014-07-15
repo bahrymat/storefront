@@ -115,36 +115,15 @@ function refreshImageEvents() {
 
 refreshImageEvents();
 
-function parseForms() {
+function parseSettingsForms() {
 	var forms = $('.storeform-container');
 	var logged = document.cookie.slice(6);
 	var formObject = {
-		elements: [],
-		products: [],
 		settings: {}
 	};
-	formObject.user = logged.replace(".", "_").replace("@", "_");
+	formObject.user = logged.replace(".", "_").replace("@", "__");
 	var fields;
-	$('.element-container').each(function (i) {
-		formObject.elements[i] = {};
-		$(this).find('.storeform').each(function () {
-			if (this.type == 'checkbox') { //strange bug with checkboxes not properly storing their value.
-				formObject.elements[i][this.id] = $(this).is(':checked');
-			} else {
-				formObject.elements[i][this.id] = this.value ? this.value : this.placeholder;
-			}
-		});
-	});
-	$('.product-container').each(function (i) {
-		formObject.products[i] = {};
-		$(this).find('.storeform').each(function () {
-			if (this.type == 'checkbox') { //strange bug with checkboxes not properly storing their value.
-				formObject.products[i][this.id] = $(this).is(':checked');
-			} else {
-				formObject.products[i][this.id] = this.value ? this.value : this.placeholder;
-			}
-		});
-	});
+
 	$('.settings-container').each(function () {
 		category = this.id
 		formObject.settings[category] = {};
@@ -162,4 +141,55 @@ function parseForms() {
 
 }
 
-$('.storesubmit').click(parseForms);
+function parseProductForms() {
+	var forms = $('.storeform-container');
+	var logged = document.cookie.slice(6);
+	var formObject = {
+		products: []
+	};
+	formObject.user = logged.replace(".", "_").replace("@", "__");
+	var fields;
+	$('.product-container').each(function (i) {
+		formObject.products[i] = {};
+		$(this).find('.storeform').each(function () {
+			if (this.type == 'checkbox') { //strange bug with checkboxes not properly storing their value.
+				formObject.products[i][this.id] = $(this).is(':checked');
+			} else {
+				formObject.products[i][this.id] = this.value ? this.value : this.placeholder;
+			}
+		});
+	});
+	$.post("/changeproducts", JSON.stringify(formObject), function (serverreply) {
+		alert(serverreply);
+	});
+
+}
+
+function parseFrontForms() {
+	var forms = $('.storeform-container');
+	var logged = document.cookie.slice(6);
+	var formObject = {
+		elements: []
+	};
+	formObject.user = logged.replace(".", "_").replace("@", "__");
+	var fields;
+	$('.element-container').each(function (i) {
+		formObject.elements[i] = {};
+		$(this).find('.storeform').each(function () {
+			if (this.type == 'checkbox') { //strange bug with checkboxes not properly storing their value.
+				formObject.elements[i][this.id] = $(this).is(':checked');
+			} else {
+				formObject.elements[i][this.id] = this.value ? this.value : this.placeholder;
+			}
+		});
+	});
+
+	$.post("/changefront", JSON.stringify(formObject), function (serverreply) {
+		alert(serverreply);
+	});
+
+}
+
+$('.settingssubmit').click(parseSettingsForms);
+$('.productssubmit').click(parseProductForms);
+$('.frontsubmit').click(parseFrontForms);

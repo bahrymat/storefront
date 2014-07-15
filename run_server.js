@@ -14,6 +14,11 @@ var imageSchema = mongoose.Schema({
         ititle:  String,
         iimage: String
 });
+
+var productList = mongoose.Schema({
+	products: [productSchema]
+});
+
 var productSchema = mongoose.Schema({
 		ptitle: String,
 		psdescription: String,
@@ -252,10 +257,10 @@ http.createServer(function (req, res) {
 				});
 
 			} else if (url == "/changesettings") {
-				console.log("received store edit request. this hasn't been implemented yet."); //"data" currently contains the json for the store settings
+				console.log("received store settings edit request"); 
 				res.writeHead(200);
 				var pdata =JSON.parse(data);
-				console.log('Updating ' + pdata.user);
+				console.log('Updating ' + pdata.user + ' settings');
 				mongoose.connect('mongodb://localhost:8081/easyStorefront');
 				var db = mongoose.connection;
 				db.on('error', console.error.bind(console, 'connection error:'));
@@ -322,27 +327,74 @@ http.createServer(function (req, res) {
 				//will probably add a timestamp, 
 				//then delete the entry with the oldest timestamp after new on is saved
 				mongoose.connection.collections[(pdata.user) + 'settings'].drop( function(err) { 
-					if (err) {
-						console.log(err);
-						db.close();
-						return;
-					} else {
-						console.log(pdata.user + 'settings dropped');  
-						new_settings.save(function (err) {  
-							if (err) {
-								console.log(err);
-								db.close();
-								return;
-							} else {
-								console.log("settings saved sucessfully");
-								db.close();
-							}
-						});
+					if (!err) {
+						console.log(pdata.user + ' settings dropped'); 
 					}
+						 
+					new_settings.save(function (err) {  
+						if (err) {
+							console.log(err);
+							db.close();
+							return;
+						} else {
+							console.log("settings saved sucessfully");
+							db.close();
+						}
+					});
+					
 				});
 				
-				res.end("Your changes have been saved!\n...actually, we haven't implemented (most of) that.");
-
+				res.end("Your settings changes have been saved!");
+			} else if (url == "/changeproducts") {
+				console.log("received store products edit request"); 
+				res.writeHead(200);
+				var pdata =JSON.parse(data);
+				console.log('Updating ' + pdata.user + ' products');
+				mongoose.connect('mongodb://localhost:8081/easyStorefront');
+				var db = mongoose.connection;
+				db.on('error', console.error.bind(console, 'connection error:'));
+				db.once('open', function callback () {
+					console.log('Connected to MongoDB');
+				});
+				var pdata = JSON.parse(data);
+				var products = mongoose.model(((pdata.user).trim()) + 'p', productSchema);
+				var pList = mongoose.model(((pdata.user).trim()) + 'products', productList);
+				var prodata = pdata.products;
+				var new_products = new pList;
+				for(var i = 0; i < prodata.length;i++){
+					var new_product = new products({
+						ptitle : prodata[i].ptitle,
+						psdescription : prodata[i].psdescription,
+						pldescription : prodata[i].pldescription,
+						pprice : prodata[i].pprice,
+						pimage : prodata[i].pimage,
+						ptags : prodata[i].ptags
+					});
+					new_products.products.addToSet(new_product);
+				}
+				//clear the stored settings before saving new ones, kinda sketchy right now
+				//will probably add a timestamp, 
+				//then delete the entry with the oldest timestamp after new on is saved
+				mongoose.connection.collections[(pdata.user) + 'products'].drop( function(err) { 
+					if (!err) {
+						console.log(pdata.user + ' products dropped'); 
+					}
+						 
+					new_products.save(function (err) {  
+						if (err) {
+							console.log(err);
+							db.close();
+							return;
+						} else {
+							console.log("products saved sucessfully");
+							db.close();
+						}
+					});
+					
+				});
+				res.end("Your product changes have been saved!");
+			} else if (url == "/changefront") {
+				console.log(data);
 			} else {
 				console.log("unknown POST request. url params:");
 				console.log(urlParams);
