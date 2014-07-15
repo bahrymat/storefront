@@ -65,12 +65,14 @@
 			</div>
 		  </div>
 		
-						<!-- element Page -->
 						<div class="container settings_container hidden loggedin">
 
 <div class="bs-example bs-example-tabs">
 		  <ul id="myTab" class="nav nav-tabs">
-		    <li class="active"><a href="#elements" data-toggle="tab">Elements</a></li>
+		    <li class="active"><a href="#elements1" data-toggle="tab">Home Page</a></li>
+		    
+		    <li><a href="#elements2" data-toggle="tab">Products Page</a></li>
+		    
 		    <li><a href="#products" data-toggle="tab">Products</a></li>
 
 		    <li><a href="#images" data-toggle="tab">Images</a></li>
@@ -79,19 +81,22 @@
 		    
 		  </ul>
 		<div id="myTabContent" class="tab-content">
-    	<div class="tab-pane in active" id="elements">
+		
+						<!-- homepage element Page -->
+    	<div class="tab-pane in active" id="elements1">
 							
 						 <div class="back">
 							 <div class="jumbotron big">
-							 <div class="titles">Customize your home page</div><br>
+							 <div class="titles">Customize your splash page</div><br>
 								<div class="btn-group">
   								<button type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown">
     									New Element <span class="caret"></span>
   								</button><br>
-  								<ul class="dropdown-menu newElement" role="menu">
+  								<ul class="dropdown-menu newElement1" role="menu">
     								<li id="TextBlock">Text Block</li>
-    								<li id="ImageBlock">Image Block</li>
-    								<li id="ProductList">Product List</li>
+    								<li id="ImageBlock">Single Image</li>
+    								<li id="Carousel">Image Carousel</li>
+    								<li id="StartShopping">Start Shopping Button</li>
   								</ul>
 								</div>
 <br>
@@ -100,89 +105,39 @@
 								<button type="submit" class="btn btn-primary">Restore Default</button>
 								<button type="submit" class="btn btn-primary">Preview</button>
 							</div>
-							<div class="row" id="elementContent">
-								<!-- Textblock--
-									<div class="col-sm-6 textblockBox">
-										<div class="block"><div class="titles">Text Block
-											<button type="button" class="close deleteTextblock" aria-hidden="true">&times;</button></div>
-											<form class="form-horizontal element-container" role="form"> 
-												<div class="form-group">
-													<input type="hidden" class="form-control storeform" id="type" value="text">
-													<label for="ttitle" class="col-sm-3 control-label">Title</label>
-													<div class="col-sm-9">
-												 	 	<input type="text" class="form-control storeform" id="ttitle" placeholder="Title">
-											 		</div>
-													<label for="tdescription" class="col-sm-3 control-label">Description</label>
-													<div class="col-sm-9">
-														<textarea class="form-control storeform" rows="2" columns="3" id="tdescription" placeholder="Description"></textarea>
-													</div>
-													<label for="pos" class="col-sm-3 control-label">Position</label>
-													<div class="col-sm-9">
-												 	 <input type="number" class="form-control storeform" id="pos" placeholder="1">
-											 		</div>
-												</div>
-
-
-											</form>
-										</div>
-									</div>
-									<!-- /Textblock-->
-
-									<!-- Imageblock--
-									<div class="col-sm-6 imageblockBox">
-										<div class="block"><div class="titles">Image Block
-											<button type="button" class="close deleteImageblock" aria-hidden="true">&times;</button></div>
-											<form class="form-horizontal element-container" role="form">
-												<div class="form-group">
-													<input type="hidden" class="form-control storeform" id="type" value="image">
-													<label for="ititle" class="col-sm-3 control-label">Title</label>
-													<div class="col-sm-9">
-												 	 <input type="text" class="form-control storeform" id="ititle" placeholder="Title">
-											 		</div>
-													<label for="idescription" class="col-sm-3 control-label">Description</label>
-													<div class="col-sm-9">
-														<textarea class="form-control storeform" rows="2" id="idescription" placeholder="Description"></textarea>
-													</div>
-			
-													<label for="iimage" class="col-sm-3 control-label">Image</label>
-													<div class="col-sm-9">
-															<select class="form-control storeform" id="iimage">
-																<option>None</option>
-																<option>image1.jpg</option>
-																<option>image2.jpg</option>
-																<option>image3.jpg</option>
-																<option>image4.jpg</option>
-																<option>image5.jpg</option>
-															</select>
-													</div>
-													<label for="pos" class="col-sm-3 control-label">Position</label>
-													<div class="col-sm-9">
-												 	 <input type="number" class="form-control storeform" id="pos" placeholder="2">
-											 		</div>
-												</div>
-											</form>
-										</div>
-									</div>
-									<!-- /Imageblock-->
-
-									<!-- productlist --
-									<div class="col-sm-6 productblockBox">
-										<div class="block"><div class="titles">Product List
-											<button type="button" class="close deleteProductblock" aria-hidden="true">&times;</button></div>
-											<form class="form-horizontal element-container" role="form">
-													<input type="hidden" class="form-control storeform" id="type" value="productlist">
-												<div class="form-group">
-
-													<label for="pos" class="col-sm-3 control-label">Position</label>
-													<div class="col-sm-9">
-												 	 <input type="number" class="form-control storeform" id="pos" placeholder="3">
-											 		</div>
-												</div>
-											</form>
-										</div>
-									</div>
-									<!-- /productlist -->
-
+							<div class="row" id="element1Content">
+									<!-- contents go here -->
+								</div>
+							</div>
+						</div>
+				<!-- element Page -->	
+	
+	
+						<!-- product page elements Page -->
+    	<div class="tab-pane" id="elements2">
+							
+						 <div class="back">
+							 <div class="jumbotron big">
+							 <div class="titles">Customize your products page</div><br>
+								<div class="btn-group">
+  								<button type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown">
+    									New Element <span class="caret"></span>
+  								</button><br>
+  								<ul class="dropdown-menu newElement2" role="menu">
+    								<li id="TextBlock">Text Block</li>
+    								<li id="ImageBlock">Single Image</li>
+    								<li id="Carousel">Image Carousel</li>
+    								<li id="ProductList">Product List</li>
+  								</ul>
+								</div>
+<br>
+								<button type="submit" class="btn btn-primary productpagesubmit">Save</button>
+								<button type="submit" class="btn btn-primary">Save Draft</button>
+								<button type="submit" class="btn btn-primary">Restore Default</button>
+								<button type="submit" class="btn btn-primary">Preview</button>
+							</div>
+							<div class="row" id="element2Content">
+									<!-- contents go here -->
 								</div>
 							</div>
 						</div>
@@ -207,50 +162,7 @@
 
 								</div>
 								<div class="row" id="productContent" margin>
-										<!-- Product--
-										<div class="col-sm-6 productBox">
-											<div class="block" >
-												<button type="button" class="close deleteProduct" aria-hidden="true">&times;</button><br>
-												<form class="form-horizontal product-container" role="form">
-													<div class="form-group">
-														<label for="ptitle" class="col-sm-3 control-label">Product</label>
-														<div class="col-sm-9">
-													 	 <input type="text" class="form-control storeform" id="ptitle" placeholder="Product Name">
-												 		</div>
-														<label for="psdescription" class="col-sm-3 control-label">Short Description</label>
-														<div class="col-sm-9">
-															<textarea class="form-control storeform" rows="2" id="psdescription"  placeholder="Short Description"></textarea>
-														</div>
-														<label for="pldescription" class="col-sm-3 control-label">Long Description</label>
-														<div class="col-sm-9">
-															<textarea class="form-control storeform" rows="2" id="pldescription"  placeholder="Long Description"></textarea>
-														</div>
-
-														<label for="pprice" class="col-sm-3 control-label">Price</label>
-
-														<div class="col-sm-9">
-													 	 <input type="number" class="form-control storeform" id="pprice" placeholder="Price">
-												 		</div>
-														<label for="pimage" class="col-sm-3 control-label">Image</label>
-														<div class="col-sm-9">
-																<select class="form-control storeform" id="pimage">
-																	<option>None</option>
-																	<option>image1.jpg</option>
-																	<option>image2.jpg</option>
-																	<option>image3.jpg</option>
-																	<option>image4.jpg</option>
-																	<option>image5.jpg</option>
-																</select>
-														</div>
-														<label for="ptags" class="col-sm-3 control-label">Tags</label>
-														<div class="col-sm-9">
-															<textarea class="form-control storeform" rows="2" id="ptags"  placeholder="Tags (comma separated)"></textarea>
-														</div>
-													</div>
-												</form>
-											</div>
-										</div>
-										<!-- /Product-->
+										<!-- contents go here -->
 
 								</div>
 							</div>
@@ -276,30 +188,7 @@
 
 							</div>
 							<div class="row" id="imagesContent" >
-									<!-- Image--
-									<div class="col-sm-6 imageBox">
-										<div class="block"><button type="button" class="close deleteImage" aria-hidden="true">&times;</button><br>
-											<div class="col-sm-12"><img class="img-thumbnail imagethumb" src="http://placehold.it/200x200&text=Thumbnail" alt="200x200"></img></div>
-											<form class="form-horizontal image-container" role="form">
-												<div class="form-group"><div>
-													<label for="imname" class="col-sm-4 control-label">Name</label>
-													<div class="col-sm-8">
-												 	 <input type="text" class="form-control storeform" id="imname" placeholder="Image name">
-											 		</div>
-													<label for="imfile" class="col-sm-4 control-label">Image File</label>
-													<div class="col-sm-8">
-												 	 <input type="file" class="form-control storeform imfile" >
-														<input type="text" class="filename">
-														<div class="button-group"> 
-															<a href="#" class="browse">Browse</a>
-														</div>
-														</div>
-													</div>
-												</div>
-											</form>
-										</div>
-									</div>
-									<!-- /Image-->
+									<!-- contents go here -->
 								</div>
 							</div>
 					</div>
@@ -387,7 +276,7 @@
 													<div class="col-sm-9">
 												 	 <input type="text" class="form-control storeform" id="navbarcolor" placeholder="#279191">
 											 		</div>
-													<label for="navbarhighlight" class="col-sm-3 control-label">Navbar highlight colour</label>
+													<label for="navbarhighlight" class="col-sm-3 control-label">Navbar highlight</label>
 													<div class="col-sm-9">
 												 	 <input type="text" class="form-control storeform" id="navbarhighlight" placeholder="#207777">
 											 		</div>
@@ -423,42 +312,6 @@
 											 		</div>
 												</div>
 											</form>
-										</div>
-										<div class="setblock">
-											<div class="titles">Splash Page</div>
-											<form class="form-horizontal settings-container" role="form" id="splash">
-												<div class="form-group">
-													<div class="col-sm-6">
-														<div class="checkbox">
-															<label>
-																Include a Splash page for your site <input type="checkbox" class="storeform"  id="splashUse"/>
-															</label>
-														</div>
-													</div><br><br>
-													<label for="splashHead" class="col-sm-3 control-label">Heading</label>
-													<div class="col-sm-9">
-													 	 <input type="text" class="form-control storeform" id="splashHead" placeholder="Heading">
-											 		</div>
-													<label for="splashSubHead" class="col-sm-3 control-label">Subheading</label>
-													<div class="col-sm-9">
-													 	 <input type="text" class="form-control storeform" id="splashSubHead" placeholder="Subheading">
-											 		</div>
-													<label for="splashImage" class="col-sm-3 control-label">Splash Image</label>
-													<div class="col-sm-9">
-													 	 <select class="form-control storeform" id="splashImage">
-															<option>None</option>
-															<option>image1.jpg</option>
-															<option>image2.jpg</option>
-															<option>image3.jpg</option>
-															<option>image4.jpg</option>
-															<option>etc.</option>
-														 </select>
-											 		</div>
-													<label for="splashCaption" class="col-sm-3 control-label">Caption</label>
-													<div class="col-sm-9">
-													 	 <input type="text" class="form-control storeform" id="splashCaption" placeholder="Caption">
-											 		</div>
-											</div></form>
 										</div>
 										<div class="setblock">
 											<div class="titles">Location and Contact Information</div>

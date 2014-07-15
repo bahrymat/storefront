@@ -49,13 +49,6 @@ var settingsSchema = mongoose.Schema({
 	navbar: {
 		navbarLogo: String
 	},
-	splash: {
-		splashUse: Boolean,
-		splashHead: String,
-		splashSubHead: String,
-		splashImage: String,
-		splashCaption: String
-	},
 	contact: {
 		stAdd: String,
 		city: String,
@@ -290,13 +283,6 @@ http.createServer(function (req, res) {
 					navbar: {
 						navbarLogo: sdata.navbar.navbarLogo
 					},
-					splash: {
-						splashUse: sdata.splash.splashUse,
-						splashHead: sdata.splash.splashHead,
-						splashSubHead: sdata.splash.splashSubHead,
-						splashImage: sdata.splash.splashImage,
-						splashCaption: sdata.splash.splashCaption
-					},
 					contact: {
 						stAdd: sdata.contact.stAdd,
 						city: sdata.contact.city,
@@ -393,8 +379,14 @@ http.createServer(function (req, res) {
 					
 				});
 				res.end("Your product changes have been saved!");
-			} else if (url == "/changefront") {
+			} else if (url == "/changefrontpage") {
 				console.log(data);
+				res.writeHead(200);
+				res.end("Not implemented!");
+			} else if (url == "/changeproductpage") {
+				console.log(data);
+				res.writeHead(200);
+				res.end("Not implemented!");
 			} else {
 				console.log("unknown POST request. url params:");
 				console.log(urlParams);
