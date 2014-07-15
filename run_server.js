@@ -1,4 +1,4 @@
-var http = require('http'), fs = require('fs'), util = require('util'), mongoose = require('mongoose');;
+var http = require('http'), fs = require('fs'), util = require('util'), mongoose = require('mongoose');
 
 var frontSchema = mongoose.Schema({
   position: Number,
@@ -77,8 +77,8 @@ var settingsSchema = mongoose.Schema({
 });
 
 var redirected_urls = {"/": "/index.html", "/about": "/aboutus.html", "/examples": "/examples.html", "/edit": "/settings.html", "/logout": "/logout.html"}
-var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js", "/settings.css",
-                      "/yuwei.JPG", "/keegan.jpg", "/jason.jpg", "/matt.jpg", "/exclamation.jpg"]
+var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js",
+                      "/settings.css", "/yuwei.JPG", "/keegan.jpg", "/jason.jpg", "/matt.jpg", "/exclamation.jpg"]
 /* Included for security purposes, as well as to create a RESTful API.
    Static urls only - dynamic stuff like /login is handled separately. */
 
