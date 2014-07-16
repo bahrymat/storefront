@@ -372,7 +372,7 @@ http.createServer(function (req, res) {
 					});
 					new_products.products.addToSet(new_product);
 				}
-				//clear the stored settings before saving new ones, kinda sketchy right now
+				//clear the stored productss before saving new ones, kinda sketchy right now
 				//will probably add a timestamp, 
 				//then delete the entry with the oldest timestamp after new on is saved
 				mongoose.connection.collections[(pdata.user) + 'products'].drop( function(err) { 
@@ -394,7 +394,53 @@ http.createServer(function (req, res) {
 				});
 				res.end("Your product changes have been saved!");
 			} else if (url == "/changefront") {
-				console.log(data);
+				console.log("received store front edit request"); 
+				res.writeHead(200);
+				var pdata =JSON.parse(data);
+				console.log('Updating ' + pdata.user + ' front');
+				mongoose.connect('mongodb://localhost:8081/easyStorefront');
+				var db = mongoose.connection;
+				db.on('error', console.error.bind(console, 'connection error:'));
+				db.once('open', function callback () {
+					console.log('Connected to MongoDB');
+				});
+				var edata = JSON.parse(data);
+				var elements = mongoose.model('products', productSchema);
+				var eList = mongoose.model(((pdata.user).trim()) + 'products', productList);
+				var eledata = pdata.elements;
+				var new_elements = new eList;
+				for(var i = 0; i < eledata.length;i++){
+					var new_product = new elements({
+						ptitle : prodata[i].ptitle,
+						psdescription : prodata[i].psdescription,
+						pldescription : prodata[i].pldescription,
+						pprice : prodata[i].pprice,
+						pimage : prodata[i].pimage,
+						ptags : prodata[i].ptags
+					});
+					new_products.products.addToSet(new_product);
+				}
+				//clear the stored productss before saving new ones, kinda sketchy right now
+				//will probably add a timestamp, 
+				//then delete the entry with the oldest timestamp after new on is saved
+				mongoose.connection.collections[(pdata.user) + 'front'].drop( function(err) { 
+					if (!err) {
+						console.log(pdata.user + ' front dropped'); 
+					}
+						 
+					new_products.save(function (err) {  
+						if (err) {
+							console.log(err);
+							db.close();
+							return;
+						} else {
+							console.log("front saved sucessfully");
+							db.close();
+						}
+					});
+					
+				});
+				res.end("Your front changes have been saved!");
 			} else {
 				console.log("unknown POST request. url params:");
 				console.log(urlParams);

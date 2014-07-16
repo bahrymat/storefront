@@ -45,7 +45,7 @@ $("ul.newElement > li#ImageBlock").click(
 
 $("ul.newElement > li#ProductList").click(
 	function () {
-		var productlistform = '<div class="col-sm-6 productblockBox"><div class="block"><div class="titles">Product List<button type="button" class="close deleteProductblock" aria-hidden="true">&times;</button></div><form class="form-horizontal element-container" role="form"><div class="form-group"><label for="pos" class="col-sm-3 control-label">Position</label><div class="col-sm-9"><input type="number" class="form-control storeform" id="pos" placeholder="n + 1"></div></form></div></div>';
+		var productlistform = '<div class="col-sm-6 productblockBox"><div class="block"><div class="titles">Product List<button type="button" class="close deleteProductblock" aria-hidden="true">&times;</button></div><form class="form-horizontal element-container" role="form"><div class="form-group"><label for="pltitle" class="col-sm-3 control-label">Title</label><div class="col-sm-9"><input type="text" class="form-control storeform" id="ttitle" placeholder="Title"></div><label for="pos" class="col-sm-3 control-label">Position</label><div class="col-sm-9"><input type="number" class="form-control storeform" id="pos" placeholder="n + 1"></div></form></div></div>';
 
 		$("#elementContent").append(productlistform)
 	});
