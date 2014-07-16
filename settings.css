@@ -148,7 +148,6 @@ ul#myTab{
 	min-height:40px;
 }
 .imagethumb{
-	max-width: 200px;
  	max-height: 200px;
 	display:block;
 	margin:auto;
@@ -169,11 +168,21 @@ input[type="file"]{display:none;}
 .nav-tabs > li > a, .nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
   /* can change styling of inactive tabs here */
   border: 1px solid #bbb;
-  border-bottom: none;
 }
 
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
   /* can change styling of active tab here */
 	background-color:#0099CC;
 color:white;
+}
+
+.image-container input {
+  margin-bottom: 3px;
+}
+
+.imageBox {
+  height: 404px;
+}
+
+.imageBox .block {
 }
