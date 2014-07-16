@@ -101,65 +101,75 @@ function url_parse(query) {
  var userSchema = mongoose.Schema({user:String, pass:String, url: String});
 function registerUser(email, password, url, callback) {
 	return_value = undefined;
-  mongoose.connect('mongodb://localhost:8081/easyStorefront');
+	mongoose.connect('mongodb://localhost:8081/easyStorefront');
 
-  var db = mongoose.connection;
-  db.on('error', console.error.bind(console, 'connection error:'));
-  db.once('open', function callback () {
-    console.log('Connected to MongoDB');
-  });
+	var db = mongoose.connection;
+	db.on('error', console.error.bind(console, 'connection error:'));
+	db.once('open', function callback () {
+		console.log('Connected to MongoDB');
+	});
 
 	//first check if email in use
 	var users = mongoose.model('users', userSchema);
 	users.findOne({user:email}, function (err,data) {
 		if (err) {
 			console.log(err);
+			console.log("Problem A");
 			callback(true, "We're having some issues, try again later.");
-			db.close()
+			db.close();
 			return;
 		}
-		if (data == null){
+		if (data == null) {
      	
 			var newUser = new users({user:email, pass:password, url:url});
-			newUser.save(function (err) {  
+			newUser.save(function (err) {
 				if (err) {
-				  console.log(err);
+					console.log(err);
+					console.log("Problem B");
 					callback(true, "We're having some issues, try again later.");
-				  return;
+					db.close();
+					return;
 				}
 
-				users.findById(newUser._id, function(err, u) {
+				users.findById(newUser._id, function (err, u) {
 					if (err) {
 						//User not created properly
 						console.log(err);
+						console.log("Problem C");
+						db.close();
 						callback(true, "We're having some issues, try again later.");
 						return;
 					}
-					console.log('Created user: ' + u.user);
-				  callback(false, "");
+					// Create dir on account creation
+					fs.mkdir(('users/' + email),function (uerr) {
+						if (uerr) {
+							//users/email not created
+							console.log("Problem D");
+							callback(true, "We're having some issues, try again later.");
+							console.log(uerr);		
+							db.close();
+						} else {
+							fs.mkdir(('users/' + email + '/images'), function (uerr) {
+								if (uerr) {
+									//users/email/images not created
+									console.log("Problem E");
+									callback(true, "We're having some issues, try again later.");
+									console.log(uerr);
+								} else {
+									console.log('Created user: ' + u.user);
+									db.close();
+									callback(false, "");
+								}
+							});	
+						}
+					});
+					
 				});
 			});
-
-			// Create dir on account creation
-			fs.mkdir(('users/' + email),function(uerr){
-				if(uerr){
-					//users/email not created
-					callback(true, "We're having some issues, try again later.");
-					console.log(uerr);		
-				} else {
-          fs.mkdir(('users/' + email + '/images'),function(uerr){
-				    if(uerr){
-					    //users/email/images not created
-					    callback(true, "We're having some issues, try again later.");
-					    console.log(uerr);}
-          });	
-				}
-			db.close();
-		});}
-		else {
+		} else {
 			console.log(data);
-			db.close()
 			callback(true, "Email already in use");
+			db.close();
 		}
 	});
 }
