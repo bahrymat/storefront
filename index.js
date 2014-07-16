@@ -23,6 +23,7 @@ function getCookie(cname) {
 
 if (getCookie("email")) {
 	$(".loggedin").removeClass("hidden");
+	$("#logout")[0].innerHTML = getCookie("email") + " - Log Out";
 } else {
 	$(".loggedout").removeClass("hidden");
 }
