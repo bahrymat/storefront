@@ -1,4 +1,40 @@
-var http = require('http'), fs = require('fs'), util = require('util');
+var http = require('http'), fs = require('fs'), util = require('util'), mongoose = require('mongoose');
+
+
+
+//this bit is irrelevant for now
+
+var userSchema = mongoose.Schema({user:String, pass:String, url: String});
+var productSchema = mongoose.Schema({
+	ptitle: String,
+	psdescription: String,
+	pldescription: String,
+	pprice: Number,
+	pimage: String,
+	ptags: String
+});
+var Product = mongoose.model('Product', productSchema);
+var User = mongoose.model('User', userSchema);
+
+mongoose.connect('mongodb://localhost:8081/easyStorefront');
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+	console.log('Connected to MongoDB');
+	User.find(function (err, data) {
+		if (err) {
+			console.error(err);
+			db.close();
+			return;
+		}
+		console.log(data);
+		db.close();
+	});
+});
+
+//end irrelevant bit
+
+
 
 function generateHeader(active_link) {
 	var headerhtml = '<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="utf-8"><title>%s</title><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"><link href="example_store.css" rel="stylesheet"><link href="store_custom.css" rel="stylesheet"></head><body><div class="navbar"><div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="example_store_home.html"><img src="example_store_logo.png" height="100%" alt="%s"></a></div><div class="collapse navbar-collapse"><ul class="nav navbar-nav">'

@@ -1,13 +1,13 @@
-var http = require('http'), fs = require('fs'), util = require('util'), mongoose = require('mongoose');;
+var http = require('http'), fs = require('fs'), util = require('util'), mongoose = require('mongoose');
 
-var frontSchema = mongoose.Schema({
+var eleSchema = mongoose.Schema({
   position: Number,
   type: String,
-  fields: [
-    {
-      entry: String,
-    }
-  ]
+  fields: [mongoose.Schema.Types.Mixed]
+});
+
+var eleList = mongoose.Schema({
+  elements: [eleSchema]
 });
 
 var imageSchema = mongoose.Schema({
@@ -49,13 +49,6 @@ var settingsSchema = mongoose.Schema({
 	navbar: {
 		navbarLogo: String
 	},
-	splash: {
-		splashUse: Boolean,
-		splashHead: String,
-		splashSubHead: String,
-		splashImage: String,
-		splashCaption: String
-	},
 	contact: {
 		stAdd: String,
 		city: String,
@@ -84,8 +77,8 @@ var settingsSchema = mongoose.Schema({
 });
 
 var redirected_urls = {"/": "/index.html", "/about": "/aboutus.html", "/examples": "/examples.html", "/edit": "/settings.html", "/logout": "/logout.html"}
-var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js", "/settings.css",
-                      "/yuwei.JPG", "/keegan.jpg", "/jason.jpg", "/matt.jpg", "/exclamation.jpg"]
+var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js",
+                      "/settings.css", "/yuwei.JPG", "/keegan.jpg", "/jason.jpg", "/matt.jpg", "/exclamation.jpg"]
 /* Included for security purposes, as well as to create a RESTful API.
    Static urls only - dynamic stuff like /login is handled separately. */
 
@@ -290,13 +283,6 @@ http.createServer(function (req, res) {
 					navbar: {
 						navbarLogo: sdata.navbar.navbarLogo
 					},
-					splash: {
-						splashUse: sdata.splash.splashUse,
-						splashHead: sdata.splash.splashHead,
-						splashSubHead: sdata.splash.splashSubHead,
-						splashImage: sdata.splash.splashImage,
-						splashCaption: sdata.splash.splashCaption
-					},
 					contact: {
 						stAdd: sdata.contact.stAdd,
 						city: sdata.contact.city,
@@ -393,10 +379,10 @@ http.createServer(function (req, res) {
 					
 				});
 				res.end("Your product changes have been saved!");
-			} else if (url == "/changefront") {
+			} else if (url == "/changefrontpage") {
 				console.log("received store front edit request"); 
 				res.writeHead(200);
-				var pdata =JSON.parse(data);
+				var pdata = JSON.parse(data);
 				console.log('Updating ' + pdata.user + ' front');
 				mongoose.connect('mongodb://localhost:8081/easyStorefront');
 				var db = mongoose.connection;
@@ -405,42 +391,65 @@ http.createServer(function (req, res) {
 					console.log('Connected to MongoDB');
 				});
 				var edata = JSON.parse(data);
-				var elements = mongoose.model('products', productSchema);
-				var eList = mongoose.model(((pdata.user).trim()) + 'products', productList);
-				var eledata = pdata.elements;
+				var elements = mongoose.model('elements', eleSchema);
+				var eList = mongoose.model(((pdata.user).trim()) + 'frontpage', eleList);
+				var eledata = pdata.frontPageElements;
 				var new_elements = new eList;
 				for(var i = 0; i < eledata.length;i++){
-					var new_product = new elements({
-						ptitle : prodata[i].ptitle,
-						psdescription : prodata[i].psdescription,
-						pldescription : prodata[i].pldescription,
-						pprice : prodata[i].pprice,
-						pimage : prodata[i].pimage,
-						ptags : prodata[i].ptags
+					var new_ele = new elements({
+						type : eledata[i].type,
+						pos : eledata[i].pos
 					});
-					new_products.products.addToSet(new_product);
+          if (new_ele.type == 'ImageBlock'){
+            new_ele.fields = [
+              {ititle: eledata[i].ititle}, 
+              {idescription: eledata[i].idescription},
+              {iimage:eledata[i].iimage}];
+          } else if (new_ele.type == 'TextBlock'){
+            new_ele.fields = [
+              {ttitle: eledata[i].ttitle}, 
+              {tdescription: eledata[i].tdescription}];
+          } else if (new_ele.type == 'Carousel'){
+            new_ele.fields = [
+              {cimage1: eledata[i].cimage1},
+              {cimage2: eledata[i].cimage2},
+              {cimage3: eledata[i].cimage3}];console.log('wat');
+          } else if (new_ele.type == 'StartShoppingButton'){
+            //incase we change contents
+            new_ele.fields = [];
+          } else {
+            //This should never be reached
+            console.log('something bad happened saving the front page');
+          }
+					new_elements.elements.addToSet(new_ele);
 				}
+console.log(new_elements);
 				//clear the stored productss before saving new ones, kinda sketchy right now
 				//will probably add a timestamp, 
 				//then delete the entry with the oldest timestamp after new on is saved
-				mongoose.connection.collections[(pdata.user) + 'front'].drop( function(err) { 
+        /*mongoose.connection.collections[(pdata.user) + 'frontpage'].drop( function(err) { 
 					if (!err) {
-						console.log(pdata.user + ' front dropped'); 
+						console.log(pdata.user + ' frontpage dropped'); 
 					}
 						 
-					new_products.save(function (err) {  
+					new_elements.save(function (err) {  
 						if (err) {
 							console.log(err);
 							db.close();
 							return;
 						} else {
-							console.log("front saved sucessfully");
+							console.log("frontpage saved sucessfully");
 							db.close();
 						}
 					});
 					
-				});
-				res.end("Your front changes have been saved!");
+				});*/db.close();
+				res.end("Your Home Page changes have been saved!");
+
+			} else if (url == "/changeproductpage") {
+				console.log(data);
+				res.writeHead(200);
+				res.end("Not implemented!");
 			} else {
 				console.log("unknown POST request. url params:");
 				console.log(urlParams);
