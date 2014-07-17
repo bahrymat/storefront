@@ -3,7 +3,7 @@ var http = require('http'), fs = require('fs'), util = require('util'), mongoose
 var eleSchema = mongoose.Schema({
   position: Number,
   type: String,
-  fields: [mongoose.Schema.Types.Mixed]
+  fields: { type : Array , "default" : [] }
 });
 
 var eleList = mongoose.Schema({
@@ -319,27 +319,35 @@ http.createServer(function (req, res) {
 					}
 
 				});
-				//clear the stored settings before saving new ones, kinda sketchy right now
-				//will probably add a timestamp, 
-				//then delete the entry with the oldest timestamp after new on is saved
-				mongoose.connection.collections[(pdata.user) + 'settings'].drop( function(err) { 
-					if (!err) {
-						console.log(pdata.user + ' settings dropped'); 
+				settings.findOne({}, function (err,q) {
+					var old = null;
+					if (err) {
+						console.log(err + ' here');
+						db.close()
+						return;
 					}
-						 
+					else if (q != null){
+					 	old = q._id;
+					}
 					new_settings.save(function (err) {  
 						if (err) {
-							console.log(err);
+							console.log(err + ' or here');
 							db.close();
 							return;
 						} else {
-							console.log("settings saved sucessfully");
+							if (old != null){
+								settings.remove({_id: old}, function(err) {
+									if (err) {
+										console.log(err + ' maybe here');//this gets thrown for some reason
+										return;
+									}
+								});}
+							console.log("Products saved sucessfully");
 							db.close();
 						}
 					});
-					
 				});
-				
+								
 				res.end("Your settings changes have been saved!");
 			} else if (url == "/changeproducts") {
 				console.log("received store products edit request"); 
@@ -368,32 +376,41 @@ http.createServer(function (req, res) {
 					});
 					new_products.products.addToSet(new_product);
 				}
-				//clear the stored productss before saving new ones, kinda sketchy right now
-				//will probably add a timestamp, 
-				//then delete the entry with the oldest timestamp after new on is saved
-				mongoose.connection.collections[(pdata.user) + 'products'].drop( function(err) { 
-					if (!err) {
-						console.log(pdata.user + ' products dropped'); 
+				pList.findOne({}, function (err,q) {
+					var old = null;
+					if (err) {
+						console.log(err + ' here');
+						db.close()
+						return;
 					}
-						 
+					else if (q != null){
+					 	old = q._id;
+					}
 					new_products.save(function (err) {  
 						if (err) {
-							console.log(err);
+							console.log(err + ' or here');
 							db.close();
 							return;
 						} else {
-							console.log("products saved sucessfully");
+							if (old != null){
+								pList.remove({_id: old}, function(err) {
+									if (err) {
+										console.log(err + ' maybe here');//this gets thrown for some reason
+										return;
+									}
+								});}
+							console.log("Products saved sucessfully");
 							db.close();
 						}
 					});
-					
 				});
+				
 				res.end("Your product changes have been saved!");
 			} else if (url == "/changefrontpage") {
 				console.log("received store front edit request"); 
 				res.writeHead(200);
 				var pdata = JSON.parse(data);
-				console.log('Updating ' + pdata.user + ' front');
+				console.log('Updating ' + pdata.user + ' frontpage');
 				mongoose.connect('mongodb://localhost:8081/easyStorefront');
 				var db = mongoose.connection;
 				db.on('error', console.error.bind(console, 'connection error:'));
@@ -423,7 +440,7 @@ http.createServer(function (req, res) {
             new_ele.fields = [
               {cimage1: eledata[i].cimage1},
               {cimage2: eledata[i].cimage2},
-              {cimage3: eledata[i].cimage3}];console.log('wat');
+              {cimage3: eledata[i].cimage3}];
           } else if (new_ele.type == 'StartShoppingButton'){
             //incase we change contents
             new_ele.fields = [];
@@ -433,33 +450,113 @@ http.createServer(function (req, res) {
           }
 					new_elements.elements.addToSet(new_ele);
 				}
-console.log(new_elements);
-				//clear the stored productss before saving new ones, kinda sketchy right now
-				//will probably add a timestamp, 
-				//then delete the entry with the oldest timestamp after new on is saved
-        /*mongoose.connection.collections[(pdata.user) + 'frontpage'].drop( function(err) { 
-					if (!err) {
-						console.log(pdata.user + ' frontpage dropped'); 
+				eList.findOne({}, function (err,q) {
+					var old = null;
+					if (err) {
+						console.log(err + ' here');
+						db.close()
+						return;
 					}
-						 
+					else if (q != null){
+					 	old = q._id;
+					}
 					new_elements.save(function (err) {  
 						if (err) {
-							console.log(err);
+							console.log(err + ' or here');
 							db.close();
 							return;
 						} else {
+							if (old != null){
+								eList.remove({_id: old}, function(err) {
+									if (err) {
+										console.log(err + ' maybe here');//this gets thrown for some reason
+										return;
+									}
+								});}
 							console.log("frontpage saved sucessfully");
 							db.close();
 						}
 					});
 					
-				});*/db.close();
+				});
+
 				res.end("Your Home Page changes have been saved!");
 
 			} else if (url == "/changeproductpage") {
-				console.log(data);
+				console.log("received store front edit request"); 
 				res.writeHead(200);
-				res.end("Not implemented!");
+				var pdata = JSON.parse(data);
+				console.log('Updating ' + pdata.user + ' product page');
+				mongoose.connect('mongodb://localhost:8081/easyStorefront');
+				var db = mongoose.connection;
+				db.on('error', console.error.bind(console, 'connection error:'));
+				db.once('open', function callback () {
+					console.log('Connected to MongoDB');
+				});
+				var edata = JSON.parse(data);
+				var elements = mongoose.model('elements', eleSchema);
+				var eList = mongoose.model(((pdata.user).trim()) + 'productpage', eleList);
+				var eledata = pdata.productsPageElements;
+				var new_elements = new eList;
+				for(var i = 0; i < eledata.length;i++){
+					var new_ele = new elements({
+						type : eledata[i].type,
+						pos : eledata[i].pos
+					});
+          if (new_ele.type == 'ImageBlock'){
+            new_ele.fields = [
+              {ititle: eledata[i].ititle}, 
+              {idescription: eledata[i].idescription},
+              {iimage:eledata[i].iimage}];
+          } else if (new_ele.type == 'TextBlock'){
+            new_ele.fields = [
+              {ttitle: eledata[i].ttitle}, 
+              {tdescription: eledata[i].tdescription}];
+          } else if (new_ele.type == 'Carousel'){
+            new_ele.fields = [
+              {cimage1: eledata[i].cimage1},
+              {cimage2: eledata[i].cimage2},
+              {cimage3: eledata[i].cimage3}];
+          } else if (new_ele.type == 'StartShoppingButton'){
+            //incase we change contents
+            new_ele.fields = [];
+          } else {
+            //This should never be reached
+            console.log('something bad happened saving the front page');
+          }
+					new_elements.elements.addToSet(new_ele);
+				}
+				eList.findOne({}, function (err,q) {
+					var old = null;
+					if (err) {
+						console.log(err + ' here');
+						db.close()
+						return;
+					}
+					else if (q != null){
+					 	old = q._id;
+					}
+					new_elements.save(function (err) {  
+						if (err) {
+							console.log(err + ' or here');
+							db.close();
+							return;
+						} else {
+							if (old != null){
+								eList.remove({_id: old}, function(err) {
+									if (err) {
+										console.log(err + ' maybe here'); //this gets thrown for some reason
+										return;
+									}
+								});}
+							console.log("Product page saved sucessfully");
+							db.close();
+						}
+					});
+				});
+
+				res.end("Your Product Page changes have been saved!");
+
 			} else {
 				console.log("unknown POST request. url params:");
 				console.log(urlParams);
