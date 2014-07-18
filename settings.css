@@ -101,7 +101,7 @@ ul#myTab{
 	background-color:#9cd7eb;
 	padding:10px;
 	margin:10px 5px;
-	min-height:240px;
+	min-height:275px;
 	border-radius:8px;
   	border-bottom: 1px solid #5E818D;
 }
@@ -153,14 +153,36 @@ ul#myTab{
 	margin:auto;
 	margin-bottom:10px;
 }
+.confirmDelete{
+display:none;
+text-align:right;
+margin-bottom:-5px
+}
 
+.confirmDelete div{
+display:inline-block
+}
+.del{
+font-size:125%;
+margin-top:-5px;
+padding-right:1em
+}
+.deletable{
+min-height: 1.7em
+}
+.confirmYes{
+margin-right:0.5em
+}
 
 #myTab a {
 outline:0;
 } 
-
+.deletable{
+max-height:20px;
+}
 .close{
-font-size:30px;}
+font-size:20px;}
+
 * {z-index: 9;} 
 
 
