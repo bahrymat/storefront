@@ -242,25 +242,48 @@ function upload_image(req, res, img_directory) {
 			return;
 		}
 
-		pretty_name = fields.imname[0];
-		user_email = fields.email[0];
-		filename = files.imfile[0].originalFilename;
-		fs.readFile(files.imfile[0].path, function (err, data) {
+		var pretty_name = fields.imname[0];
+		var user_email = fields.email[0];
+		var filename = files.imfile[0].originalFilename;
 		
+		var db_name = user_email.replace(".", "_").replace("@", "__") + "images";
+		
+		fs.readFile(files.imfile[0].path, function (err, data) {
 			if (err) {
 				console.log(err);
+				four_oh_four(res);
+				return;
 			}
 			
-			var newPath = __dirname + "/users/" + user_email + "/images/" + filename;
+			var newPath = "/users/" + user_email + "/images/" + filename;
 			
-			fs.writeFile(newPath, data, function (err) {
+			fs.writeFile(__dirname + newPath, data, function (err) {
 				if (err) {
 					console.log(err);
-					return
+					four_oh_four(res);
+					return;
 				}
 				
-				res.writeHead(303, {'Location': '/edit#images'});
-				res.end();
+				mongoose.connect('mongodb://localhost:8081/easyStorefront');
+				var db = mongoose.connection;
+				db.on('error', console.error.bind(console, 'connection error:'));
+				db.once('open', function callback () {
+					console.log('Connected to MongoDB');
+					var Image = mongoose.model(db_name, imageSchema);
+					var new_image = new Image({ititle: pretty_name, iimage: newPath})
+					new_image.save(function(err, data) {
+						if (err) {
+							console.log(err);
+							four_oh_four(res);
+							db.close();
+							return;
+						}
+						console.dir(new_image);
+						res.writeHead(303, {'Location': '/edit#images'});
+						res.end();
+						db.close();
+					});
+				});
 				
 			});
 			
