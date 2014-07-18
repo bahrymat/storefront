@@ -274,3 +274,10 @@ $('.settingssubmit').click(parseSettingsForms);
 $('.productssubmit').click(parseProductForms);
 $('.frontsubmit').click(parseFrontPageForms);
 $('.productpagesubmit').click(parseProductsPageForms);
+
+
+
+var hash = window.location.hash;
+hash && $('ul.nav a[href="' + hash + '"]').tab('show'); //link to specific tab
+
+history.pushState("", document.title, window.location.pathname); //remove anchor from url

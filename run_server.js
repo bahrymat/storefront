@@ -241,8 +241,6 @@ function upload_image(req, res, img_directory) {
 			four_oh_four(res);
 			return;
 		}
-		res.writeHead(200, {'content-type': 'text/plain'});
-		res.end('received upload');
 
 		pretty_name = fields.imname[0];
 		user_email = fields.email[0];
@@ -258,7 +256,11 @@ function upload_image(req, res, img_directory) {
 			fs.writeFile(newPath, data, function (err) {
 				if (err) {
 					console.log(err);
+					return
 				}
+				
+				res.writeHead(303, {'Location': '/edit#images'});
+				res.end();
 				
 			});
 			
