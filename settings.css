@@ -198,7 +198,7 @@ input[type="file"]{display:none;}
 color:white;
 }
 
-.image-container input {
+.image-container input[type=text] {
   margin-bottom: 3px;
 }
 
@@ -206,5 +206,6 @@ color:white;
   height: 404px;
 }
 
-.imageBox .block {
+.form-horizontal.image-container {
+  height: 318px;
 }

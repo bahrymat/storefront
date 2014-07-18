@@ -1,4 +1,4 @@
-var http = require('http'), fs = require('fs'), util = require('util'), mongoose = require('mongoose');
+var http = require('http'), fs = require('fs'), util = require('util'), mongoose = require('mongoose'), multiparty = require('multiparty');
 
 var eleSchema = mongoose.Schema({
   position: Number,
@@ -87,15 +87,19 @@ var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator
 /* converts url string in the form "email=foo@bar.com&password=abc123" into an object
    http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript */
 function url_parse(query) {
-    var match,
-        pl     = /\+/g,  // Regex for replacing addition symbol with a space
-        search = /([^&=]+)=?([^&]*)/g,
-        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); }
+	try {
+		var match,
+			pl     = /\+/g,  // Regex for replacing addition symbol with a space
+			search = /([^&=]+)=?([^&]*)/g,
+			decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); }
 
-    var urlParams = {};
-    while (match = search.exec(query))
-       urlParams[decode(match[1])] = decode(match[2]);
-	return urlParams;
+		var urlParams = {};
+		while (match = search.exec(query))
+		   urlParams[decode(match[1])] = decode(match[2]);
+		return urlParams;
+	} catch (URIError) {
+		return "";
+	}
 }
 
  var userSchema = mongoose.Schema({user:String, pass:String, url: String});
@@ -186,11 +190,12 @@ function login(email, password, callback) {
 	users.findOne({user:email, pass:password}, function (err,data) {
 		if (err) {
 			console.log(err);
+			callback(true, "Theres problems");
 			db.close()
 			return;
 		}
 		else if (data == null){
-     	db.close();
+			db.close();
 			callback(true, "Username or password incorrect");
 			return;
 		}
@@ -227,16 +232,61 @@ function sendPageWithSubstitutions(res, url, message) {
 	});
 }
 
+function upload_image(req, res, img_directory) {
+	var form = new multiparty.Form();
+
+	form.parse(req, function(err, fields, files) {
+		if (err) {
+			console.log(err);
+			four_oh_four(res);
+			return;
+		}
+		res.writeHead(200, {'content-type': 'text/plain'});
+		res.end('received upload');
+
+		pretty_name = fields.imname[0];
+		user_email = fields.email[0];
+		filename = files.imfile[0].originalFilename;
+		fs.readFile(files.imfile[0].path, function (err, data) {
+		
+			if (err) {
+				console.log(err);
+			}
+			
+			var newPath = __dirname + "/users/" + user_email + "/images/" + filename;
+			
+			fs.writeFile(newPath, data, function (err) {
+				if (err) {
+					console.log(err);
+				}
+				
+			});
+			
+		});
+
+	});
+
+	return;
+}
+
 
 http.createServer(function (req, res) {
-	var url = req.url
+	var url = req.url;
+	
 	if (req.method == "POST") {
+	
+		if (url == "/addimage") {
+			upload_image(req, res);
+			return;
+		}
+	
+	
 		var data = "";
 
 		req.on('data', function(data_piece) {
 			data += data_piece;
 		});
-
+		
 		req.on('end', function() {
 
 			if (url == "/register") {
@@ -427,27 +477,27 @@ http.createServer(function (req, res) {
 						type : eledata[i].type,
 						pos : eledata[i].pos
 					});
-          if (new_ele.type == 'ImageBlock'){
-            new_ele.fields = [
-              {ititle: eledata[i].ititle}, 
-              {idescription: eledata[i].idescription},
-              {iimage:eledata[i].iimage}];
-          } else if (new_ele.type == 'TextBlock'){
-            new_ele.fields = [
-              {ttitle: eledata[i].ttitle}, 
-              {tdescription: eledata[i].tdescription}];
-          } else if (new_ele.type == 'Carousel'){
-            new_ele.fields = [
-              {cimage1: eledata[i].cimage1},
-              {cimage2: eledata[i].cimage2},
-              {cimage3: eledata[i].cimage3}];
-          } else if (new_ele.type == 'StartShoppingButton'){
-            //incase we change contents
-            new_ele.fields = [];
-          } else {
-            //This should never be reached
-            console.log('something bad happened saving the front page');
-          }
+					if (new_ele.type == 'ImageBlock'){
+					new_ele.fields = [
+					  {ititle: eledata[i].ititle}, 
+					  {idescription: eledata[i].idescription},
+					  {iimage:eledata[i].iimage}];
+					} else if (new_ele.type == 'TextBlock'){
+					new_ele.fields = [
+					  {ttitle: eledata[i].ttitle}, 
+					  {tdescription: eledata[i].tdescription}];
+					} else if (new_ele.type == 'Carousel'){
+					new_ele.fields = [
+					  {cimage1: eledata[i].cimage1},
+					  {cimage2: eledata[i].cimage2},
+					  {cimage3: eledata[i].cimage3}];
+					} else if (new_ele.type == 'StartShoppingButton'){
+					//incase we change contents
+					new_ele.fields = [];
+					} else {
+					//This should never be reached
+					console.log('something bad happened saving the front page');
+					}
 					new_elements.elements.addToSet(new_ele);
 				}
 				eList.findOne({}, function (err,q) {
@@ -503,27 +553,27 @@ http.createServer(function (req, res) {
 						type : eledata[i].type,
 						pos : eledata[i].pos
 					});
-          if (new_ele.type == 'ImageBlock'){
-            new_ele.fields = [
-              {ititle: eledata[i].ititle}, 
-              {idescription: eledata[i].idescription},
-              {iimage:eledata[i].iimage}];
-          } else if (new_ele.type == 'TextBlock'){
-            new_ele.fields = [
-              {ttitle: eledata[i].ttitle}, 
-              {tdescription: eledata[i].tdescription}];
-          } else if (new_ele.type == 'Carousel'){
-            new_ele.fields = [
-              {cimage1: eledata[i].cimage1},
-              {cimage2: eledata[i].cimage2},
-              {cimage3: eledata[i].cimage3}];
-          } else if (new_ele.type == 'StartShoppingButton'){
-            //incase we change contents
-            new_ele.fields = [];
-          } else {
-            //This should never be reached
-            console.log('something bad happened saving the front page');
-          }
+					if (new_ele.type == 'ImageBlock'){
+					new_ele.fields = [
+					  {ititle: eledata[i].ititle}, 
+					  {idescription: eledata[i].idescription},
+					  {iimage:eledata[i].iimage}];
+					} else if (new_ele.type == 'TextBlock'){
+					new_ele.fields = [
+					  {ttitle: eledata[i].ttitle}, 
+					  {tdescription: eledata[i].tdescription}];
+					} else if (new_ele.type == 'Carousel'){
+					new_ele.fields = [
+					  {cimage1: eledata[i].cimage1},
+					  {cimage2: eledata[i].cimage2},
+					  {cimage3: eledata[i].cimage3}];
+					} else if (new_ele.type == 'StartShoppingButton'){
+					//incase we change contents
+					new_ele.fields = [];
+					} else {
+					//This should never be reached
+					console.log('something bad happened saving the front page');
+					}
 					new_elements.elements.addToSet(new_ele);
 				}
 				eList.findOne({}, function (err,q) {
@@ -558,6 +608,7 @@ http.createServer(function (req, res) {
 				res.end("Your Product Page changes have been saved!");
 
 			} else {
+				var urlParams = url_parse(data);
 				console.log("unknown POST request. url params:");
 				console.log(urlParams);
 				four_oh_four(res);
