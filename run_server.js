@@ -736,7 +736,7 @@ http.createServer(function (req, res) {
 			four_oh_four(res);
 		} else if (url.substring(0,13) == "/getstoredata") {
 			res.writeHead(200, {"Content-Type": "application/json"});
-			var store_data = {images:[]}
+			var store_data = {homePageElements: [], productsPageElements: [], products: [], images: [], settings: {}}
 			var user = url.substring(14);
 			var subbed_user = user.replace(".", "_").replace("@", "__");
 			if (user == "") {
@@ -747,17 +747,65 @@ http.createServer(function (req, res) {
 			var db = mongoose.connection;
 			db.on('error', console.error.bind(console, 'connection error:'));
 			db.once('open', function () {
-				var Images = mongoose.model(subbed_user + "images", imageSchema);
 				console.log('Connected to MongoDB');
+				
+				var Images = mongoose.model(subbed_user + "images", imageSchema);
 				Images.find(function (err, image_data) {
 					if (err) {
 						console.error(err);
+						four_oh_four(res);
 						db.close();
 						return;
 					}
-					db.close();
 					store_data.images = image_data;
-					res.end(JSON.stringify(store_data));
+				
+				var HomePageElements = mongoose.model(subbed_user + "frontpages", eleList);
+				HomePageElements.find(function (err, hp_data) {
+					if (err) {
+						console.error(err);
+						four_oh_four(res);
+						db.close();
+						return;
+					}
+					store_data.homePageElements = hp_data[0].elements;
+				
+				var ProductsPageElements = mongoose.model(subbed_user + "productpages", eleList);
+				ProductsPageElements.find(function (err, pp_data) {
+					if (err) {
+						console.error(err);
+						four_oh_four(res);
+						db.close();
+						return;
+					}
+					store_data.productsPageElements = pp_data[0].elements;
+				
+				var Products = mongoose.model(subbed_user + "products", productList);
+				Products.find(function (err, p_data) {
+					if (err) {
+						console.error(err);
+						four_oh_four(res);
+						db.close();
+						return;
+					}
+					store_data.products = p_data[0].products;
+				
+				var Settings = mongoose.model(subbed_user + "settings", settingsSchema);
+				Settings.find(function (err, s_data) {
+					if (err) {
+						console.error(err);
+						four_oh_four(res);
+						db.close();
+						return;
+					}
+					store_data.settings = s_data[0];
+				
+				db.close();
+				res.end(JSON.stringify(store_data));
+				
+				});
+				});
+				});
+				});
 				});
 			});
 		} else {
