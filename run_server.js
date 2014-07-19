@@ -1,6 +1,6 @@
 var http = require('http'), fs = require('fs'), util = require('util'), mongoose = require('mongoose'), multiparty = require('multiparty'),
     querystring = require('querystring');
-
+	
 var eleSchema = mongoose.Schema({
   pos: Number,
   type: String,
@@ -79,7 +79,7 @@ var settingsSchema = mongoose.Schema({
 
 var redirected_urls = {"/": "/index.html", "/about": "/aboutus.html", "/examples": "/examples.html", "/edit": "/settings.html", "/logout": "/logout.html"}
 var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js",
-                      "/settings.css", "/yuwei.JPG", "/keegan.jpg", "/jason.jpg", "/matt.jpg", "/exclamation.jpg"]
+                      "/settings.css", "/yuwei.JPG", "/keegan.jpg", "/jason.jpg", "/matt.jpg", "/exclamation.jpg", "/store_generic.css"]
 /* Included for security purposes, as well as to create a RESTful API.
    Static urls only - dynamic stuff like /login is handled separately. */
 
@@ -300,6 +300,163 @@ function upload_image(req, res, img_directory) {
 	return;
 }
 
+function getStoreInfo(user, callback) {
+	var subbed_user = user.replace(".", "_").replace("@", "__");
+	var store_data = {homePageElements: [], productsPageElements: [], products: [], images: [], settings: {}}
+	mongoose.connect('mongodb://localhost:8081/easyStorefront');
+	var db = mongoose.connection;
+	db.on('error', console.error.bind(console, 'connection error:'));
+	db.once('open', function () {
+		console.log('Connected to MongoDB');
+		
+		var Images = mongoose.model(subbed_user + "images", imageSchema);
+		Images.find(function (err, image_data) {
+			if (err) {
+				console.error(err);
+				db.close();
+				callback(store_data);
+				return;
+			}
+			store_data.images = image_data;
+		
+		var HomePageElements = mongoose.model(subbed_user + "frontpages", eleList);
+		HomePageElements.find(function (err, hp_data) {
+			if (err) {
+				console.error("banana" + err);
+				db.close();
+				callback(store_data);
+				return;
+			}
+			if (hp_data[0]) {
+				store_data.homePageElements = hp_data[0].elements;
+			}
+		
+		var ProductsPageElements = mongoose.model(subbed_user + "productpages", eleList);
+		ProductsPageElements.find(function (err, pp_data) {
+			if (err) {
+				console.error(err);
+				db.close();
+				callback(store_data);
+				return;
+			}
+			if (pp_data[0]) {
+				store_data.productsPageElements = pp_data[0].elements;
+			}
+		
+		var Products = mongoose.model(subbed_user + "products", productList);
+		Products.find(function (err, p_data) {
+			if (err) {
+				console.error(err);
+				db.close();
+				callback(store_data);
+				return;
+			}
+			if (p_data[0]) {
+				store_data.products = p_data[0].products;
+			}
+		
+		var Settings = mongoose.model(subbed_user + "settings", settingsSchema);
+		Settings.find(function (err, s_data) {
+			if (err) {
+				console.error(err);
+				db.close();
+				callback(store_data);
+				return;
+			}
+			if (s_data[0]) {
+				store_data.settings = s_data[0];
+			}
+		
+		db.close();
+		callback(store_data);
+		
+		});
+		});
+		});
+		});
+		});
+	});
+}
+
+function generate_store(escaped_email) {
+	email = escaped_email.replace("__", "@").replace("_", ".")
+	console.log("generating store for user " + email);
+
+	function generateHeader(active_link) {
+		var headerhtml = '<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="utf-8"><title>%s</title><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"><link href="../../store_generic.css" rel="stylesheet"><link href="store_custom.css" rel="stylesheet"></head><body><div class="navbar"><div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="example_store_home.html"><img src="example_store_logo.png" height="100%" alt="Logo Image Goes Here"></a></div><div class="collapse navbar-collapse"><ul class="nav navbar-nav">'
+		headerhtml += active_link == "home" ? '<li class="active">' : '<li>'
+		headerhtml += '<a href="example_store_home.html">Home</a></li>'
+		headerhtml += active_link == "products" ? '<li class="active">' : '<li>'
+		headerhtml += '<a href="example_store_products.html">Products</a></li></ul><form class="navbar-form navbar-left" role="search"><div class="form-group"><input type="text" class="form-control" placeholder="Search"></div> <a class="btn btn-default" href="example_store_searchresults.html" role="button">Submit</a></form></div></div></div><div class="main">';
+		return headerhtml;
+	}
+	function generateFooter() {
+		return '</div><div id="footer"><div class="container text-right"><p class="text-muted"><small>\u00A92014 %s. Store created with the assistance of easyStorefront.</small></p></div></div><script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script><script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script></body></html>';
+	}
+	function processElements(elements, products, settings) {
+		elementhtml = "";
+		for (var i = 0; i < elements.length; i++) {
+			if (elements[i].type == "TextBlock") {
+				elementhtml += util.format('<div class="container textbox"><h1>%s</h1><p class="lead">%s</p></div>', elements[i].ttitle, elements[i].tdescription);
+			} else if (elements[i].type == "ImageBlock") {
+				console.log("Image not implemented");
+			} else if (elements[i].type == "ProductList") {
+				elementhtml += '<div class="container"><div class="row">';
+				
+				for (var j = 0; j < products.length; j++) {
+				elementhtml += util.format('<div class="col-sm-6 col-md-4"><div class="thumbnail"><img src="example_product.png" alt="%s"><div class="caption"><h3>%s</h3><h4>%s%s</h4><p>%s</p><p><a href="#" class="btn btn-primary" role="button">Buy Now</a> <a href="example_store_product.html" class="btn btn-default" role="button">View Details</a></p></div></div></div>', products[j].ptitle, products[j].ptitle, settings.page.pageCurrency, products[j].pprice, products[j].psdescription);
+				}
+				
+				elementhtml += '</div></div>';
+			} else if (elements[i].type == "StartShoppingButton") {
+				elementhtml += '<p><a class="btn btn-lg btn-primary" href="/products" role="button">Start shopping! \u00BB</a></p>';
+			} else if (elements[i].type == "Carousel") {
+				console.log("ImageCarousel not implemented");
+			} else {
+				console.log("Unknown element type: " + elements[i].type);
+			}
+		}
+		return elementhtml;
+	}
+	
+	var data = getStoreInfo(email, function (data) {
+		productlistpage = util.format(generateHeader('products'), data.settings.page.pageTitle);
+		data.productsPageElements.sort(function(a, b){return a.pos-b.pos}); //sort based on the pos property of the page element
+		productlistpage += processElements(data.productsPageElements, data.products, data.settings);
+		productlistpage += util.format(generateFooter(), data.settings.page.pageTitle);
+		fs.writeFile("./users/" + email + "/store_products.html", productlistpage);
+		
+		
+		
+		splashpage = util.format(generateHeader('home'), data.settings.page.pageTitle);
+		splashpage += '<div class="container"><div class="jumbotron text-center">';
+		data.homePageElements.sort(function(a, b){return a.pos-b.pos}); //sort based on the pos property of the page element
+		splashpage += processElements(data.homePageElements, data.products, data.settings);
+		splashpage += "</div></div>";
+		splashpage += util.format(generateFooter(), data.settings.page.pageTitle);
+		fs.writeFile("./users/" + email + "/store_splash.html", splashpage);
+		
+		
+		
+		productpage = util.format(generateHeader(''), data.settings.page.pageTitle);
+		productpage += util.format('<div class="container"><div class="jumbotron jumbotron_lesspadding"><div class="row"><div class="col-md-5 col-sm-6"><img src="example_product.png" class="img-responsive img-rounded"></div><div class="col-md-7 col-sm-6"><h2>{ptitle}</h2><h4>%s{pprice}</h4><p>{pldescription}</p><p><a role="button" class="btn btn-primary" href="#">Buy Now</a></p></div></div><div class="row"><div class="col-md-12 col-sm-12"><div class="tags"><div class="button_label">Tags:</div><div class="btn-group">{buttons}</div></div></div></div></div></div>', data.settings.page.pageCurrency);
+		productpage += util.format(generateFooter(), data.settings.page.pageTitle);
+		fs.writeFile("./users/" + email + "/store_product.html", productpage);
+		
+		
+		
+		searchpage = util.format(generateHeader(''), data.settings.page.pageTitle);
+		searchpage += util.format('<div class="container textbox"><h1>Search Results</h1><p class="lead">The following products were found for the query, "{search}".</p></div>');
+				searchpage += '<div class="container"><div class="row">{results}</div></div>';
+		searchpage += util.format(generateFooter(), data.settings.page.pageTitle);
+		fs.writeFile("./users/" + email + "/store_search.html", searchpage);
+		
+		
+		var s = data.settings.style;
+		css = util.format('.textbox {color: %s} body {background-color: %s} .navbar {background-color: %s; border-color: %s} .main, #footer {font-family: %s} .navbar .nav a, .navbar .navbar-header a {color: %s} .navbar .nav .active a {background-color: %s} #footer {background-color: %s} #footer .text-muted {color: %s} .navbar-toggle .icon-bar {background-color: %s} .navbar-toggle {border-color: %s; background-color: %s}', s.fontcolour, s.bgcolour, s.navbarcolor, s.navbarhighlight, s.fontface, s.navbartextcolor, s.navbarhighlight, s.footercolor, s.footertext, s.navbartextcolor, s.navbartextcolor, s.navbarhighlight);
+		fs.writeFile("./users/" + email + "/store_custom.css", css);
+	});
+}
 
 http.createServer(function (req, res) {
 	var url = req.url;
@@ -424,8 +581,10 @@ http.createServer(function (req, res) {
 										return;
 									}
 									db.close();
+									console.log("Products saved sucessfully");
+									generate_store(pdata.user);
 								});}
-							console.log("Products saved sucessfully");
+							
 						}
 					});
 				});
@@ -482,8 +641,9 @@ http.createServer(function (req, res) {
 										return;
 									}
 									db.close();
+									console.log("Products saved sucessfully");
+									generate_store(pdata.user);
 								});}
-							console.log("Products saved sucessfully");
 						}
 					});
 				});
@@ -557,8 +717,9 @@ http.createServer(function (req, res) {
 										return;
 									}
 									db.close();
+									console.log("frontpage saved sucessfully");
+									generate_store(pdata.user);
 								});}
-							console.log("frontpage saved sucessfully");
 						}
 					});
 					
@@ -634,8 +795,9 @@ http.createServer(function (req, res) {
 										return;
 									}
 									db.close();
+									console.log("Product page saved sucessfully");
+									generate_store(pdata.user);
 								});}
-							console.log("Product page saved sucessfully");
 						}
 					});
 				});
@@ -736,77 +898,13 @@ http.createServer(function (req, res) {
 			four_oh_four(res);
 		} else if (url.substring(0,13) == "/getstoredata") {
 			res.writeHead(200, {"Content-Type": "application/json"});
-			var store_data = {homePageElements: [], productsPageElements: [], products: [], images: [], settings: {}}
 			var user = url.substring(14);
-			var subbed_user = user.replace(".", "_").replace("@", "__");
 			if (user == "") {
 				four_oh_four(res);
 				return;
 			}
-			mongoose.connect('mongodb://localhost:8081/easyStorefront');
-			var db = mongoose.connection;
-			db.on('error', console.error.bind(console, 'connection error:'));
-			db.once('open', function () {
-				console.log('Connected to MongoDB');
-				
-				var Images = mongoose.model(subbed_user + "images", imageSchema);
-				Images.find(function (err, image_data) {
-					if (err) {
-						console.error(err);
-						four_oh_four(res);
-						db.close();
-						return;
-					}
-					store_data.images = image_data;
-				
-				var HomePageElements = mongoose.model(subbed_user + "frontpages", eleList);
-				HomePageElements.find(function (err, hp_data) {
-					if (err) {
-						console.error(err);
-						four_oh_four(res);
-						db.close();
-						return;
-					}
-					store_data.homePageElements = hp_data[0].elements;
-				
-				var ProductsPageElements = mongoose.model(subbed_user + "productpages", eleList);
-				ProductsPageElements.find(function (err, pp_data) {
-					if (err) {
-						console.error(err);
-						four_oh_four(res);
-						db.close();
-						return;
-					}
-					store_data.productsPageElements = pp_data[0].elements;
-				
-				var Products = mongoose.model(subbed_user + "products", productList);
-				Products.find(function (err, p_data) {
-					if (err) {
-						console.error(err);
-						four_oh_four(res);
-						db.close();
-						return;
-					}
-					store_data.products = p_data[0].products;
-				
-				var Settings = mongoose.model(subbed_user + "settings", settingsSchema);
-				Settings.find(function (err, s_data) {
-					if (err) {
-						console.error(err);
-						four_oh_four(res);
-						db.close();
-						return;
-					}
-					store_data.settings = s_data[0];
-				
-				db.close();
-				res.end(JSON.stringify(store_data));
-				
-				});
-				});
-				});
-				});
-				});
+			getStoreInfo(user, function (data) {
+				res.end(JSON.stringify(data));
 			});
 		} else {
 			console.log("user tried to request disallowed file: " + url);
