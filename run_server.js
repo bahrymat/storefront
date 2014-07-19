@@ -1,7 +1,8 @@
-var http = require('http'), fs = require('fs'), util = require('util'), mongoose = require('mongoose'), multiparty = require('multiparty');
+var http = require('http'), fs = require('fs'), util = require('util'), mongoose = require('mongoose'), multiparty = require('multiparty'),
+    querystring = require('querystring');
 
 var eleSchema = mongoose.Schema({
-  position: Number,
+  pos: Number,
   type: String,
   fields: { type : Array , "default" : [] }
 });
@@ -11,8 +12,8 @@ var eleList = mongoose.Schema({
 });
 
 var imageSchema = mongoose.Schema({
-        imname:  String,
-        filename: String
+  imname:  String,
+  filename: { type: [String], unique: true }
 });
 
 var productList = mongoose.Schema({
@@ -101,6 +102,7 @@ function url_parse(query) {
 		return "";
 	}
 }
+
 
  var userSchema = mongoose.Schema({user:String, pass:String, url: String});
 function registerUser(email, password, url, callback) {
@@ -238,29 +240,56 @@ function upload_image(req, res, img_directory) {
 	form.parse(req, function(err, fields, files) {
 		if (err) {
 			console.log(err);
-			four_oh_four(res);
+			four_oh_four(res); //a bit lazy
 			return;
 		}
 
-		pretty_name = fields.imname[0];
-		user_email = fields.email[0];
-		filename = files.imfile[0].originalFilename;
-		fs.readFile(files.imfile[0].path, function (err, data) {
+		var pretty_name = fields.imname[0];
+		var user_email = fields.email[0];
+		var filename = files.imfile[0].originalFilename;
 		
-			if (err) {
-				console.log(err);
-			}
-			
-			var newPath = __dirname + "/users/" + user_email + "/images/" + filename;
-			
-			fs.writeFile(newPath, data, function (err) {
+		var db_name = user_email.replace(".", "_").replace("@", "__") + "images";
+						
+		mongoose.connect('mongodb://localhost:8081/easyStorefront');
+		var db = mongoose.connection;
+		db.on('error', console.error.bind(console, 'connection error:'));
+		db.once('open', function callback () {
+			console.log('Connected to MongoDB');
+			var Image = mongoose.model(db_name, imageSchema);
+			var new_image = new Image({ititle: pretty_name, iimage: filename})
+			new_image.save(function(err, data) {
 				if (err) {
 					console.log(err);
-					return
+					db.close();
+					if (err.err.indexOf("duplicate key") != -1) {
+						sendPageWithSubstitutions(res, "error.html", "You may not use the same filename twice.");
+					} else {
+						four_oh_four(res);
+					}
+					return;
 				}
-				
-				res.writeHead(303, {'Location': '/edit#images'});
-				res.end();
+				fs.readFile(files.imfile[0].path, function (err, data) {
+					if (err) {
+						console.log(err);
+						four_oh_four(res);
+						return;
+					}
+					
+					var newPath = __dirname + "/users/" + user_email + "/images/" + filename;
+					
+					fs.writeFile(newPath, data, function (err) {
+						if (err) {
+							console.log(err);
+							four_oh_four(res);
+							return;
+						}
+						console.dir(new_image);
+						res.writeHead(303, {'Location': '/edit#images'});
+						res.end();
+						db.close();
+					});
+					
+				});
 				
 			});
 			
@@ -277,7 +306,7 @@ http.createServer(function (req, res) {
 	
 	if (req.method == "POST") {
 	
-		if (url == "/addimage") {
+		if (url == "/addimage") { // special case - we need to use the request object to save the image.
 			upload_image(req, res);
 			return;
 		}
@@ -460,15 +489,12 @@ http.createServer(function (req, res) {
 							if (old != null){
 								settings.remove({_id: old}, function(err) {
 									if (err) {
-										console.log(err + ' maybe here');
+										console.log(err + ' maybe here');//this NO LONGER gets thrown for some reason
+										db.close();
 										return;
-									} else { 
-                    db.close();
-                  }
-								});
-              } else { 
-                db.close();
-              }
+									}
+									db.close();
+								});}
 							console.log("Products saved sucessfully");
 						}
 					});
@@ -521,15 +547,13 @@ http.createServer(function (req, res) {
 							if (old != null){
 								pList.remove({_id: old}, function(err) {
 									if (err) {
-										console.log(err + ' maybe here');//this gets thrown for some reason
+										console.log(err + ' maybe here');//this NO LONGER gets thrown for some reason
+										db.close();
 										return;
-									} else { 
-                    db.close();
-                  }
-								});
-              } else { 
-                db.close();
-              }
+
+									}
+									db.close();
+								});}
 							console.log("Products saved sucessfully");
 						}
 					});
@@ -599,15 +623,12 @@ http.createServer(function (req, res) {
 							if (old != null){
 								eList.remove({_id: old}, function(err) {
 									if (err) {
-										console.log(err + ' maybe here');//this gets thrown for some reason
+										console.log(err + ' maybe here');//this NO LONGER gets thrown for some reason
+										db.close();
 										return;
-									} else { 
-                    db.close();
-                  }
-								});
-              } else { 
-                db.close();
-              }
+									}
+									db.close();
+								});}
 							console.log("frontpage saved sucessfully");
 						}
 					});
@@ -679,15 +700,12 @@ http.createServer(function (req, res) {
 							if (old != null){
 								eList.remove({_id: old}, function(err) {
 									if (err) {
-										console.log(err + ' maybe here'); //this gets thrown for some reason
+										console.log(err + ' maybe here'); //this NO LONGER gets thrown for some reason
+										db.close();
 										return;
-									} else { 
-                    db.close();
-                  }
-								});
-              } else { 
-                db.close();
-              }
+									}
+									db.close();
+								});}
 							console.log("Product page saved sucessfully");
 						}
 					});
@@ -695,9 +713,50 @@ http.createServer(function (req, res) {
 
 				res.end("Your Product Page changes have been saved!");
 
+			} else if (url.substring(0,12) == "/deleteimage") {
+			
+				var path = url.split("/");
+				if (path.length != 4) {
+					return;
+				}
+				var user = path[2];
+				var filename = querystring.unescape(path[3]);
+				console.log(user);
+				console.log(filename);
+			
+				fs.unlink(__dirname + "/users/" + user + "/images/" + filename, function (err) {
+					if (err) {
+						console.log(err);
+					}
+					
+					var db_name = user.replace(".", "_").replace("@", "__") + "images";
+					
+					mongoose.connect('mongodb://localhost:8081/easyStorefront');
+					var db = mongoose.connection;
+					db.on('error', console.error.bind(console, 'connection error:'));
+					db.once('open', function callback () {
+						console.log('Connected to MongoDB');
+						var Image = mongoose.model(db_name, imageSchema);
+						Image.findOne({iimage: filename}).remove(function(err) {
+							if (err) {
+								console.log(err);
+								four_oh_four(res);
+								db.close();
+								return;
+							}
+							console.log(user + "'s " + filename + " deleted");
+							res.writeHead(200);
+							res.end();
+							db.close();
+						});
+					});
+					
+				});
+				
 			} else {
 				var urlParams = url_parse(data);
-				console.log("unknown POST request. url params:");
+				console.log("unknown POST request. url/params:");
+				console.log(url);
 				console.log(urlParams);
 				four_oh_four(res);
 			}
@@ -746,6 +805,80 @@ http.createServer(function (req, res) {
 
 			console.log(util.format("user tried to request page '%s' from store '%s'. but we haven't implemented this yet!!", page_url, store_url));
 			four_oh_four(res);
+		} else if (url.substring(0,13) == "/getstoredata") {
+			res.writeHead(200, {"Content-Type": "application/json"});
+			var store_data = {homePageElements: [], productsPageElements: [], products: [], images: [], settings: {}}
+			var user = url.substring(14);
+			var subbed_user = user.replace(".", "_").replace("@", "__");
+			if (user == "") {
+				four_oh_four(res);
+				return;
+			}
+			mongoose.connect('mongodb://localhost:8081/easyStorefront');
+			var db = mongoose.connection;
+			db.on('error', console.error.bind(console, 'connection error:'));
+			db.once('open', function () {
+				console.log('Connected to MongoDB');
+				
+				var Images = mongoose.model(subbed_user + "images", imageSchema);
+				Images.find(function (err, image_data) {
+					if (err) {
+						console.error(err);
+						four_oh_four(res);
+						db.close();
+						return;
+					}
+					store_data.images = image_data;
+				
+				var HomePageElements = mongoose.model(subbed_user + "frontpages", eleList);
+				HomePageElements.find(function (err, hp_data) {
+					if (err) {
+						console.error(err);
+						four_oh_four(res);
+						db.close();
+						return;
+					}
+					store_data.homePageElements = hp_data[0].elements;
+				
+				var ProductsPageElements = mongoose.model(subbed_user + "productpages", eleList);
+				ProductsPageElements.find(function (err, pp_data) {
+					if (err) {
+						console.error(err);
+						four_oh_four(res);
+						db.close();
+						return;
+					}
+					store_data.productsPageElements = pp_data[0].elements;
+				
+				var Products = mongoose.model(subbed_user + "products", productList);
+				Products.find(function (err, p_data) {
+					if (err) {
+						console.error(err);
+						four_oh_four(res);
+						db.close();
+						return;
+					}
+					store_data.products = p_data[0].products;
+				
+				var Settings = mongoose.model(subbed_user + "settings", settingsSchema);
+				Settings.find(function (err, s_data) {
+					if (err) {
+						console.error(err);
+						four_oh_four(res);
+						db.close();
+						return;
+					}
+					store_data.settings = s_data[0];
+				
+				db.close();
+				res.end(JSON.stringify(store_data));
+				
+				});
+				});
+				});
+				});
+				});
+			});
 		} else {
 			console.log("user tried to request disallowed file: " + url);
 			four_oh_four(res);
