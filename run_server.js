@@ -419,12 +419,13 @@ http.createServer(function (req, res) {
 							if (old != null){
 								settings.remove({_id: old}, function(err) {
 									if (err) {
-										console.log(err + ' maybe here');//this gets thrown for some reason
+										console.log(err + ' maybe here');//this NO LONGER gets thrown for some reason
+										db.close();
 										return;
 									}
+									db.close();
 								});}
 							console.log("Products saved sucessfully");
-							db.close();
 						}
 					});
 				});
@@ -476,12 +477,13 @@ http.createServer(function (req, res) {
 							if (old != null){
 								pList.remove({_id: old}, function(err) {
 									if (err) {
-										console.log(err + ' maybe here');//this gets thrown for some reason
+										console.log(err + ' maybe here');//this NO LONGER gets thrown for some reason
+										db.close();
 										return;
 									}
+									db.close();
 								});}
 							console.log("Products saved sucessfully");
-							db.close();
 						}
 					});
 				});
@@ -550,12 +552,13 @@ http.createServer(function (req, res) {
 							if (old != null){
 								eList.remove({_id: old}, function(err) {
 									if (err) {
-										console.log(err + ' maybe here');//this gets thrown for some reason
+										console.log(err + ' maybe here');//this NO LONGER gets thrown for some reason
+										db.close();
 										return;
 									}
+									db.close();
 								});}
 							console.log("frontpage saved sucessfully");
-							db.close();
 						}
 					});
 					
@@ -626,12 +629,13 @@ http.createServer(function (req, res) {
 							if (old != null){
 								eList.remove({_id: old}, function(err) {
 									if (err) {
-										console.log(err + ' maybe here'); //this gets thrown for some reason
+										console.log(err + ' maybe here'); //this NO LONGER gets thrown for some reason
+										db.close();
 										return;
 									}
+									db.close();
 								});}
 							console.log("Product page saved sucessfully");
-							db.close();
 						}
 					});
 				});
