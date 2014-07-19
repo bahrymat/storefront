@@ -2,7 +2,6 @@ var http = require('http'), fs = require('fs'), util = require('util'), mongoose
 
 
 
-//this bit is irrelevant for now
 
 var productSchema = mongoose.Schema({
 	ptitle: String,

@@ -1,4 +1,5 @@
-var http = require('http'), fs = require('fs'), util = require('util'), mongoose = require('mongoose'), multiparty = require('multiparty');
+var http = require('http'), fs = require('fs'), util = require('util'), mongoose = require('mongoose'), multiparty = require('multiparty'),
+    querystring = require('querystring');
 
 var eleSchema = mongoose.Schema({
   position: Number,
@@ -12,7 +13,7 @@ var eleList = mongoose.Schema({
 
 var imageSchema = mongoose.Schema({
         ititle:  String,
-        iimage: String
+        iimage: { type: [String], unique: true }
 });
 
 var productList = mongoose.Schema({
@@ -101,6 +102,7 @@ function url_parse(query) {
 		return "";
 	}
 }
+
 
  var userSchema = mongoose.Schema({user:String, pass:String, url: String});
 function registerUser(email, password, url, callback) {
@@ -238,7 +240,7 @@ function upload_image(req, res, img_directory) {
 	form.parse(req, function(err, fields, files) {
 		if (err) {
 			console.log(err);
-			four_oh_four(res);
+			four_oh_four(res); //a bit lazy
 			return;
 		}
 
@@ -247,35 +249,38 @@ function upload_image(req, res, img_directory) {
 		var filename = files.imfile[0].originalFilename;
 		
 		var db_name = user_email.replace(".", "_").replace("@", "__") + "images";
-		
-		fs.readFile(files.imfile[0].path, function (err, data) {
-			if (err) {
-				console.log(err);
-				four_oh_four(res);
-				return;
-			}
-			
-			var newPath = "/users/" + user_email + "/images/" + filename;
-			
-			fs.writeFile(__dirname + newPath, data, function (err) {
+						
+		mongoose.connect('mongodb://localhost:8081/easyStorefront');
+		var db = mongoose.connection;
+		db.on('error', console.error.bind(console, 'connection error:'));
+		db.once('open', function callback () {
+			console.log('Connected to MongoDB');
+			var Image = mongoose.model(db_name, imageSchema);
+			var new_image = new Image({ititle: pretty_name, iimage: filename})
+			new_image.save(function(err, data) {
 				if (err) {
 					console.log(err);
-					four_oh_four(res);
+					db.close();
+					if (err.err.indexOf("duplicate key") != -1) {
+						sendPageWithSubstitutions(res, "error.html", "You may not use the same filename twice.");
+					} else {
+						four_oh_four(res);
+					}
 					return;
 				}
-				
-				mongoose.connect('mongodb://localhost:8081/easyStorefront');
-				var db = mongoose.connection;
-				db.on('error', console.error.bind(console, 'connection error:'));
-				db.once('open', function callback () {
-					console.log('Connected to MongoDB');
-					var Image = mongoose.model(db_name, imageSchema);
-					var new_image = new Image({ititle: pretty_name, iimage: newPath})
-					new_image.save(function(err, data) {
+				fs.readFile(files.imfile[0].path, function (err, data) {
+					if (err) {
+						console.log(err);
+						four_oh_four(res);
+						return;
+					}
+					
+					var newPath = __dirname + "/users/" + user_email + "/images/" + filename;
+					
+					fs.writeFile(newPath, data, function (err) {
 						if (err) {
 							console.log(err);
 							four_oh_four(res);
-							db.close();
 							return;
 						}
 						console.dir(new_image);
@@ -283,6 +288,7 @@ function upload_image(req, res, img_directory) {
 						res.end();
 						db.close();
 					});
+					
 				});
 				
 			});
@@ -300,7 +306,7 @@ http.createServer(function (req, res) {
 	
 	if (req.method == "POST") {
 	
-		if (url == "/addimage") {
+		if (url == "/addimage") { // special case - we need to use the request object to save the image.
 			upload_image(req, res);
 			return;
 		}
@@ -632,9 +638,50 @@ http.createServer(function (req, res) {
 
 				res.end("Your Product Page changes have been saved!");
 
+			} else if (url.substring(0,12) == "/deleteimage") {
+			
+				var path = url.split("/");
+				if (path.length != 4) {
+					return;
+				}
+				var user = path[2];
+				var filename = querystring.unescape(path[3]);
+				console.log(user);
+				console.log(filename);
+			
+				fs.unlink(__dirname + "/users/" + user + "/images/" + filename, function (err) {
+					if (err) {
+						console.log(err);
+					}
+					
+					var db_name = user.replace(".", "_").replace("@", "__") + "images";
+					
+					mongoose.connect('mongodb://localhost:8081/easyStorefront');
+					var db = mongoose.connection;
+					db.on('error', console.error.bind(console, 'connection error:'));
+					db.once('open', function callback () {
+						console.log('Connected to MongoDB');
+						var Image = mongoose.model(db_name, imageSchema);
+						Image.findOne({iimage: filename}).remove(function(err) {
+							if (err) {
+								console.log(err);
+								four_oh_four(res);
+								db.close();
+								return;
+							}
+							console.log(user + "'s " + filename + " deleted");
+							res.writeHead(200);
+							res.end();
+							db.close();
+						});
+					});
+					
+				});
+				
 			} else {
 				var urlParams = url_parse(data);
-				console.log("unknown POST request. url params:");
+				console.log("unknown POST request. url/params:");
+				console.log(url);
 				console.log(urlParams);
 				four_oh_four(res);
 			}
@@ -683,6 +730,32 @@ http.createServer(function (req, res) {
 
 			console.log(util.format("user tried to request page '%s' from store '%s'. but we haven't implemented this yet!!", page_url, store_url));
 			four_oh_four(res);
+		} else if (url.substring(0,13) == "/getstoredata") {
+			res.writeHead(200, {"Content-Type": "application/json"});
+			var store_data = {images:[]}
+			var user = url.substring(14);
+			var subbed_user = user.replace(".", "_").replace("@", "__");
+			if (user == "") {
+				four_oh_four(res);
+				return;
+			}
+			mongoose.connect('mongodb://localhost:8081/easyStorefront');
+			var db = mongoose.connection;
+			db.on('error', console.error.bind(console, 'connection error:'));
+			db.once('open', function () {
+				var Images = mongoose.model(subbed_user + "images", imageSchema);
+				console.log('Connected to MongoDB');
+				Images.find(function (err, image_data) {
+					if (err) {
+						console.error(err);
+						db.close();
+						return;
+					}
+					db.close();
+					store_data.images = image_data;
+					res.end(JSON.stringify(store_data));
+				});
+			});
 		} else {
 			console.log("user tried to request disallowed file: " + url);
 			four_oh_four(res);
