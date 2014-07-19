@@ -21,34 +21,6 @@ $(document).on('click', '.confirmNo', function() {
 	$(this).parent().parent().children().children('.deleteThis').show();
 });
 
-
-
-/*$(document).on('click', '.deleteProduct', function () {
-	if (confirm("Delete product?")) {
-		$(this).closest('.productBox').remove();
-	}
-});*/
-$(document).on('click', '.deleteTextblock', function () {
-	if (confirm("Delete Text Block?")) {
-		$(this).closest('.textblockBox').remove();
-	}
-});
-$(document).on('click', '.deleteImageblock', function () {
-	if (confirm("Delete Image Block?")) {
-		$(this).closest('.imageblockBox').remove();
-	}
-});
-$(document).on('click', '.deleteProductblock', function () {
-	if (confirm("Delete Product List?")) {
-		$(this).closest('.productblockBox').remove();
-	}
-});
-$(document).on('click', '.deleteStartShoppingblock', function () {
-	if (confirm('Delete Start Shopping Button?')) {
-		$(this).closest('.startshoppingblockBox').remove();
-	}
-});
-
 function newTextBlock1() {
 	var textblockform = '<div class="col-sm-6 box"><div class="block"><div class="deletable"><div class="confirmDelete"><div class="del">Delete?</div><button type="button" class="close confirmNo">No</button><button type="button" class="close confirmYes">Yes</button></div><div><button type="button" class="close deleteThis" ><span class="glyphicon glyphicon-remove"></span></button></div></div><h4>Textblock</h4><form class="form-horizontal element1-container" role="form""> <div class="form-group"><input type="hidden" class="storeform" id="type" value="TextBlock"><label for="ttitle" class="col-sm-3 control-label">Title</label><div class="col-sm-9"><input type="text" class="form-control storeform" id="ttitle" placeholder="Title"></div><label for="tdescription" class="col-sm-3 control-label">Description</label><div class="col-sm-9"><textarea class="form-control storeform" rows="2" columns="3" id="tdescription" placeholder="Description"></textarea></div><label for="pos" class="col-sm-3 control-label">Position</label><div class="col-sm-9"><input type="number" class="form-control storeform" id="pos" placeholder="1"></div></div></form></div></div>';
 
@@ -106,7 +78,7 @@ function newCarousel2() {
 $("ul.newElement2 > li#Carousel").click(newCarousel2);
 
 function newImage() {
-	var imageform = '<div class="col-sm-6 box"><div class="block"><div class="deletable"><div class="confirmDelete"><div class="del">Delete?</div><button type="button" class="close confirmNo">No</button><button type="button" class="close confirmYes">Yes</button></div><div><button type="button" class="close deleteThis"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="col-sm-12"><img class="img-thumbnail imagethumb" src="http://placehold.it/200x200&text=Thumbnail" alt="Image"></img></div><form class="form-horizontal image-container" role="form" action="/addimage" method="post" enctype="multipart/form-data"><div class="form-group"><div><label for="imname" class="col-sm-4 control-label">Name</label><div class="col-sm-8"><input type="text" class="form-control" id="imname" placeholder="Image name" name="imname"><input type="hidden" id="email" name="email" value="' + getCookie("email") + '"></div><label for="imfile" class="col-sm-4 control-label">Image File</label><div class="col-sm-8"><input type="file" class="form-control storeform imfile" name="imfile"><input type="text" class="form-control filename" placeholder="filename.png"><div class="button-group"> <a href="#" class="btn btn btn-default browse" role="button">Browse</a> <input type="submit" class="btn btn-default" value="Save"/></div></div></div></div></form></div></div>';
+	var imageform = '<div class="col-sm-6 box"><div class="block"><div class="deletable"><div class="confirmDelete"><div class="del">Delete?</div><button type="button" class="close confirmNo">No</button><button type="button" class="close confirmYes">Yes</button></div><div><button type="button" class="close deleteThis"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="col-sm-12"><img class="img-thumbnail imagethumb" src="http://placehold.it/200x200&text=Thumbnail" alt="200x200"></img></div><form class="form-horizontal image-container" role="form" action="/addimage" method="post" enctype="multipart/form-data"><div class="form-group"><div><label for="imname" class="col-sm-4 control-label">Name</label><div class="col-sm-8"><input type="text" class="form-control storeform" id="imname" placeholder="Image name" name="imname"><input type="hidden" id="email" name="email" class="storeform" placeholder="" value="' + getCookie("email") + '"></div><label for="imfile" class="col-sm-4 control-label">Image File</label><div class="col-sm-8"><input type="file" class="form-control imfile" name="imfile"><input type="text" id="filename" class="form-control filename storeform" placeholder="filename.png"><div class="button-group"> <a href="#" class="btn btn btn-default browse" role="button">Browse</a> <input type="submit" class="btn btn-default" value="Save"/></div></div></div></div></form></div></div>';
 	$("#imagesContent").append(imageform);
 	refreshImageEvents();
 }
@@ -206,11 +178,7 @@ function parseProductForms() {
 	$('.product-container').each(function (i) {
 		formObject.products[i] = {};
 		$(this).find('.storeform').each(function () {
-			if (this.type == 'checkbox') { //strange bug with checkboxes not properly storing their value.
-				formObject.products[i][this.id] = $(this).is(':checked');
-			} else {
 				formObject.products[i][this.id] = this.value ? this.value : this.placeholder;
-			}
 		});
 	});
 	$.post("/changeproducts", JSON.stringify(formObject), function (serverreply) {
@@ -230,11 +198,7 @@ function parseFrontPageForms() {
 	$('.element1-container').each(function (i) {
 		formObject.frontPageElements[i] = {};
 		$(this).find('.storeform').each(function () {
-			if (this.type == 'checkbox') { //strange bug with checkboxes not properly storing their value.
-				formObject.frontPageElements[i][this.id] = $(this).is(':checked');
-			} else {
 				formObject.frontPageElements[i][this.id] = this.value ? this.value : this.placeholder;
-			}
 		});
 	});
 
@@ -255,11 +219,7 @@ function parseProductsPageForms() {
 	$('.element2-container').each(function (i) {
 		formObject.productsPageElements[i] = {};
 		$(this).find('.storeform').each(function () {
-			if (this.type == 'checkbox') { //strange bug with checkboxes not properly storing their value.
-				formObject.productsPageElements[i][this.id] = $(this).is(':checked');
-			} else {
 				formObject.productsPageElements[i][this.id] = this.value ? this.value : this.placeholder;
-			}
 		});
 	});
 
@@ -269,12 +229,11 @@ function parseProductsPageForms() {
 
 }
 
+
 $('.settingssubmit').click(parseSettingsForms);
 $('.productssubmit').click(parseProductForms);
 $('.frontsubmit').click(parseFrontPageForms);
 $('.productpagesubmit').click(parseProductsPageForms);
-
-
 
 var hash = window.location.hash;
 hash && $('ul.nav a[href="' + hash + '"]').tab('show'); //link to specific tab

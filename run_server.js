@@ -12,8 +12,8 @@ var eleList = mongoose.Schema({
 });
 
 var imageSchema = mongoose.Schema({
-        ititle:  String,
-        iimage: { type: [String], unique: true }
+  ititle:  String,
+  iimage: { type: [String], unique: true }
 });
 
 var productList = mongoose.Schema({
@@ -467,7 +467,7 @@ http.createServer(function (req, res) {
 			upload_image(req, res);
 			return;
 		}
-	
+
 	
 		var data = "";
 
@@ -639,6 +639,7 @@ http.createServer(function (req, res) {
 										console.log(err + ' maybe here');//this NO LONGER gets thrown for some reason
 										db.close();
 										return;
+
 									}
 									db.close();
 									console.log("Products saved sucessfully");
@@ -749,25 +750,25 @@ http.createServer(function (req, res) {
 						pos : eledata[i].pos
 					});
 					if (new_ele.type == 'ImageBlock'){
-					new_ele.fields = [
-					  {ititle: eledata[i].ititle}, 
-					  {idescription: eledata[i].idescription},
-					  {iimage:eledata[i].iimage}];
+					  new_ele.fields = [
+					    {ititle: eledata[i].ititle}, 
+					    {idescription: eledata[i].idescription},
+					    {iimage:eledata[i].iimage}];
 					} else if (new_ele.type == 'TextBlock'){
-					new_ele.fields = [
-					  {ttitle: eledata[i].ttitle}, 
-					  {tdescription: eledata[i].tdescription}];
+					  new_ele.fields = [
+					    {ttitle: eledata[i].ttitle}, 
+					    {tdescription: eledata[i].tdescription}];
 					} else if (new_ele.type == 'Carousel'){
-					new_ele.fields = [
-					  {cimage1: eledata[i].cimage1},
-					  {cimage2: eledata[i].cimage2},
-					  {cimage3: eledata[i].cimage3}];
+					  new_ele.fields = [
+					    {cimage1: eledata[i].cimage1},
+					    {cimage2: eledata[i].cimage2},
+					    {cimage3: eledata[i].cimage3}];
 					} else if (new_ele.type == 'StartShoppingButton'){
 					//incase we change contents
-					new_ele.fields = [];
+					  new_ele.fields = [];
 					} else {
 					//This should never be reached
-					console.log('something bad happened saving the front page');
+					  console.log('something bad happened saving the front page');
 					}
 					new_elements.elements.addToSet(new_ele);
 				}
