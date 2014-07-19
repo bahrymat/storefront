@@ -2,7 +2,7 @@ var http = require('http'), fs = require('fs'), util = require('util'), mongoose
     querystring = require('querystring');
 
 var eleSchema = mongoose.Schema({
-  position: Number,
+  pos: Number,
   type: String,
   fields: { type : Array , "default" : [] }
 });
