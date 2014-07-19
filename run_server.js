@@ -393,11 +393,19 @@ function generate_store(escaped_email) {
 	function generateFooter() {
 		return '</div><div id="footer"><div class="container text-right"><p class="text-muted"><small>\u00A92014 %s. Store created with the assistance of easyStorefront.</small></p></div></div><script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script><script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script></body></html>';
 	}
+	function getFieldItem(fields, desired_key) {
+		for (var i=0; i<fields.length; i++) {
+			var key = Object.keys(fields[i])[0];
+			if (key == desired_key) {
+				return fields[i][key];
+			}
+		}
+	}
 	function processElements(elements, products, settings) {
 		elementhtml = "";
 		for (var i = 0; i < elements.length; i++) {
 			if (elements[i].type == "TextBlock") {
-				elementhtml += util.format('<div class="container textbox"><h1>%s</h1><p class="lead">%s</p></div>', elements[i].ttitle, elements[i].tdescription);
+				elementhtml += util.format('<div class="container textbox"><h1>%s</h1><p class="lead">%s</p></div>', getFieldItem(elements[i].fields, 'ttitle'), getFieldItem(elements[i].fields, 'tdescription'));
 			} else if (elements[i].type == "ImageBlock") {
 				console.log("Image not implemented");
 			} else if (elements[i].type == "ProductList") {
@@ -420,6 +428,7 @@ function generate_store(escaped_email) {
 	}
 	
 	var data = getStoreInfo(email, function (data) {
+	
 		productlistpage = util.format(generateHeader('products'), data.settings.page.pageTitle);
 		data.productsPageElements.sort(function(a, b){return a.pos-b.pos}); //sort based on the pos property of the page element
 		productlistpage += processElements(data.productsPageElements, data.products, data.settings);
