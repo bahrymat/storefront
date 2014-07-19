@@ -107,7 +107,7 @@ $("ul.newElement2 > li#Carousel").click(
 
 $(".newImage").click(
 	function () {
-		var imageform = '<div class="col-sm-6 box"><div class="block"><div class="deletable"><div class="confirmDelete"><div class="del">Delete?</div><button type="button" class="close confirmNo">No</button><button type="button" class="close confirmYes">Yes</button></div><div><button type="button" class="close deleteThis"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="col-sm-12"><img class="img-thumbnail imagethumb" src="http://placehold.it/200x200&text=Thumbnail" alt="200x200"></img></div><form class="form-horizontal image-container" role="form" action="/addimage" method="post" enctype="multipart/form-data"><div class="form-group"><div><label for="imname" class="col-sm-4 control-label">Name</label><div class="col-sm-8"><input type="text" class="form-control" id="imname" placeholder="Image name" name="imname"><input type="hidden" id="email" name="email" value="' + getCookie("email") + '"></div><label for="imfile" class="col-sm-4 control-label">Image File</label><div class="col-sm-8"><input type="file" class="form-control storeform imfile" name="imfile"><input type="text" class="form-control filename" placeholder="filename.png"><div class="button-group"> <a href="#" class="btn btn btn-default browse" role="button">Browse</a> <input type="submit" class="btn btn-default" value="Save"/></div></div></div></div></form></div></div>';
+		var imageform = '<div class="col-sm-6 box"><div class="block"><div class="deletable"><div class="confirmDelete"><div class="del">Delete?</div><button type="button" class="close confirmNo">No</button><button type="button" class="close confirmYes imagedelete">Yes</button></div><div><button type="button" class="close deleteThis"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="col-sm-12"><img class="img-thumbnail imagethumb" src="http://placehold.it/200x200&text=Thumbnail" alt="200x200"></img></div><form class="form-horizontal image-container" role="form" action="/addimage" method="post" enctype="multipart/form-data"><div class="form-group"><div><label for="imname" class="col-sm-4 control-label">Name</label><div class="col-sm-8"><input type="text" class="form-control storeform" id="imname" placeholder="Image name" name="imname"><input type="hidden" id="email" name="email" class="storeform" placeholder="" value="' + getCookie("email") + '"></div><label for="imfile" class="col-sm-4 control-label">Image File</label><div class="col-sm-8"><input type="file" class="form-control imfile" name="imfile"><input type="text" id="filename" class="form-control filename storeform" placeholder="filename.png"><div class="button-group"> <a href="#" class="btn btn btn-default browse" role="button">Browse</a> <input type="submit" class="btn btn-default imagesubmit" value="Save"/></div></div></div></div></form></div></div>';
 		$("#imagesContent").append(imageform);
 		refreshImageEvents();
 	}
@@ -207,11 +207,7 @@ function parseProductForms() {
 	$('.product-container').each(function (i) {
 		formObject.products[i] = {};
 		$(this).find('.storeform').each(function () {
-			if (this.type == 'checkbox') { //strange bug with checkboxes not properly storing their value.
-				formObject.products[i][this.id] = $(this).is(':checked');
-			} else {
 				formObject.products[i][this.id] = this.value ? this.value : this.placeholder;
-			}
 		});
 	});
 	$.post("/changeproducts", JSON.stringify(formObject), function (serverreply) {
@@ -231,11 +227,7 @@ function parseFrontPageForms() {
 	$('.element1-container').each(function (i) {
 		formObject.frontPageElements[i] = {};
 		$(this).find('.storeform').each(function () {
-			if (this.type == 'checkbox') { //strange bug with checkboxes not properly storing their value.
-				formObject.frontPageElements[i][this.id] = $(this).is(':checked');
-			} else {
 				formObject.frontPageElements[i][this.id] = this.value ? this.value : this.placeholder;
-			}
 		});
 	});
 
@@ -256,11 +248,7 @@ function parseProductsPageForms() {
 	$('.element2-container').each(function (i) {
 		formObject.productsPageElements[i] = {};
 		$(this).find('.storeform').each(function () {
-			if (this.type == 'checkbox') { //strange bug with checkboxes not properly storing their value.
-				formObject.productsPageElements[i][this.id] = $(this).is(':checked');
-			} else {
 				formObject.productsPageElements[i][this.id] = this.value ? this.value : this.placeholder;
-			}
 		});
 	});
 
@@ -270,10 +258,30 @@ function parseProductsPageForms() {
 
 }
 
+
 $('.settingssubmit').click(parseSettingsForms);
 $('.productssubmit').click(parseProductForms);
 $('.frontsubmit').click(parseFrontPageForms);
 $('.productpagesubmit').click(parseProductsPageForms);
+$(document).on('click', '.imagesubmit', function(){
+	var formObject = {};
+	$(this).closest('.image-container').find('.storeform').each(function () {
+				formObject[this.id] = this.value ? this.value : this.placeholder;
+	});
+	$.post("/addimagedb", JSON.stringify(formObject), function(serverreply){
+		alert(serverreply);
+	});
+});
+
+$(document).on('click', '.imagedelete', function(){
+	var formObject = {};
+	$(this).closest('.block').find('.storeform').each(function () {
+				formObject[this.id] = this.value ? this.value : this.placeholder;
+	});
+	$.post("/deleteimage", JSON.stringify(formObject), function(serverreply){
+		alert(serverreply);
+	});
+});
 
 
 

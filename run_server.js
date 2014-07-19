@@ -11,8 +11,8 @@ var eleList = mongoose.Schema({
 });
 
 var imageSchema = mongoose.Schema({
-        ititle:  String,
-        iimage: String
+        imname:  String,
+        filename: String
 });
 
 var productList = mongoose.Schema({
@@ -281,7 +281,7 @@ http.createServer(function (req, res) {
 			upload_image(req, res);
 			return;
 		}
-	
+
 	
 		var data = "";
 
@@ -310,6 +310,76 @@ http.createServer(function (req, res) {
 						sendPageWithSubstitutions(res, "login.html", urlParams.email);
 					}
 				});
+
+      } else if (url == "/addimagedb") {
+        console.log("received image update request"); 
+				res.writeHead(200);
+				var pdata =JSON.parse(data);
+				console.log('Saving ' + pdata.email + ' image');
+				mongoose.connect('mongodb://localhost:8081/easyStorefront');
+				var db = mongoose.connection;
+				db.on('error', console.error.bind(console, 'connection error:'));
+				db.once('open', function callback () {
+					console.log('Connected to MongoDB');
+				});
+        var dbname = (pdata.email).replace(".", "_").replace("@", "__").trim();
+        var images = mongoose.model(dbname + 'images', imageSchema);
+        var image = new images( {imname: pdata.imname, filename:pdata.filename});
+        image.save(function (err) {  
+						if (err) {
+							console.log(err + ' or here');
+							db.close();
+							return;
+						} else { 
+              db.close();
+            }
+        });
+
+				res.end("Your image has been saved!");
+
+	    } else if (url == "/deleteimage") {
+				console.log("received image update request"); 
+				res.writeHead(200);
+				var pdata =JSON.parse(data);
+				console.log('Updating ' + pdata.email + ' image');
+				mongoose.connect('mongodb://localhost:8081/easyStorefront');
+				var db = mongoose.connection;
+				db.on('error', console.error.bind(console, 'connection error:'));
+				db.once('open', function callback () {
+					console.log('Connected to MongoDB');
+				});
+        var dbname = (pdata.email).replace(".", "_").replace("@", "__").trim();
+        var images = mongoose.model(dbname + 'images', imageSchema);
+        images.findOne({filename: pdata.filename}, "_id",  function(err, doc){
+          if (err) {
+            console.log(err);
+						db.close();
+						return;
+          } else if (doc) {
+            images.remove (doc, function(err){
+              if (err){
+                console.log(err);
+						    db.close();
+						    return;
+              } else {
+                fs.unlink(__dirname + "/users/" + pdata.email + "/images/" + pdata.filename, function (err) {
+                  if (err){
+                    console.log(err);
+                    db.close();
+                  } else {
+                    console.log('Successfully deleted image');
+                    db.close();
+				            res.end("Image Deleted!");
+                  }
+                });
+                return;
+              }
+            });
+          } else {
+            db.close();
+            return;
+          }
+        });
 
 			} else if (url == "/changesettings") {
 				console.log("received store settings edit request"); 
@@ -390,12 +460,16 @@ http.createServer(function (req, res) {
 							if (old != null){
 								settings.remove({_id: old}, function(err) {
 									if (err) {
-										console.log(err + ' maybe here');//this gets thrown for some reason
+										console.log(err + ' maybe here');
 										return;
-									}
-								});}
+									} else { 
+                    db.close();
+                  }
+								});
+              } else { 
+                db.close();
+              }
 							console.log("Products saved sucessfully");
-							db.close();
 						}
 					});
 				});
@@ -449,10 +523,14 @@ http.createServer(function (req, res) {
 									if (err) {
 										console.log(err + ' maybe here');//this gets thrown for some reason
 										return;
-									}
-								});}
+									} else { 
+                    db.close();
+                  }
+								});
+              } else { 
+                db.close();
+              }
 							console.log("Products saved sucessfully");
-							db.close();
 						}
 					});
 				});
@@ -523,10 +601,14 @@ http.createServer(function (req, res) {
 									if (err) {
 										console.log(err + ' maybe here');//this gets thrown for some reason
 										return;
-									}
-								});}
+									} else { 
+                    db.close();
+                  }
+								});
+              } else { 
+                db.close();
+              }
 							console.log("frontpage saved sucessfully");
-							db.close();
 						}
 					});
 					
@@ -556,25 +638,25 @@ http.createServer(function (req, res) {
 						pos : eledata[i].pos
 					});
 					if (new_ele.type == 'ImageBlock'){
-					new_ele.fields = [
-					  {ititle: eledata[i].ititle}, 
-					  {idescription: eledata[i].idescription},
-					  {iimage:eledata[i].iimage}];
+					  new_ele.fields = [
+					    {ititle: eledata[i].ititle}, 
+					    {idescription: eledata[i].idescription},
+					    {iimage:eledata[i].iimage}];
 					} else if (new_ele.type == 'TextBlock'){
-					new_ele.fields = [
-					  {ttitle: eledata[i].ttitle}, 
-					  {tdescription: eledata[i].tdescription}];
+					  new_ele.fields = [
+					    {ttitle: eledata[i].ttitle}, 
+					    {tdescription: eledata[i].tdescription}];
 					} else if (new_ele.type == 'Carousel'){
-					new_ele.fields = [
-					  {cimage1: eledata[i].cimage1},
-					  {cimage2: eledata[i].cimage2},
-					  {cimage3: eledata[i].cimage3}];
+					  new_ele.fields = [
+					    {cimage1: eledata[i].cimage1},
+					    {cimage2: eledata[i].cimage2},
+					    {cimage3: eledata[i].cimage3}];
 					} else if (new_ele.type == 'StartShoppingButton'){
 					//incase we change contents
-					new_ele.fields = [];
+					  new_ele.fields = [];
 					} else {
 					//This should never be reached
-					console.log('something bad happened saving the front page');
+					  console.log('something bad happened saving the front page');
 					}
 					new_elements.elements.addToSet(new_ele);
 				}
@@ -599,10 +681,14 @@ http.createServer(function (req, res) {
 									if (err) {
 										console.log(err + ' maybe here'); //this gets thrown for some reason
 										return;
-									}
-								});}
+									} else { 
+                    db.close();
+                  }
+								});
+              } else { 
+                db.close();
+              }
 							console.log("Product page saved sucessfully");
-							db.close();
 						}
 					});
 				});
