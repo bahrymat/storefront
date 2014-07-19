@@ -12,8 +12,8 @@ var eleList = mongoose.Schema({
 });
 
 var imageSchema = mongoose.Schema({
-  imname:  String,
-  filename: { type: [String], unique: true }
+  ititle:  String,
+  iimage: { type: [String], unique: true }
 });
 
 var productList = mongoose.Schema({
@@ -339,76 +339,6 @@ http.createServer(function (req, res) {
 						sendPageWithSubstitutions(res, "login.html", urlParams.email);
 					}
 				});
-
-      } else if (url == "/addimagedb") {
-        console.log("received image update request"); 
-				res.writeHead(200);
-				var pdata =JSON.parse(data);
-				console.log('Saving ' + pdata.email + ' image');
-				mongoose.connect('mongodb://localhost:8081/easyStorefront');
-				var db = mongoose.connection;
-				db.on('error', console.error.bind(console, 'connection error:'));
-				db.once('open', function callback () {
-					console.log('Connected to MongoDB');
-				});
-        var dbname = (pdata.email).replace(".", "_").replace("@", "__").trim();
-        var images = mongoose.model(dbname + 'images', imageSchema);
-        var image = new images( {imname: pdata.imname, filename:pdata.filename});
-        image.save(function (err) {  
-						if (err) {
-							console.log(err + ' or here');
-							db.close();
-							return;
-						} else { 
-              db.close();
-            }
-        });
-
-				res.end("Your image has been saved!");
-
-	    } else if (url == "/deleteimage") {
-				console.log("received image update request"); 
-				res.writeHead(200);
-				var pdata =JSON.parse(data);
-				console.log('Updating ' + pdata.email + ' image');
-				mongoose.connect('mongodb://localhost:8081/easyStorefront');
-				var db = mongoose.connection;
-				db.on('error', console.error.bind(console, 'connection error:'));
-				db.once('open', function callback () {
-					console.log('Connected to MongoDB');
-				});
-        var dbname = (pdata.email).replace(".", "_").replace("@", "__").trim();
-        var images = mongoose.model(dbname + 'images', imageSchema);
-        images.findOne({filename: pdata.filename}, "_id",  function(err, doc){
-          if (err) {
-            console.log(err);
-						db.close();
-						return;
-          } else if (doc) {
-            images.remove (doc, function(err){
-              if (err){
-                console.log(err);
-						    db.close();
-						    return;
-              } else {
-                fs.unlink(__dirname + "/users/" + pdata.email + "/images/" + pdata.filename, function (err) {
-                  if (err){
-                    console.log(err);
-                    db.close();
-                  } else {
-                    console.log('Successfully deleted image');
-                    db.close();
-				            res.end("Image Deleted!");
-                  }
-                });
-                return;
-              }
-            });
-          } else {
-            db.close();
-            return;
-          }
-        });
 
 			} else if (url == "/changesettings") {
 				console.log("received store settings edit request"); 
