@@ -256,7 +256,7 @@ function upload_image(req, res, img_directory) {
 		db.once('open', function callback () {
 			console.log('Connected to MongoDB');
 			var Image = mongoose.model(db_name, imageSchema);
-			var new_image = new Image({ititle: pretty_name, iimage: filename})
+			var new_image = new Image({ititle: pretty_name, iimage: filename});
 			new_image.save(function(err, data) {
 				if (err) {
 					console.log(err);
@@ -379,15 +379,15 @@ function getStoreInfo(user, callback) {
 }
 
 function generate_store(escaped_email) {
-	email = escaped_email.replace("__", "@").replace("_", ".")
+	email = escaped_email.replace("__", "@").replace("_", ".");
 	console.log("generating store for user " + email);
 
 	function generateHeader(active_link) {
-		var headerhtml = '<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="utf-8"><title>%s</title><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"><link href="../../store_generic.css" rel="stylesheet"><link href="store_custom.css" rel="stylesheet"></head><body><div class="navbar"><div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="example_store_home.html"><img src="example_store_logo.png" height="100%" alt="Logo Image Goes Here"></a></div><div class="collapse navbar-collapse"><ul class="nav navbar-nav">'
+		var headerhtml = '<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="utf-8"><title>%s</title><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"><link href="../../store_generic.css" rel="stylesheet"><link href="store_custom.css" rel="stylesheet"></head><body><div class="navbar"><div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="."><img src="example_store_logo.png" height="100%" alt="Logo Image Goes Here"></a></div><div class="collapse navbar-collapse"><ul class="nav navbar-nav">'
 		headerhtml += active_link == "home" ? '<li class="active">' : '<li>'
-		headerhtml += '<a href="example_store_home.html">Home</a></li>'
+		headerhtml += '<a href=".">Home</a></li>'
 		headerhtml += active_link == "products" ? '<li class="active">' : '<li>'
-		headerhtml += '<a href="example_store_products.html">Products</a></li></ul><form class="navbar-form navbar-left" role="search"><div class="form-group"><input type="text" class="form-control" placeholder="Search"></div> <a class="btn btn-default" href="example_store_searchresults.html" role="button">Submit</a></form></div></div></div><div class="main">';
+		headerhtml += '<a href="products">Products</a></li></ul><form class="navbar-form navbar-left" role="search"><div class="form-group"><input type="text" class="form-control" placeholder="Search"></div> <a class="btn btn-default" href="search" role="button">Submit</a></form></div></div></div><div class="main">';
 		return headerhtml;
 	}
 	function generateFooter() {
@@ -412,12 +412,12 @@ function generate_store(escaped_email) {
 				elementhtml += '<div class="container"><div class="row">';
 				
 				for (var j = 0; j < products.length; j++) {
-				elementhtml += util.format('<div class="col-sm-6 col-md-4"><div class="thumbnail"><img src="example_product.png" alt="%s"><div class="caption"><h3>%s</h3><h4>%s%s</h4><p>%s</p><p><a href="#" class="btn btn-primary" role="button">Buy Now</a> <a href="example_store_product.html" class="btn btn-default" role="button">View Details</a></p></div></div></div>', products[j].ptitle, products[j].ptitle, settings.page.pageCurrency, products[j].pprice, products[j].psdescription);
+				elementhtml += util.format('<div class="col-sm-6 col-md-4"><div class="thumbnail"><img src="example_product.png" alt="%s"><div class="caption"><h3>%s</h3><h4>%s%s</h4><p>%s</p><p><a href="#" class="btn btn-primary" role="button">Buy Now</a> <a href="product" class="btn btn-default" role="button">View Details</a></p></div></div></div>', products[j].ptitle, products[j].ptitle, settings.page.pageCurrency, products[j].pprice, products[j].psdescription);
 				}
 				
 				elementhtml += '</div></div>';
 			} else if (elements[i].type == "StartShoppingButton") {
-				elementhtml += '<p><a class="btn btn-lg btn-primary" href="/products" role="button">Start shopping! \u00BB</a></p>';
+				elementhtml += '<p><a class="btn btn-lg btn-primary" href="products" role="button">Start shopping! \u00BB</a></p>';
 			} else if (elements[i].type == "Carousel") {
 				console.log("ImageCarousel not implemented");
 			} else {
@@ -464,6 +464,18 @@ function generate_store(escaped_email) {
 		var s = data.settings.style;
 		css = util.format('.textbox {color: %s} body {background-color: %s} .navbar {background-color: %s; border-color: %s} .main, #footer {font-family: %s} .navbar .nav a, .navbar .navbar-header a {color: %s} .navbar .nav .active a {background-color: %s} #footer {background-color: %s} #footer .text-muted {color: %s} .navbar-toggle .icon-bar {background-color: %s} .navbar-toggle {border-color: %s; background-color: %s}', s.fontcolour, s.bgcolour, s.navbarcolor, s.navbarhighlight, s.fontface, s.navbartextcolor, s.navbarhighlight, s.footercolor, s.footertext, s.navbartextcolor, s.navbartextcolor, s.navbarhighlight);
 		fs.writeFile("./users/" + email + "/store_custom.css", css);
+	});
+}
+
+function giveStaticFile(res, path) {
+	fs.readFile(path, function (err,data) {
+		if (err) {
+			console.log(path + " should have been found, but wasn't!");
+			four_oh_four(res);
+		} else {
+			res.writeHead(200);
+			res.end(data);
+		}
 	});
 }
 
@@ -589,9 +601,21 @@ http.createServer(function (req, res) {
 										db.close();
 										return;
 									}
-									db.close();
-									console.log("Products saved sucessfully");
-									generate_store(pdata.user);
+									var new_url = sdata.page.pageURL;
+									var User = mongoose.model('users', userSchema);
+									var unescaped_email = pdata.user.replace("__", "@").replace("_", ".");
+									User.findOne({user: unescaped_email}, function (err, item) {
+										if (err || !item) {
+											console.log(err);
+											db.close();
+											return;
+										}
+										item.url = sdata.page.pageURL;
+										item.save();
+										db.close();
+										console.log("Products saved sucessfully");
+										generate_store(pdata.user);
+									});
 								});}
 							
 						}
@@ -866,29 +890,10 @@ http.createServer(function (req, res) {
 
 	} else if (req.method == "GET") {
 		if (redirected_urls[url] != undefined) {
-			fs.readFile(__dirname + redirected_urls[url], function (err,data) {
-				if (err) {
-					console.log(redirected_urls[url] + " should have been found, but wasn't!");
-					four_oh_four(res);
-				} else {
-					res.writeHead(200);
-					res.end(data);
-				}
-			});
+			giveStaticFile(res, __dirname + redirected_urls[url]);
 		} else if (unchanged_urls.indexOf(url) >= 0) {
-			fs.readFile(__dirname + url, function (err,data) {
-				if (err) {
-					console.log(url + " should have been found, but wasn't!");
-					four_oh_four(res);
-				} else {
-					res.writeHead(200);
-					res.end(data);
-				}
-			});
+			giveStaticFile(res, __dirname + url);
 		} else if (url.substring(0,6) == "/store") {
-			if (url.slice(-1) == "/") {
-				url = url.slice(0, -1);
-			}
 
 			thirdslash = url.indexOf("/", 7);
 			if (thirdslash == -1) {
@@ -896,7 +901,7 @@ http.createServer(function (req, res) {
 				page_url = "";
 			} else {
 				store_url = url.substring(7, thirdslash);
-				page_url = url.substring(thirdslash + 1);
+				page_url = url.substring(thirdslash);
 			}
 
 			if (store_url == "") {
@@ -904,8 +909,48 @@ http.createServer(function (req, res) {
 				return;
 			}
 
-			console.log(util.format("user tried to request page '%s' from store '%s'. but we haven't implemented this yet!!", page_url, store_url));
-			four_oh_four(res);
+			mongoose.connect('mongodb://localhost:8081/easyStorefront');
+			var db = mongoose.connection;
+			db.on('error', console.error.bind(console, 'connection error:'));
+			db.once('open', function callback () {
+				var User = mongoose.model('users', userSchema);
+				User.findOne({url: store_url}, function (err, item) {
+					if (err) {
+						console.log(err);
+						four_oh_four(res);
+						db.close();
+						return;
+					} else if (!item) {
+						console.log("store " + store_url + " does not exist!");
+						four_oh_four(res);
+						db.close();
+						return;
+					}
+					db.close();
+					store_owner = item.user;
+					
+					if (page_url == "/") { //store home page
+						giveStaticFile(res, __dirname + "/users/" + store_owner + "/store_splash.html");
+					} else if (page_url == "/products") {
+						giveStaticFile(res, __dirname + "/users/" + store_owner + "/store_products.html");
+					} else if (page_url == "/product") {
+						giveStaticFile(res, __dirname + "/users/" + store_owner + "/store_product.html");
+					} else if (page_url == "/search") {
+						giveStaticFile(res, __dirname + "/users/" + store_owner + "/store_search.html");
+					} else if (page_url == "/store_custom.css") {
+						giveStaticFile(res, __dirname + "/users/" + store_owner + "/store_custom.css");
+					} else if (page_url == "") { 
+						res.writeHead(303, {'Location': '/store/' + store_url + "/"}); //redirect from "/store/hatstore" to "/store/hatstore/" for technical reasons
+						res.end();
+					} else {
+						console.log(util.format("user tried to request page '%s' from store owner '%s'.", page_url, store_owner));
+						four_oh_four(res);
+					} 
+					
+				});
+			});
+			
+			
 		} else if (url.substring(0,13) == "/getstoredata") {
 			res.writeHead(200, {"Content-Type": "application/json"});
 			var user = url.substring(14);
