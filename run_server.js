@@ -383,7 +383,7 @@ function generate_store(escaped_email) {
 	console.log("generating store for user " + email);
 
 	function generateHeader(active_link, store_url) {
-		var headerhtml = '<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="utf-8"><title>%s</title><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"><link href="/store_generic.css" rel="stylesheet"><link href="/store/'+store_url+'/store_custom.css" rel="stylesheet"></head><body><div class="navbar"><div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/store/'+store_url+'"><img src="example_store_logo.png" height="100%" alt="Logo Image Goes Here"></a></div><div class="collapse navbar-collapse"><ul class="nav navbar-nav">';
+		var headerhtml = '<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="utf-8"><title>%s</title><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"><link href="/store_generic.css" rel="stylesheet"><link href="/store/'+store_url+'/store_custom.css" rel="stylesheet"></head><body><div class="navbar"><div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/store/'+store_url+'"><img src="/store/'+store_url+'/images/%s" height="100%" alt="Logo Image Goes Here"></a></div><div class="collapse navbar-collapse"><ul class="nav navbar-nav">';
 		headerhtml += active_link == "home" ? '<li class="active">' : '<li>'
 		headerhtml += '<a href="/store/'+store_url+'">Home</a></li>'
 		headerhtml += active_link == "products" ? '<li class="active">' : '<li>'
@@ -429,7 +429,7 @@ function generate_store(escaped_email) {
 	
 	var data = getStoreInfo(email, function (data) {
 	
-		productlistpage = util.format(generateHeader('products', data.settings.page.pageURL), data.settings.page.pageTitle);
+		productlistpage = util.format(generateHeader('products', data.settings.page.pageURL), data.settings.page.pageTitle, data.settings.navbar.navbarLogo);
 		data.productsPageElements.sort(function(a, b){return a.pos-b.pos}); //sort based on the pos property of the page element
 		productlistpage += processElements(data.productsPageElements, data.products, data.settings);
 		productlistpage += util.format(generateFooter(), data.settings.page.pageTitle);
@@ -437,7 +437,7 @@ function generate_store(escaped_email) {
 		
 		
 		
-		splashpage = util.format(generateHeader('home', data.settings.page.pageURL), data.settings.page.pageTitle);
+		splashpage = util.format(generateHeader('home', data.settings.page.pageURL), data.settings.page.pageTitle, data.settings.navbar.navbarLogo);
 		splashpage += '<div class="container"><div class="jumbotron text-center">';
 		data.homePageElements.sort(function(a, b){return a.pos-b.pos}); //sort based on the pos property of the page element
 		splashpage += processElements(data.homePageElements, data.products, data.settings);
@@ -447,14 +447,14 @@ function generate_store(escaped_email) {
 		
 		
 		
-		productpage = util.format(generateHeader('', data.settings.page.pageURL), data.settings.page.pageTitle);
+		productpage = util.format(generateHeader('', data.settings.page.pageURL), data.settings.page.pageTitle, data.settings.navbar.navbarLogo);
 		productpage += util.format('<div class="container"><div class="jumbotron jumbotron_lesspadding"><div class="row"><div class="col-md-5 col-sm-6"><img src="example_product.png" class="img-responsive img-rounded"></div><div class="col-md-7 col-sm-6"><h2>{ptitle}</h2><h4>%s{pprice}</h4><p>{pldescription}</p><p><a role="button" class="btn btn-primary" href="#">Buy Now</a></p></div></div><div class="row"><div class="col-md-12 col-sm-12"><div class="tags"><div class="button_label">Tags: </div> <div class="btn-group"> {buttons}</div></div></div></div></div></div>', data.settings.page.pageCurrency);
 		productpage += util.format(generateFooter(), data.settings.page.pageTitle);
 		fs.writeFile("./users/" + email + "/store_product.html", productpage);
 		
 		
 		
-		searchpage = util.format(generateHeader('', data.settings.page.pageURL), data.settings.page.pageTitle);
+		searchpage = util.format(generateHeader('', data.settings.page.pageURL), data.settings.page.pageTitle, data.settings.navbar.navbarLogo);
 		searchpage += util.format('<div class="container textbox"><h1>Search Results</h1><p class="lead">The following products were found for the query, "{search}".</p></div>');
 				searchpage += '<div class="container"><div class="row">{results}</div></div>';
 		searchpage += util.format(generateFooter(), data.settings.page.pageTitle);
@@ -895,28 +895,27 @@ http.createServer(function (req, res) {
 			giveStaticFile(res, __dirname + url);
 		} else if (url.substring(0,6) == "/store") {
 
-			thirdslash = url.indexOf("/", 7);
+			var thirdslash = url.indexOf("/", 7);
 			if (thirdslash == -1) {
-				store_url = url.substring(7);
-				page_url = "";
+				var store_url = url.substring(7);
+				var page_url = "";
 			} else {
-				store_url = url.substring(7, thirdslash);
-				page_url = url.substring(thirdslash);
+				var store_url = url.substring(7, thirdslash);
+				var page_url = url.substring(thirdslash);
 			}
 
 			if (store_url == "") {
 				four_oh_four(res);
 				return;
 			}
-
-			mongoose.connect('mongodb://localhost:8081/easyStorefront');
-			var db = mongoose.connection;
-			db.on('error',function(){;});
+					
+			var db = mongoose.createConnection('mongodb://localhost:8081/easyStorefront');
+			db.on('error', console.error.bind(console, 'connection error:'));
 			db.once('open', function callback () {
-				var User = mongoose.model('users', userSchema);
+				var User = db.model('users', userSchema);
 				User.findOne({url: store_url}, function (err, item) {
 					if (err) {
-						console.log(err);
+						console.log("there's problems " + err);
 						four_oh_four(res);
 						db.close();
 						return;
@@ -939,7 +938,7 @@ http.createServer(function (req, res) {
 						var prod_num = page_url.substring(9);
 					
 						var db_name = store_owner.replace(".", "_").replace("@", "__") + "products";
-						var ProductList = mongoose.model(db_name, productList);
+						var ProductList = db.model(db_name, productList);
 						
 						
 						ProductList.findOne().exec(function(err, data) {
@@ -977,7 +976,7 @@ http.createServer(function (req, res) {
 						var query = page_url.substring(page_url.indexOf("=")+1).toLowerCase();
 					
 						var db_name = store_owner.replace(".", "_").replace("@", "__") + "products";
-						var ProductList = mongoose.model(db_name, productList);
+						var ProductList = db.model(db_name, productList);
 						
 						
 						ProductList.findOne().exec(function(err, data) {
@@ -1009,6 +1008,10 @@ http.createServer(function (req, res) {
 					} else if (page_url == "/store_custom.css") {
 						db.close();
 						giveStaticFile(res, __dirname + "/users/" + store_owner + "/store_custom.css");
+					} else if (page_url.substring(0,7) == "/images") {
+						db.close();
+						var img = page_url.substring(7);
+						giveStaticFile(res, __dirname + "/users/" + store_owner + "/images/" + img);
 					} else if (page_url == "") { 
 						db.close();
 						res.writeHead(303, {'Location': '/store/' + store_url + "/"}); //redirect from "/store/hatstore" to "/store/hatstore/" for technical reasons
@@ -1021,7 +1024,7 @@ http.createServer(function (req, res) {
 					
 				});
 			});
-			
+
 			
 		} else if (url.substring(0,13) == "/getstoredata") {
 			res.writeHead(200, {"Content-Type": "application/json"});

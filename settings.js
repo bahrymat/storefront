@@ -29,7 +29,7 @@ function newTextBlock1() {
 $("ul.newElement1 > li#TextBlock").click(newTextBlock1);
 
 function newImageBlock1() {
-	var imageblockform = '<div class="col-sm-6 box"><div class="block"><div class="deletable"><div class="confirmDelete"><div class="del">Delete?</div><button type="button" class="close confirmNo">No</button><button type="button" class="close confirmYes">Yes</button></div><div><button type="button" class="close deleteThis" ><span class="glyphicon glyphicon-remove"></span></button></div></div><h4>Imageblock</h4><form class="form-horizontal element1-container" role="form"><div class="form-group"><input type="hidden" class="storeform" id="type" value="ImageBlock"><label for="ititle" class="col-sm-3 control-label">Title</label><div class="col-sm-9"><input type="text" class="form-control storeform" id="ititle" placeholder="Title"></div><label for="idescription" class="col-sm-3 control-label">Description</label><div class="col-sm-9"><textarea class="form-control storeform" rows="2" id="idescription" placeholder="Description"></textarea></div><label for="iimage" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control storeform" id="iimage"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><label for="pos" class="col-sm-3 control-label">Position</label><div class="col-sm-9"><input type="number" class="form-control storeform" id="pos" placeholder="1"></div></div></form></div></div>';
+	var imageblockform = '<div class="col-sm-6 box"><div class="block"><div class="deletable"><div class="confirmDelete"><div class="del">Delete?</div><button type="button" class="close confirmNo">No</button><button type="button" class="close confirmYes">Yes</button></div><div><button type="button" class="close deleteThis" ><span class="glyphicon glyphicon-remove"></span></button></div></div><h4>Imageblock</h4><form class="form-horizontal element1-container" role="form"><div class="form-group"><input type="hidden" class="storeform" id="type" value="ImageBlock"><label for="ititle" class="col-sm-3 control-label">Title</label><div class="col-sm-9"><input type="text" class="form-control storeform" id="ititle" placeholder="Title"></div><label for="idescription" class="col-sm-3 control-label">Description</label><div class="col-sm-9"><textarea class="form-control storeform" rows="2" id="idescription" placeholder="Description"></textarea></div><label for="iimage" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control storeform imageselect" id="iimage"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><label for="pos" class="col-sm-3 control-label">Position</label><div class="col-sm-9"><input type="number" class="form-control storeform" id="pos" placeholder="1"></div></div></form></div></div>';
 
 	$("#element1Content").append(imageblockform);
 }
@@ -43,7 +43,7 @@ function newStartShopping1() {
 $("ul.newElement1 > li#StartShopping").click(newStartShopping1);
 	
 function newCarousel1() {
-	var carouselform = '<div class="col-sm-6 box"><div class="block"><div class="deletable"><div class="confirmDelete"><div class="del">Delete?</div><button type="button" class="close confirmNo">No</button><button type="button" class="close confirmYes">Yes</button></div><div><button type="button" class="close deleteThis" ><span class="glyphicon glyphicon-remove"></span></button></div></div><h4>Carousel</h4><form class="form-horizontal element1-container" role="form"><div class="form-group"><input type="hidden" class="storeform" id="type" value="Carousel"><label for="cimage1" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control storeform" id="cimage1"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><label for="cimage2" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control storeform" id="cimage2"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><label for="cimage3" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control storeform" id="cimage3"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><label for="pos" class="col-sm-3 control-label">Position</label><div class="col-sm-9"><input type="number" class="form-control storeform" id="pos" placeholder="1"></div></div></form></div></div>';
+	var carouselform = '<div class="col-sm-6 box"><div class="block"><div class="deletable"><div class="confirmDelete"><div class="del">Delete?</div><button type="button" class="close confirmNo">No</button><button type="button" class="close confirmYes">Yes</button></div><div><button type="button" class="close deleteThis" ><span class="glyphicon glyphicon-remove"></span></button></div></div><h4>Carousel</h4><form class="form-horizontal element1-container" role="form"><div class="form-group"><input type="hidden" class="storeform" id="type" value="Carousel"><label for="cimage1" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control storeform imageselect" id="cimage1"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><label for="cimage2" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control storeform imageselect" id="cimage2"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><label for="cimage3" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control storeform imageselect" id="cimage3"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><label for="pos" class="col-sm-3 control-label">Position</label><div class="col-sm-9"><input type="number" class="form-control storeform" id="pos" placeholder="1"></div></div></form></div></div>';
 
 	$("#element1Content").append(carouselform);
 }
@@ -57,7 +57,7 @@ function newTextBlock2() {
 $("ul.newElement2 > li#TextBlock").click(newTextBlock2);
 
 function newImageBlock2() {
-	var imageblockform = '<div class="col-sm-6 box"><div class="block"><div class="deletable"><div class="confirmDelete"><div class="del">Delete?</div><button type="button" class="close confirmNo">No</button><button type="button" class="close confirmYes">Yes</button></div><div><button type="button" class="close deleteThis" ><span class="glyphicon glyphicon-remove"></span></button></div></div><h4>Imageblock</h4><form class="form-horizontal element2-container" role="form"><div class="form-group"><input type="hidden" class="storeform" id="type" value="ImageBlock"><label for="ititle" class="col-sm-3 control-label">Title</label><div class="col-sm-9"><input type="text" class="form-control storeform" id="ititle" placeholder="Title"></div><label for="idescription" class="col-sm-3 control-label">Description</label><div class="col-sm-9"><textarea class="form-control storeform" rows="2" id="idescription" placeholder="Description"></textarea></div><label for="iimage" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control storeform" id="iimage"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><label for="pos" class="col-sm-3 control-label">Position</label><div class="col-sm-9"><input type="number" class="form-control storeform" id="pos" placeholder="1"></div></div></form></div></div>';
+	var imageblockform = '<div class="col-sm-6 box"><div class="block"><div class="deletable"><div class="confirmDelete"><div class="del">Delete?</div><button type="button" class="close confirmNo">No</button><button type="button" class="close confirmYes">Yes</button></div><div><button type="button" class="close deleteThis" ><span class="glyphicon glyphicon-remove"></span></button></div></div><h4>Imageblock</h4><form class="form-horizontal element2-container" role="form"><div class="form-group"><input type="hidden" class="storeform" id="type" value="ImageBlock"><label for="ititle" class="col-sm-3 control-label">Title</label><div class="col-sm-9"><input type="text" class="form-control storeform" id="ititle" placeholder="Title"></div><label for="idescription" class="col-sm-3 control-label">Description</label><div class="col-sm-9"><textarea class="form-control storeform" rows="2" id="idescription" placeholder="Description"></textarea></div><label for="iimage" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control storeform imageselect" id="iimage"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><label for="pos" class="col-sm-3 control-label">Position</label><div class="col-sm-9"><input type="number" class="form-control storeform" id="pos" placeholder="1"></div></div></form></div></div>';
 
 	$("#element2Content").append(imageblockform);
 }
@@ -71,7 +71,7 @@ function newProductList2() {
 $("ul.newElement2 > li#ProductList").click(newProductList2);
 
 function newCarousel2() {
-	var carouselform = '<div class="col-sm-6 box"><div class="block"><div class="deletable"><div class="confirmDelete"><div class="del">Delete?</div><button type="button" class="close confirmNo">No</button><button type="button" class="close confirmYes">Yes</button></div><div><button type="button" class="close deleteThis" ><span class="glyphicon glyphicon-remove"></span></button></div></div><h4>Carousel</h4><form class="form-horizontal element2-container" role="form"><div class="form-group"><input type="hidden" class="storeform" id="type" value="Carousel"><label for="cimage1" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control storeform" id="cimage1"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><label for="cimage2" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control storeform" id="cimage2"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><label for="cimage3" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control storeform" id="cimage3"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><label for="pos" class="col-sm-3 control-label">Position</label><div class="col-sm-9"><input type="number" class="form-control storeform" id="pos" placeholder="1"></div></div></form></div></div>';
+	var carouselform = '<div class="col-sm-6 box"><div class="block"><div class="deletable"><div class="confirmDelete"><div class="del">Delete?</div><button type="button" class="close confirmNo">No</button><button type="button" class="close confirmYes">Yes</button></div><div><button type="button" class="close deleteThis" ><span class="glyphicon glyphicon-remove"></span></button></div></div><h4>Carousel</h4><form class="form-horizontal element2-container" role="form"><div class="form-group"><input type="hidden" class="storeform" id="type" value="Carousel"><label for="cimage1" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control storeform imageselect" id="cimage1"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><label for="cimage2" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control storeform imageselect" id="cimage2"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><label for="cimage3" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control storeform imageselect" id="cimage3"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><label for="pos" class="col-sm-3 control-label">Position</label><div class="col-sm-9"><input type="number" class="form-control storeform" id="pos" placeholder="1"></div></div></form></div></div>';
 
 	$("#element2Content").append(carouselform);
 }
@@ -85,7 +85,7 @@ function newImage() {
 $(".newImage").click(newImage);
 
 function newProduct() {
-	var productform = '<div class="col-sm-6 box"><div class="block" ><div class="deletable"><div class="confirmDelete"><div class="del">Delete?</div><button type="button" class="close confirmNo">No</button><button type="button" class="close confirmYes">Yes</button></div><div><button type="button" class="close deleteThis" ><span class="glyphicon glyphicon-remove"></span></button></div></div><form class="form-horizontal product-container" role="form""><div class="form-group"><label for="ptitle" class="col-sm-3 control-label">Product</label><div class="col-sm-9"><input type="text" class="form-control storeform" id="ptitle" placeholder="Product Name"></div><label for="psdescription" class="col-sm-3 control-label">Short Description</label><div class="col-sm-9"><textarea class="form-control storeform" rows="2" id="psdescription"  placeholder="Short Description"></textarea></div><label for="pldescription" class="col-sm-3 control-label">Long Description</label><div class="col-sm-9"><textarea class="form-control storeform" rows="2" id="pldescription"  placeholder="Long Description"></textarea></div><label for="pprice" class="col-sm-3 control-label">Price</label><div class="col-sm-9"><input type="number" class="form-control storeform" id="pprice" placeholder="Price"></div><label for="pimage" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control storeform" id="pimage"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><label for="ptags" class="col-sm-3 control-label">Tags</label><div class="col-sm-9"><textarea class="form-control storeform" rows="2" id="ptags"  placeholder="Tags (comma separated)"></textarea></div></div></form></div></div>';
+	var productform = '<div class="col-sm-6 box"><div class="block" ><div class="deletable"><div class="confirmDelete"><div class="del">Delete?</div><button type="button" class="close confirmNo">No</button><button type="button" class="close confirmYes">Yes</button></div><div><button type="button" class="close deleteThis" ><span class="glyphicon glyphicon-remove"></span></button></div></div><form class="form-horizontal product-container" role="form""><div class="form-group"><label for="ptitle" class="col-sm-3 control-label">Product</label><div class="col-sm-9"><input type="text" class="form-control storeform" id="ptitle" placeholder="Product Name"></div><label for="psdescription" class="col-sm-3 control-label">Short Description</label><div class="col-sm-9"><textarea class="form-control storeform" rows="2" id="psdescription"  placeholder="Short Description"></textarea></div><label for="pldescription" class="col-sm-3 control-label">Long Description</label><div class="col-sm-9"><textarea class="form-control storeform" rows="2" id="pldescription"  placeholder="Long Description"></textarea></div><label for="pprice" class="col-sm-3 control-label">Price</label><div class="col-sm-9"><input type="number" class="form-control storeform" id="pprice" placeholder="Price"></div><label for="pimage" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control storeform imageselect" id="pimage"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><label for="ptags" class="col-sm-3 control-label">Tags</label><div class="col-sm-9"><textarea class="form-control storeform" rows="2" id="ptags"  placeholder="Tags (comma separated)"></textarea></div></div></form></div></div>';
 	$("#productContent").append(productform);
 }
 $(".newProduct").click(newProduct);
@@ -234,13 +234,14 @@ $('.settingssubmit').click(parseSettingsForms);
 $('.productssubmit').click(parseProductForms);
 $('.frontsubmit').click(parseFrontPageForms);
 $('.productpagesubmit').click(parseProductsPageForms);
+$('.reset').click(reset);
 
 var hash = window.location.hash;
 hash && $('ul.nav a[href="' + hash + '"]').tab('show'); //link to specific tab
 
 history.pushState("", document.title, window.location.pathname); //remove anchor from url
 
-(function populateSettings() {
+function populateSettings() {
 	$.ajax({url: "/getstoredata/" + getCookie("email")}).done(function (data) {
 	
 		for (var i = 0; i < data.images.length; i++) {
@@ -299,8 +300,10 @@ history.pushState("", document.title, window.location.pathname); //remove anchor
 				newCarousel1();
 			}
 			for (var j = 0; j < element.fields.length; j++) {
-				var key = Object.keys(element.fields[j])[0];
-				$('#elements1 .block').slice(i,i+1).find('#'+key)[0].value = element.fields[j][key];
+				try {
+					var key = Object.keys(element.fields[j])[0];
+					$('#elements1 .block').slice(i,i+1).find('#'+key)[0].value = element.fields[j][key];
+				} catch (TypeError) {;}
 			}
 			$('#elements1 #pos')[i].value = element.pos;
 		}
@@ -317,10 +320,26 @@ history.pushState("", document.title, window.location.pathname); //remove anchor
 				newCarousel2();
 			}
 			for (var j = 0; j < element.fields.length; j++) {
-				var key = Object.keys(element.fields[j])[0];
-				$('#elements2 .block').slice(i,i+1).find('#'+key)[0].value = element.fields[j][key];
+				try {
+					var key = Object.keys(element.fields[j])[0];
+					$('#elements2 .block').slice(i,i+1).find('#'+key)[0].value = element.fields[j][key];
+				} catch (TypeError) {;}
 			}
 			$('#elements2 #pos')[i].value = element.pos;
 		}
+		
+		var imageselects = $('.imageselect').html(''); //clear the old options
+		for (i = 0; i < data.images.length; i++) {
+			imageselects.append('<option>'+data.images[i].iimage[0]+'</option>');
+		}
+		if (data.images.length == 0) {
+			imageselects.append('<option>None</option>');
+		}
 	});
-}());
+}
+populateSettings();
+
+function reset() {
+	$('.box').remove();
+	populateSettings();
+}

@@ -99,11 +99,9 @@
     								<li id="StartShopping">Start Shopping Button</li>
   								</ul>
 								</div>
-<br>
-								<button type="submit" class="btn btn-primary frontsubmit">Save</button>
-								<button type="submit" class="btn btn-primary">Save Draft</button>
-								<button type="submit" class="btn btn-primary">Restore Default</button>
-								<button type="submit" class="btn btn-primary">Preview</button>
+<br>	
+								<button type="button" class="btn btn-primary frontsubmit">Save Changes</button>
+								<button type="button" class="btn btn-primary reset">Revert Changes</input>
 							</div>
 							<div class="row" id="element1Content">
 									<!-- contents go here -->
@@ -131,10 +129,8 @@
   								</ul>
 								</div>
 <br>
-								<button type="submit" class="btn btn-primary productpagesubmit">Save</button>
-								<button type="submit" class="btn btn-primary">Save Draft</button>
-								<button type="submit" class="btn btn-primary">Restore Default</button>
-								<button type="submit" class="btn btn-primary">Preview</button>
+								<button type="button" class="btn btn-primary productpagesubmit">Save Changes</button>
+								<button type="button" class="btn btn-primary reset">Revert Changes</input>
 							</div>
 							<div class="row" id="element2Content">
 									<!-- contents go here -->
@@ -152,13 +148,14 @@
 							 	<div class="jumbotron">
 							 		<div class="titles">Add, modify and delete products</div><br>
 									<button type="submit" class="btn btn-primary newProduct">New Product</button>
-									<button type="submit" class="btn btn-primary productssubmit">Save Changes</button>
-									<div class="input-group searchbar">
+									<button type="button" class="btn btn-primary productssubmit">Save Changes</button>
+									<button type="button" class="btn btn-primary reset">Revert Changes</input>
+									<!--<div class="input-group searchbar">
 										<input type="text" class="form-control searchbar" placeholder="Search products...">
 										<span class="input-group-btn">
 											<button class="btn btn-default glyphicon glyphicon-search" type="button"></button>
 										</span>
-									</div>
+									</div>-->
 
 								</div>
 								<div class="row" id="productContent" margin>
@@ -202,9 +199,8 @@
 						 	<div class="jumbotron">
 							 	<div class="titles">Change settings of your store page</div><br>
 												 
-								<button type="button" class="btn btn-primary newImage settingssubmit">Save Changes</button>
-								<button type="button" class="btn btn-primary newImage">Revert Changes</button>
-								<button type="button" class="btn btn-primary newImage">Preview</button>
+								<button type="button" class="btn btn-primary settingssubmit">Save Changes</button>
+								<button type="button" class="btn btn-primary reset">Revert Changes</input>
 							</div>
 							<div class="row">
 								<div class="col-lg-12">
@@ -228,7 +224,8 @@
 														<option>$</option>
 														<option>£</option>
 														<option>¥</option>
-														<option>etc.</option>
+														<option>€</option>
+														<option>฿</option>
 													 </select>
 											 		</div>
 													<div class="col-sm-6">
@@ -268,7 +265,7 @@
 														<option>Times New Roman</option>
 														<option>Courier</option>
 														<option>Verdana</option>
-														<option>etc.</option>
+														<option>Comic Sans MS</option>
 													 </select>
 											 		</div>
 													<label for="navcolor" class="col-sm-3 control-label">Navbar colour</label>
@@ -300,7 +297,7 @@
 												<div class="form-group">
 													<label for="logo" class="col-sm-3 control-label">Logo Image</label>
 													<div class="col-sm-9">
-													 	 <select class="form-control storeform" id="navbarLogo">
+													 	 <select class="form-control storeform imageselect" id="navbarLogo">
 															<option>None</option>
 															<option>image1.jpg</option>
 															<option>image2.jpg</option>
