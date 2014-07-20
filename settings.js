@@ -355,5 +355,8 @@ populateSettings(function (data) {
 
 function reset() {
 	$('.box').remove();
-	populateSettings();
+	populateSettings(function (data) {
+		global_data = data;
+		fixDropdowns();
+	});
 }
