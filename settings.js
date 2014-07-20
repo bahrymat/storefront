@@ -33,7 +33,7 @@ function newImageBlock1() {
 
 	$("#element1Content").append(imageblockform);
 }
-$("ul.newElement1 > li#ImageBlock").click(newImageBlock1);
+$("ul.newElement1 > li#ImageBlock").click(newImageBlock1).click(fixDropdowns);
 
 function newStartShopping1() {
 	var startshoppingform = '<div class="col-sm-6 box"><div class="block"><div class="deletable"><div class="confirmDelete"><div class="del">Delete?</div><button type="button" class="close confirmNo">No</button><button type="button" class="close confirmYes">Yes</button></div><div><button type="button" class="close deleteThis" ><span class="glyphicon glyphicon-remove"></span></button></div></div><h4>Start Shopping button</h4><form class="form-horizontal element1-container" role="form"><div class="form-group"><input type="hidden" class="storeform" id="type" value="StartShoppingButton"><label for="pos" class="col-sm-3 control-label">Position</label><div class="col-sm-9"><input type="number" class="form-control storeform" id="pos" placeholder="1"></div></form></div></div>';
@@ -47,7 +47,7 @@ function newCarousel1() {
 
 	$("#element1Content").append(carouselform);
 }
-$("ul.newElement1 > li#Carousel").click(newCarousel1);
+$("ul.newElement1 > li#Carousel").click(newCarousel1).click(fixDropdowns);
 	
 function newTextBlock2() {
 	var textblockform = '<div class="col-sm-6 box"><div class="block"><div class="deletable"><div class="confirmDelete"><div class="del">Delete?</div><button type="button" class="close confirmNo">No</button><button type="button" class="close confirmYes">Yes</button></div><div><button type="button" class="close deleteThis" ><span class="glyphicon glyphicon-remove"></span></button></div></div><h4>Textblock</h4><form class="form-horizontal element2-container" role="form""> <div class="form-group"><input type="hidden" class="storeform" id="type" value="TextBlock"><label for="ttitle" class="col-sm-3 control-label">Title</label><div class="col-sm-9"><input type="text" class="form-control storeform" id="ttitle" placeholder="Title"></div><label for="tdescription" class="col-sm-3 control-label">Description</label><div class="col-sm-9"><textarea class="form-control storeform" rows="2" columns="3" id="tdescription" placeholder="Description"></textarea></div><label for="pos" class="col-sm-3 control-label">Position</label><div class="col-sm-9"><input type="number" class="form-control storeform" id="pos" placeholder="1"></div></div></form></div></div>';
@@ -61,7 +61,7 @@ function newImageBlock2() {
 
 	$("#element2Content").append(imageblockform);
 }
-$("ul.newElement2 > li#ImageBlock").click(newImageBlock2);
+$("ul.newElement2 > li#ImageBlock").click(newImageBlock2).click(fixDropdowns);
 
 function newProductList2() {
 	var productlistform = '<div class="col-sm-6 box"><div class="block"><div class="deletable"><div class="confirmDelete"><div class="del">Delete?</div><button type="button" class="close confirmNo">No</button><button type="button" class="close confirmYes">Yes</button></div><div><button type="button" class="close deleteThis" ><span class="glyphicon glyphicon-remove"></span></button></div></div><h4>Product List</h4><form class="form-horizontal element2-container" role="form"><div class="form-group"><input type="hidden" class="storeform" id="type" value="ProductList"><label for="pos" class="col-sm-3 control-label">Position</label><div class="col-sm-9"><input type="number" class="form-control storeform" id="pos" placeholder="1"></div></form></div></div>';
@@ -75,7 +75,7 @@ function newCarousel2() {
 
 	$("#element2Content").append(carouselform);
 }
-$("ul.newElement2 > li#Carousel").click(newCarousel2);
+$("ul.newElement2 > li#Carousel").click(newCarousel2).click(fixDropdowns);
 
 function newImage() {
 	var imageform = '<div class="col-sm-6 box"><div class="block"><div class="deletable"><div class="confirmDelete"><div class="del">Delete?</div><button type="button" class="close confirmNo">No</button><button type="button" class="close confirmYes">Yes</button></div><div><button type="button" class="close deleteThis"><span class="glyphicon glyphicon-remove"></span></button></div></div><div class="col-sm-12"><img class="img-thumbnail imagethumb" src="http://placehold.it/200x200&text=Thumbnail" alt="200x200"></img></div><form class="form-horizontal image-container" role="form" action="/addimage" method="post" enctype="multipart/form-data"><div class="form-group"><div><label for="imname" class="col-sm-4 control-label">Name</label><div class="col-sm-8"><input type="text" class="form-control storeform" id="imname" placeholder="Image name" name="imname"><input type="hidden" id="email" name="email" class="storeform" placeholder="" value="' + getCookie("email") + '"></div><label for="imfile" class="col-sm-4 control-label">Image File</label><div class="col-sm-8"><input type="file" class="form-control imfile" name="imfile"><input type="text" id="filename" class="form-control filename storeform" placeholder="filename.png"><div class="button-group"> <a href="#" class="btn btn btn-default browse" role="button">Browse</a> <input type="submit" class="btn btn-default" value="Save"/></div></div></div></div></form></div></div>';
@@ -88,7 +88,7 @@ function newProduct() {
 	var productform = '<div class="col-sm-6 box"><div class="block" ><div class="deletable"><div class="confirmDelete"><div class="del">Delete?</div><button type="button" class="close confirmNo">No</button><button type="button" class="close confirmYes">Yes</button></div><div><button type="button" class="close deleteThis" ><span class="glyphicon glyphicon-remove"></span></button></div></div><form class="form-horizontal product-container" role="form""><div class="form-group"><label for="ptitle" class="col-sm-3 control-label">Product</label><div class="col-sm-9"><input type="text" class="form-control storeform" id="ptitle" placeholder="Product Name"></div><label for="psdescription" class="col-sm-3 control-label">Short Description</label><div class="col-sm-9"><textarea class="form-control storeform" rows="2" id="psdescription"  placeholder="Short Description"></textarea></div><label for="pldescription" class="col-sm-3 control-label">Long Description</label><div class="col-sm-9"><textarea class="form-control storeform" rows="2" id="pldescription"  placeholder="Long Description"></textarea></div><label for="pprice" class="col-sm-3 control-label">Price</label><div class="col-sm-9"><input type="number" class="form-control storeform" id="pprice" placeholder="Price"></div><label for="pimage" class="col-sm-3 control-label">Image</label><div class="col-sm-9"><select class="form-control storeform imageselect" id="pimage"><option>None</option><option>image1.jpg</option><option>image2.jpg</option><option>image3.jpg</option><option>image4.jpg</option><option>image5.jpg</option></select></div><label for="ptags" class="col-sm-3 control-label">Tags</label><div class="col-sm-9"><textarea class="form-control storeform" rows="2" id="ptags"  placeholder="Tags (comma separated)"></textarea></div></div></form></div></div>';
 	$("#productContent").append(productform);
 }
-$(".newProduct").click(newProduct);
+$(".newProduct").click(newProduct).click(fixDropdowns);
 
 $(".toTop").click(
 	function () {
@@ -241,8 +241,9 @@ hash && $('ul.nav a[href="' + hash + '"]').tab('show'); //link to specific tab
 
 history.pushState("", document.title, window.location.pathname); //remove anchor from url
 
-function populateSettings() {
+function populateSettings(callback) {
 	$.ajax({url: "/getstoredata/" + getCookie("email")}).done(function (data) {
+	
 	
 		for (var i = 0; i < data.images.length; i++) {
 			newImage();
@@ -332,16 +333,25 @@ function populateSettings() {
 			$('#elements2 #pos')[i].value = element.pos;
 		}
 		
-		var imageselects = $('.imageselect').html(''); //clear the old options
-		for (i = 0; i < data.images.length; i++) {
-			imageselects.append('<option>'+data.images[i].iimage[0]+'</option>');
-		}
-		if (data.images.length == 0) {
-			imageselects.append('<option>None</option>');
-		}
+		callback(data);
 	});
 }
-populateSettings();
+
+function fixDropdowns() {
+	var imageselects = $('.imageselect').html(''); //clear the old options
+	for (i = 0; i < global_data.images.length; i++) {
+		imageselects.append('<option>'+global_data.images[i].iimage[0]+'</option>');
+	}
+	if (global_data.images.length == 0) {
+		imageselects.append('<option>None</option>');
+	}
+}
+
+var global_data = {}
+populateSettings(function (data) {
+	global_data = data;
+	fixDropdowns();
+});
 
 function reset() {
 	$('.box').remove();

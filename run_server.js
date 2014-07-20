@@ -419,8 +419,8 @@ function generate_store(escaped_email) {
 			} else if (elements[i].type == "StartShoppingButton") {
 				elementhtml += '<p><a class="btn btn-lg btn-primary" href="products" role="button">Start shopping! \u00BB</a></p>';
 			} else if (elements[i].type == "Carousel") {
-				console.log("ImageCarousel not implemented");
-				elementhtml += util.format('the three images that would have been part of this carousel are images/%s, images/%s, images/%s', getFieldItem(elements[i].fields, 'cimage1'), getFieldItem(elements[i].fields, 'cimage2'), getFieldItem(elements[i].fields, 'cimage3'));
+				var id = elements[i]._id;
+				elementhtml += util.format('<div class="container"><p><div id="carousel-'+id+'" class="carousel slide" data-ride="carousel"><ol class="carousel-indicators"><li data-target="#carousel-'+id+'" data-slide-to="0" class="active"></li><li data-target="#carousel-'+id+'" data-slide-to="1"></li><li data-target="#carousel-'+id+'" data-slide-to="2"></li></ol><div class="carousel-inner"><div class="item active"><img src="images/%s" alt="slide1"></div><div class="item"><img src="images/%s" alt="slide2"></div><div class="item"><img src="images/%s" alt="slide3"></div></div><a class="left carousel-control" href="#carousel-'+id+'" role="button" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a><a class="right carousel-control" href="#carousel-'+id+'" role="button" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a></div></p></div>', getFieldItem(elements[i].fields, 'cimage1'), getFieldItem(elements[i].fields, 'cimage2'), getFieldItem(elements[i].fields, 'cimage3'));
 			} else {
 				console.log("Unknown element type: " + elements[i].type);
 			}

@@ -63,7 +63,7 @@ html {
   background-color: white;
 }
 
-.text-center img {
+.text-center img, .carousel img {
   margin-left: auto;
   margin-right: auto;
 }
