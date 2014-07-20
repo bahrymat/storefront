@@ -247,7 +247,7 @@ function populateSettings() {
 		for (var i = 0; i < data.images.length; i++) {
 			newImage();
 			
-			$("#imagesContent .imagethumb")[i].src = "/store/" + "STOREURL" + "/images/" + data.images[i].iimage;
+			$("#imagesContent .imagethumb")[i].src = "/store/" + data.settings.page.pageURL + "/images/" + data.images[i].iimage;
 			$("#imagesContent #imname")[i].value = data.images[i].ititle;
 			$("#imagesContent .filename")[i].value = data.images[i].iimage;
 			
@@ -283,6 +283,10 @@ function populateSettings() {
 						input.checked = data.settings[field][field2];
 					} else {
 						input.value = data.settings[field][field2];
+					}
+					if (field2 == "pageURL") {
+						$('#storelink').removeClass('hidden');
+						$('#storelink2')[0].href = "/store/" + data.settings[field][field2];
 					}
 				}
 			}

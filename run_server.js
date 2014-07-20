@@ -77,7 +77,7 @@ var settingsSchema = mongoose.Schema({
 
 });
 
-var redirected_urls = {"/": "/index.html", "/about": "/aboutus.html", "/examples": "/examples.html", "/edit": "/settings.html", "/logout": "/logout.html"}
+var redirected_urls = {"/": "/index.html", "/about": "/aboutus.html", "/edit": "/settings.html", "/logout": "/logout.html"}
 var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js",
                       "/settings.css", "/yuwei.JPG", "/keegan.jpg", "/jason.jpg", "/matt.jpg", "/exclamation.jpg", "/store_generic.css"]
 /* Included for security purposes, as well as to create a RESTful API.
@@ -104,7 +104,7 @@ function url_parse(query) {
 }
 
 
- var userSchema = mongoose.Schema({user:String, pass:String, url: String});
+ var userSchema = mongoose.Schema({user:String, pass:String, url: String, examplesListing: Boolean});
 function registerUser(email, password, url, callback) {
 	return_value = undefined;
 	mongoose.connect('mongodb://localhost:8081/easyStorefront');
@@ -127,7 +127,7 @@ function registerUser(email, password, url, callback) {
 		}
 		if (data == null) {
      	
-			var newUser = new users({user:email, pass:password, url:url});
+			var newUser = new users({user:email, pass:password, url:url, examplesListing:false});
 			newUser.save(function (err) {
 				if (err) {
 					console.log(err);
@@ -407,12 +407,12 @@ function generate_store(escaped_email) {
 			if (elements[i].type == "TextBlock") {
 				elementhtml += util.format('<div class="container textbox"><h1>%s</h1><p class="lead">%s</p></div>', getFieldItem(elements[i].fields, 'ttitle'), getFieldItem(elements[i].fields, 'tdescription'));
 			} else if (elements[i].type == "ImageBlock") {
-				console.log("Image not implemented");
+				elementhtml += util.format('<div class="container"><p><img src="images/%s" class="img-responsive"></p></div>', getFieldItem(elements[i].fields, 'iimage'));
 			} else if (elements[i].type == "ProductList") {
 				elementhtml += '<div class="container"><div class="row">';
 				
 				for (var j = 0; j < products.length; j++) {
-					elementhtml += util.format('<div class="col-sm-6 col-md-4"><div class="thumbnail"><img src="example_product.png" alt="%s"><div class="caption"><h3>%s</h3><h4>%s%s</h4><p>%s</p><p><a href="#" class="btn btn-primary" role="button">Buy Now</a> <a href="product/'+j+'" class="btn btn-default" role="button">View Details</a></p></div></div></div>', products[j].ptitle, products[j].ptitle, settings.page.pageCurrency, products[j].pprice, products[j].psdescription);
+					elementhtml += util.format('<div class="col-sm-6 col-md-4"><div class="thumbnail"><img src="images/'+products[j].pimage+'" alt="%s"><div class="caption"><h3>%s</h3><h4>%s%s</h4><p>%s</p><p><a href="#" class="btn btn-primary" role="button">Buy Now</a> <a href="product/'+j+'" class="btn btn-default" role="button">View Details</a></p></div></div></div>', products[j].ptitle, products[j].ptitle, settings.page.pageCurrency, products[j].pprice, products[j].psdescription);
 				}
 				
 				elementhtml += '</div></div>';
@@ -448,7 +448,7 @@ function generate_store(escaped_email) {
 		
 		
 		productpage = util.format(generateHeader('', data.settings.page.pageURL), data.settings.page.pageTitle, data.settings.navbar.navbarLogo);
-		productpage += util.format('<div class="container"><div class="jumbotron jumbotron_lesspadding"><div class="row"><div class="col-md-5 col-sm-6"><img src="example_product.png" class="img-responsive img-rounded"></div><div class="col-md-7 col-sm-6"><h2>{ptitle}</h2><h4>%s{pprice}</h4><p>{pldescription}</p><p><a role="button" class="btn btn-primary" href="#">Buy Now</a></p></div></div><div class="row"><div class="col-md-12 col-sm-12"><div class="tags"><div class="button_label">Tags: </div> <div class="btn-group"> {buttons}</div></div></div></div></div></div>', data.settings.page.pageCurrency);
+		productpage += util.format('<div class="container"><div class="jumbotron jumbotron_lesspadding"><div class="row"><div class="col-md-5 col-sm-6"><img src="{pimage}" class="img-responsive img-rounded"></div><div class="col-md-7 col-sm-6"><h2>{ptitle}</h2><h4>%s{pprice}</h4><p>{pldescription}</p><p><a role="button" class="btn btn-primary" href="#">Buy Now</a></p></div></div><div class="row"><div class="col-md-12 col-sm-12"><div class="tags"><div class="button_label">Tags: </div> <div class="btn-group"> {buttons}</div></div></div></div></div></div>', data.settings.page.pageCurrency);
 		productpage += util.format(generateFooter(), data.settings.page.pageTitle);
 		fs.writeFile("./users/" + email + "/store_product.html", productpage);
 		
@@ -611,6 +611,7 @@ http.createServer(function (req, res) {
 											return;
 										}
 										item.url = sdata.page.pageURL;
+										item.examplesListing = sdata.page.pageHomepageListing;
 										item.save();
 										db.close();
 										console.log("Products saved sucessfully");
@@ -893,6 +894,25 @@ http.createServer(function (req, res) {
 			giveStaticFile(res, __dirname + redirected_urls[url]);
 		} else if (unchanged_urls.indexOf(url) >= 0) {
 			giveStaticFile(res, __dirname + url);
+		} else if (url == "/examples") {
+			var db = mongoose.createConnection('mongodb://localhost:8081/easyStorefront');
+			db.on('error', console.error.bind(console, 'connection error:'));
+			db.once('open', function callback () {
+				var User = db.model('users', userSchema);
+				User.find({examplesListing: true}, function (err, items) {
+					if (err) {
+						console.log("there's problems " + err);
+						four_oh_four(res);
+						db.close();
+						return;
+					}
+					var exampleStores = "";
+					for (var i=0; i<items.length; i++) {
+						exampleStores += '<li><a href="/store/'+items[i].url+'">'+items[i].url+'</a></li>';
+					}
+					sendPageWithSubstitutions(res,"examples.html", exampleStores);
+				});
+			});
 		} else if (url.substring(0,6) == "/store") {
 
 			var thirdslash = url.indexOf("/", 7);
@@ -962,7 +982,7 @@ http.createServer(function (req, res) {
 											var tag = tags[i].trim();
 											tag_html += '<a role="button" class="btn btn-default" href="../search?q='+tag+'">'+tag+'</a>';
 										}
-										res.end(filedata.toString().replace("{ptitle}", p.ptitle).replace("{pprice}", p.pprice).replace("{pldescription}", p.pldescription).replace("{buttons}", tag_html));
+										res.end(filedata.toString().replace("{ptitle}", p.ptitle).replace("{pprice}", p.pprice).replace("{pldescription}", p.pldescription).replace("{buttons}", tag_html).replace("{pimage}", "../images/"+p.pimage));
 									} else {
 										four_oh_four(res);
 									}
@@ -991,7 +1011,7 @@ http.createServer(function (req, res) {
 								var p = data.products[i];
 								if (p.ptitle.toLowerCase().indexOf(query) >= 0 || p.psdescription.toLowerCase().indexOf(query) >= 0 || p.pldescription.toLowerCase().indexOf(query) >= 0 || p.ptags.toLowerCase().indexOf(query) >= 0) {
 									//matches the search
-									resultshtml += util.format('<div class="col-sm-6 col-md-4"><div class="thumbnail"><img src="example_product.png" alt="%s"><div class="caption"><h3>%s</h3><h4>%s%s</h4><p>%s</p><p><a href="#" class="btn btn-primary" role="button">Buy Now</a> <a href="product/'+i+'" class="btn btn-default" role="button">View Details</a></p></div></div></div>', p.ptitle, p.ptitle, "$", p.pprice, p.psdescription);
+									resultshtml += util.format('<div class="col-sm-6 col-md-4"><div class="thumbnail"><img src="images/'+p.pimage+'" alt="%s"><div class="caption"><h3>%s</h3><h4>%s%s</h4><p>%s</p><p><a href="#" class="btn btn-primary" role="button">Buy Now</a> <a href="product/'+i+'" class="btn btn-default" role="button">View Details</a></p></div></div></div>', p.ptitle, p.ptitle, "$", p.pprice, p.psdescription);
 								}
 							}
 							fs.readFile(__dirname + "/users/" + store_owner + "/store_search.html", function (err,filedata) {

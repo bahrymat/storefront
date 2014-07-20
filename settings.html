@@ -67,6 +67,8 @@
 		
 						<div class="container settings_container hidden loggedin">
 
+						<p style="margin: 20px;" class="hidden" id="storelink">Your store may be found <a href="asdf" target="_blank" id="storelink2">here.</a></p>
+						
 <div class="bs-example bs-example-tabs">
 		  <ul id="myTab" class="nav nav-tabs">
 		    <li class="active"><a href="#elements1" data-toggle="tab">Home Page</a></li>
@@ -213,9 +215,9 @@
 														<div class="col-sm-9">
 													 	 <input type="text" class="form-control storeform" id="pageURL" placeholder="URL">
 												 		</div>
-													<label for="pageTitle" class="col-sm-3 control-label">Page Title</label>
+													<label for="pageTitle" class="col-sm-3 control-label">Store Name</label>
 														<div class="col-sm-9">
-													 	 <input type="text" class="form-control storeform" id="pageTitle" placeholder="Page Title">
+													 	 <input type="text" class="form-control storeform" id="pageTitle" placeholder="My Cool Store">
 												 		</div>
 													<label for="currency" class="col-sm-3 control-label">Currency</label>
 
@@ -228,7 +230,7 @@
 														<option>฿</option>
 													 </select>
 											 		</div>
-													<div class="col-sm-6">
+													<div class="col-sm-6 hidden">
 														<div class="checkbox">
 															<label>
 																Display website online<input type="checkbox" class="storeform" id="pageDisplayOnline"/>
@@ -238,7 +240,7 @@
 													<div class="col-sm-6">
 														<div class="checkbox">
 															<label>
-																Opt-in to home page listing<input type="checkbox" class="storeform"  id="pageHomepageListing"/>
+																Opt-in to examples page listing<input type="checkbox" class="storeform"  id="pageHomepageListing"/>
 															</label>
 														</div>
 													</div>
