@@ -382,12 +382,12 @@ function generate_store(escaped_email) {
 	email = escaped_email.replace("__", "@").replace("_", ".");
 	console.log("generating store for user " + email);
 
-	function generateHeader(active_link) {
-		var headerhtml = '<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="utf-8"><title>%s</title><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"><link href="../../store_generic.css" rel="stylesheet"><link href="store_custom.css" rel="stylesheet"></head><body><div class="navbar"><div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="."><img src="example_store_logo.png" height="100%" alt="Logo Image Goes Here"></a></div><div class="collapse navbar-collapse"><ul class="nav navbar-nav">'
+	function generateHeader(active_link, store_url) {
+		var headerhtml = '<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="utf-8"><title>%s</title><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"><link href="/store_generic.css" rel="stylesheet"><link href="/store/'+store_url+'/store_custom.css" rel="stylesheet"></head><body><div class="navbar"><div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/store/'+store_url+'"><img src="example_store_logo.png" height="100%" alt="Logo Image Goes Here"></a></div><div class="collapse navbar-collapse"><ul class="nav navbar-nav">';
 		headerhtml += active_link == "home" ? '<li class="active">' : '<li>'
-		headerhtml += '<a href=".">Home</a></li>'
+		headerhtml += '<a href="/store/'+store_url+'">Home</a></li>'
 		headerhtml += active_link == "products" ? '<li class="active">' : '<li>'
-		headerhtml += '<a href="products">Products</a></li></ul><form class="navbar-form navbar-left" role="search"><div class="form-group"><input type="text" class="form-control" placeholder="Search"></div> <a class="btn btn-default" href="search" role="button">Submit</a></form></div></div></div><div class="main">';
+		headerhtml += '<a href="/store/'+store_url+'/products">Products</a></li></ul><form class="navbar-form navbar-left" role="search" action="/store/'+store_url+'/search" method="get"><div class="form-group"><input type="text" class="form-control" placeholder="Search" id="q" name="q"></div> <input type="submit" class="btn btn-default" role="button" value="Submit"/></form></div></div></div><div class="main">';
 		return headerhtml;
 	}
 	function generateFooter() {
@@ -412,7 +412,7 @@ function generate_store(escaped_email) {
 				elementhtml += '<div class="container"><div class="row">';
 				
 				for (var j = 0; j < products.length; j++) {
-				elementhtml += util.format('<div class="col-sm-6 col-md-4"><div class="thumbnail"><img src="example_product.png" alt="%s"><div class="caption"><h3>%s</h3><h4>%s%s</h4><p>%s</p><p><a href="#" class="btn btn-primary" role="button">Buy Now</a> <a href="product" class="btn btn-default" role="button">View Details</a></p></div></div></div>', products[j].ptitle, products[j].ptitle, settings.page.pageCurrency, products[j].pprice, products[j].psdescription);
+					elementhtml += util.format('<div class="col-sm-6 col-md-4"><div class="thumbnail"><img src="example_product.png" alt="%s"><div class="caption"><h3>%s</h3><h4>%s%s</h4><p>%s</p><p><a href="#" class="btn btn-primary" role="button">Buy Now</a> <a href="product/'+j+'" class="btn btn-default" role="button">View Details</a></p></div></div></div>', products[j].ptitle, products[j].ptitle, settings.page.pageCurrency, products[j].pprice, products[j].psdescription);
 				}
 				
 				elementhtml += '</div></div>';
@@ -429,7 +429,7 @@ function generate_store(escaped_email) {
 	
 	var data = getStoreInfo(email, function (data) {
 	
-		productlistpage = util.format(generateHeader('products'), data.settings.page.pageTitle);
+		productlistpage = util.format(generateHeader('products', data.settings.page.pageURL), data.settings.page.pageTitle);
 		data.productsPageElements.sort(function(a, b){return a.pos-b.pos}); //sort based on the pos property of the page element
 		productlistpage += processElements(data.productsPageElements, data.products, data.settings);
 		productlistpage += util.format(generateFooter(), data.settings.page.pageTitle);
@@ -437,7 +437,7 @@ function generate_store(escaped_email) {
 		
 		
 		
-		splashpage = util.format(generateHeader('home'), data.settings.page.pageTitle);
+		splashpage = util.format(generateHeader('home', data.settings.page.pageURL), data.settings.page.pageTitle);
 		splashpage += '<div class="container"><div class="jumbotron text-center">';
 		data.homePageElements.sort(function(a, b){return a.pos-b.pos}); //sort based on the pos property of the page element
 		splashpage += processElements(data.homePageElements, data.products, data.settings);
@@ -447,14 +447,14 @@ function generate_store(escaped_email) {
 		
 		
 		
-		productpage = util.format(generateHeader(''), data.settings.page.pageTitle);
-		productpage += util.format('<div class="container"><div class="jumbotron jumbotron_lesspadding"><div class="row"><div class="col-md-5 col-sm-6"><img src="example_product.png" class="img-responsive img-rounded"></div><div class="col-md-7 col-sm-6"><h2>{ptitle}</h2><h4>%s{pprice}</h4><p>{pldescription}</p><p><a role="button" class="btn btn-primary" href="#">Buy Now</a></p></div></div><div class="row"><div class="col-md-12 col-sm-12"><div class="tags"><div class="button_label">Tags:</div><div class="btn-group">{buttons}</div></div></div></div></div></div>', data.settings.page.pageCurrency);
+		productpage = util.format(generateHeader('', data.settings.page.pageURL), data.settings.page.pageTitle);
+		productpage += util.format('<div class="container"><div class="jumbotron jumbotron_lesspadding"><div class="row"><div class="col-md-5 col-sm-6"><img src="example_product.png" class="img-responsive img-rounded"></div><div class="col-md-7 col-sm-6"><h2>{ptitle}</h2><h4>%s{pprice}</h4><p>{pldescription}</p><p><a role="button" class="btn btn-primary" href="#">Buy Now</a></p></div></div><div class="row"><div class="col-md-12 col-sm-12"><div class="tags"><div class="button_label">Tags: </div> <div class="btn-group"> {buttons}</div></div></div></div></div></div>', data.settings.page.pageCurrency);
 		productpage += util.format(generateFooter(), data.settings.page.pageTitle);
 		fs.writeFile("./users/" + email + "/store_product.html", productpage);
 		
 		
 		
-		searchpage = util.format(generateHeader(''), data.settings.page.pageTitle);
+		searchpage = util.format(generateHeader('', data.settings.page.pageURL), data.settings.page.pageTitle);
 		searchpage += util.format('<div class="container textbox"><h1>Search Results</h1><p class="lead">The following products were found for the query, "{search}".</p></div>');
 				searchpage += '<div class="container"><div class="row">{results}</div></div>';
 		searchpage += util.format(generateFooter(), data.settings.page.pageTitle);
@@ -911,7 +911,7 @@ http.createServer(function (req, res) {
 
 			mongoose.connect('mongodb://localhost:8081/easyStorefront');
 			var db = mongoose.connection;
-			db.on('error', console.error.bind(console, 'connection error:'));
+			db.on('error',function(){;});
 			db.once('open', function callback () {
 				var User = mongoose.model('users', userSchema);
 				User.findOne({url: store_url}, function (err, item) {
@@ -926,23 +926,95 @@ http.createServer(function (req, res) {
 						db.close();
 						return;
 					}
-					db.close();
 					store_owner = item.user;
 					
 					if (page_url == "/") { //store home page
+						db.close();
 						giveStaticFile(res, __dirname + "/users/" + store_owner + "/store_splash.html");
 					} else if (page_url == "/products") {
+						db.close();
 						giveStaticFile(res, __dirname + "/users/" + store_owner + "/store_products.html");
-					} else if (page_url == "/product") {
-						giveStaticFile(res, __dirname + "/users/" + store_owner + "/store_product.html");
-					} else if (page_url == "/search") {
-						giveStaticFile(res, __dirname + "/users/" + store_owner + "/store_search.html");
+					} else if (page_url.substring(0,9) == "/product/") {
+					
+						var prod_num = page_url.substring(9);
+					
+						var db_name = store_owner.replace(".", "_").replace("@", "__") + "products";
+						var ProductList = mongoose.model(db_name, productList);
+						
+						
+						ProductList.findOne().exec(function(err, data) {
+							if (err || !data) {
+								four_oh_four(res);
+								db.close();
+								return;
+							}
+							db.close();
+							fs.readFile(__dirname + "/users/" + store_owner + "/store_product.html", function (err,filedata) {
+								if (err) {
+									console.log("missing product");
+									four_oh_four(res);
+								} else {
+									res.writeHead(200);
+									var p = data.products[prod_num];
+									if (p) {
+										var tag_html = "";
+										var tags = p.ptags.split(",");
+										for (var i=0; i<tags.length; i++) {
+											var tag = tags[i].trim();
+											tag_html += '<a role="button" class="btn btn-default" href="../search?q='+tag+'">'+tag+'</a>';
+										}
+										res.end(filedata.toString().replace("{ptitle}", p.ptitle).replace("{pprice}", p.pprice).replace("{pldescription}", p.pldescription).replace("{buttons}", tag_html));
+									} else {
+										four_oh_four(res);
+									}
+								}
+							});
+						});
+						
+						
+					} else if (page_url.substring(0,7) == "/search") {
+					
+						var query = page_url.substring(page_url.indexOf("=")+1).toLowerCase();
+					
+						var db_name = store_owner.replace(".", "_").replace("@", "__") + "products";
+						var ProductList = mongoose.model(db_name, productList);
+						
+						
+						ProductList.findOne().exec(function(err, data) {
+							if (err || !data) {
+								four_oh_four(res);
+								db.close();
+								return;
+							}
+							db.close();
+							resultshtml = "";
+							for (var i = 0; i < data.products.length; i++) {
+								var p = data.products[i];
+								if (p.ptitle.toLowerCase().indexOf(query) >= 0 || p.psdescription.toLowerCase().indexOf(query) >= 0 || p.pldescription.toLowerCase().indexOf(query) >= 0 || p.ptags.toLowerCase().indexOf(query) >= 0) {
+									//matches the search
+									resultshtml += util.format('<div class="col-sm-6 col-md-4"><div class="thumbnail"><img src="example_product.png" alt="%s"><div class="caption"><h3>%s</h3><h4>%s%s</h4><p>%s</p><p><a href="#" class="btn btn-primary" role="button">Buy Now</a> <a href="product/'+i+'" class="btn btn-default" role="button">View Details</a></p></div></div></div>', p.ptitle, p.ptitle, "$", p.pprice, p.psdescription);
+								}
+							}
+							fs.readFile(__dirname + "/users/" + store_owner + "/store_search.html", function (err,filedata) {
+								if (err) {
+									console.log("missing search result page");
+									four_oh_four(res);
+								} else {
+									res.writeHead(200);
+									res.end(filedata.toString().replace("{results}", resultshtml).replace("{search}", query));
+								}
+							});
+						});
+
 					} else if (page_url == "/store_custom.css") {
+						db.close();
 						giveStaticFile(res, __dirname + "/users/" + store_owner + "/store_custom.css");
 					} else if (page_url == "") { 
+						db.close();
 						res.writeHead(303, {'Location': '/store/' + store_url + "/"}); //redirect from "/store/hatstore" to "/store/hatstore/" for technical reasons
 						res.end();
 					} else {
+						db.close();
 						console.log(util.format("user tried to request page '%s' from store owner '%s'.", page_url, store_owner));
 						four_oh_four(res);
 					} 
