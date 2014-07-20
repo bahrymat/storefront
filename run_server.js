@@ -420,6 +420,7 @@ function generate_store(escaped_email) {
 				elementhtml += '<p><a class="btn btn-lg btn-primary" href="products" role="button">Start shopping! \u00BB</a></p>';
 			} else if (elements[i].type == "Carousel") {
 				console.log("ImageCarousel not implemented");
+				elementhtml += util.format('the three images that would have been part of this carousel are images/%s, images/%s, images/%s', getFieldItem(elements[i].fields, 'cimage1'), getFieldItem(elements[i].fields, 'cimage2'), getFieldItem(elements[i].fields, 'cimage3'));
 			} else {
 				console.log("Unknown element type: " + elements[i].type);
 			}
