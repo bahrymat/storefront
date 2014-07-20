@@ -387,7 +387,9 @@ function generate_store(escaped_email) {
 		headerhtml += active_link == "home" ? '<li class="active">' : '<li>'
 		headerhtml += '<a href="/store/'+store_url+'">Home</a></li>'
 		headerhtml += active_link == "products" ? '<li class="active">' : '<li>'
-		headerhtml += '<a href="/store/'+store_url+'/products">Products</a></li></ul><form class="navbar-form navbar-left" role="search" action="/store/'+store_url+'/search" method="get"><div class="form-group"><input type="text" class="form-control" placeholder="Search" id="q" name="q"></div> <input type="submit" class="btn btn-default" role="button" value="Submit"/></form></div></div></div><div class="main">';
+		headerhtml += '<a href="/store/'+store_url+'/products">Products</a></li>'
+		headerhtml += active_link == "contact" ? '<li class="active">' : '<li>'
+		headerhtml += '<a href="/store/'+store_url+'/contact">Contact Us</a></li></ul><form class="navbar-form navbar-left" role="search" action="/store/'+store_url+'/search" method="get"><div class="form-group"><input type="text" class="form-control" placeholder="Search" id="q" name="q"></div> <input type="submit" class="btn btn-default" role="button" value="Submit"/></form></div></div></div><div class="main">';
 		return headerhtml;
 	}
 	function generateFooter() {
@@ -984,6 +986,9 @@ http.createServer(function (req, res) {
 					} else if (page_url == "/products") {
 						db.close();
 						giveStaticFile(res, __dirname + "/users/" + store_owner + "/store_products.html");
+					}else if (page_url == "/contact"){
+						db.close();
+						giveStaticFile(res, __dirname + "/users/" + store_owner + "/contact_page.html");
 					} else if (page_url.substring(0,9) == "/product/") {
 					
 						var prod_num = page_url.substring(9);
