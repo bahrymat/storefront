@@ -387,7 +387,9 @@ function generate_store(escaped_email) {
 		headerhtml += active_link == "home" ? '<li class="active">' : '<li>'
 		headerhtml += '<a href="/store/'+store_url+'">Home</a></li>'
 		headerhtml += active_link == "products" ? '<li class="active">' : '<li>'
-		headerhtml += '<a href="/store/'+store_url+'/products">Products</a></li></ul><form class="navbar-form navbar-left" role="search" action="/store/'+store_url+'/search" method="get"><div class="form-group"><input type="text" class="form-control" placeholder="Search" id="q" name="q"></div> <input type="submit" class="btn btn-default" role="button" value="Submit"/></form></div></div></div><div class="main">';
+		headerhtml += '<a href="/store/'+store_url+'/products">Products</a></li>'
+		headerhtml += active_link == "contact" ? '<li class="active">' : '<li>'
+		headerhtml += '<a href="/store/'+store_url+'/contact">Contact Us</a></li></ul><form class="navbar-form navbar-left" role="search" action="/store/'+store_url+'/search" method="get"><div class="form-group"><input type="text" class="form-control" placeholder="Search" id="q" name="q"></div> <input type="submit" class="btn btn-default" role="button" value="Submit"/></form></div></div></div><div class="main">';
 		return headerhtml;
 	}
 	function generateFooter() {
@@ -461,6 +463,36 @@ function generate_store(escaped_email) {
 		searchpage += util.format(generateFooter(), data.settings.page.pageTitle);
 		fs.writeFile("./users/" + email + "/store_search.html", searchpage);
 		
+
+
+		contactpage = util.format(generateHeader('', data.settings.page.pageURL), data.settings.page.pageTitle, data.settings.navbar.navbarLogo);
+		contactpage += '<div class="container"><div class="jumbotron whitebox"><div class="row"><div class="col-md-12"><h1 class="jumbotron_lesspadding">Contact Info</h1></div></div>';
+		//address
+		contactpage += util.format('<div class="row"><div class="col-md-3"><h3 class="textcenterd">Address: </h3></div><div class="col-md-9"><p class="textcenterd">%s</p></div></div>', 
+			data.settings.contact.stAdd + ", " + 
+			data.settings.contact.city + ", " + 
+			data.settings.contact.province + ", " + 
+			data.settings.contact.country);
+		//phone number
+		if (data.settings.contact.phone != null && data.settings.contact.phone != ""){
+			contactpage += util.format('<div class="row"><div class="col-md-3"><h3 class="textcenterd">Phone Number: </h3></div><div class="col-md-9"><p class="textcenterd">%s</p></div></div>', data.settings.contact.phone);
+		}
+		//contact email
+		if (data.settings.contact.emailAdd != null && data.settings.contact.emailAdd != ""){
+			contactpage += util.format('<div class="row"><div class="col-md-3"><h3 class="textcenterd">Contact Email: </h3></div><div class="col-md-9">	<p class="textcenterd">%s</p></div></div>', data.settings.contact.emailAdd);
+		}
+		//hours of operation
+			contactpage += util.format('<div class="row"><div class="col-md-12 col-sm-12"><h2>Store Hours</h2></div></div><div class="row"><div class="col-md-12 col-sm-12"><table class="table table-bordered"><tr><td>Day of The Week</td><td>Hours</td></tr><tr><td>Monday</td><td>%s</td></tr><tr><td>Tuesday</td><td>%s</td></tr><tr><td>Wednesday</td><td>%s</td></tr><tr><td>Thursday</td><td>%s</td></tr><tr><td>Friday</td><td>%s</td></tr><tr><td>Saturday</td><td>%s</td></tr><tr><td>Sunday</td><td>%s</td></tr></table></div></div>', 
+			data.settings.hours.monstart + " to "  + data.settings.hours.monend, 
+			data.settings.hours.tuestart + " to " + data.settings.hours.tueend, 
+			data.settings.hours.wedstart + " to "  + data.settings.hours.wedend, 
+			data.settings.hours.thustart + " to "  + data.settings.hours.thuend, 
+			data.settings.hours.frstart + " to "  + data.settings.hours.frend, 
+			data.settings.hours.satstart + " to "  + data.settings.hours.satend, 
+			data.settings.hours.sunstart + " to "  + data.settings.hours.sunend);
+		contactpage += '</div></div>';
+		contactpage += util.format(generateFooter(), data.settings.page.pageTitle);
+		fs.writeFile("./users/" + email + "/contact_page.html", contactpage);
 		
 		var s = data.settings.style;
 		css = util.format('.textbox {color: %s} body {background-color: %s} .navbar {background-color: %s; border-color: %s} .main, #footer {font-family: %s} .navbar .nav a, .navbar .navbar-header a {color: %s} .navbar .nav .active a {background-color: %s} #footer {background-color: %s} #footer .text-muted {color: %s} .navbar-toggle .icon-bar {background-color: %s} .navbar-toggle {border-color: %s; background-color: %s}', s.fontcolour, s.bgcolour, s.navbarcolor, s.navbarhighlight, s.fontface, s.navbartextcolor, s.navbarhighlight, s.footercolor, s.footertext, s.navbartextcolor, s.navbartextcolor, s.navbarhighlight);
@@ -479,6 +511,7 @@ function giveStaticFile(res, path) {
 		}
 	});
 }
+
 
 http.createServer(function (req, res) {
 	var url = req.url;
@@ -954,6 +987,9 @@ http.createServer(function (req, res) {
 					} else if (page_url == "/products") {
 						db.close();
 						giveStaticFile(res, __dirname + "/users/" + store_owner + "/store_products.html");
+					}else if (page_url == "/contact"){
+						db.close();
+						giveStaticFile(res, __dirname + "/users/" + store_owner + "/contact_page.html");
 					} else if (page_url.substring(0,9) == "/product/") {
 					
 						var prod_num = page_url.substring(9);

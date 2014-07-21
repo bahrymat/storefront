@@ -67,3 +67,9 @@ html {
   margin-left: auto;
   margin-right: auto;
 }
+
+.textcenterd {
+  vertical-align: middle;
+  margin-top: auto;
+  margin-bottom:auto;
+}
