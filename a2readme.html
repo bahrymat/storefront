@@ -14,17 +14,19 @@
 
 <h1>easyStorefront: Connecting businesses to the online world</h1>
 <p>Git repo: <a href="https://github.com/bahrymat/storefront">https://github.com/bahrymat/storefront</a></p>
+
+<p>Online instance: <a href="">[link to a cdf thing here]</a></p>
 <h2>Features</h2>
 
 <h3>Server Integration</h3>
 <h4>Account Creation and Login</h4>
 <p>
-The Create Account section on the front page sends a request to the server to cerate an account. If ther is no conflict in the fields (i.e. the email is not in use) then the user's information is added to the database, allowing login using those credentials. 
+The Create Account section on the front page sends a request to the server to cerate an account. If there is no conflict in the fields (i.e. the email is not in use) then the user's information is added to the database, allowing login using those credentials. 
 </p><p>
 The login itself checks against existing user accounts and if such an account existssets up a cookie that notifies the rest of the site of the login. As of now, the cookie stores the user's email address in plain text, but this will be changed in assignment 3.
 </p>
 <h4>Store Edit Page</h4><p>
-After login, the user has access to the create store page with which they can customise the look and content of their store. The values are stored to the server on save. Every tab other than the images save the full set of elements, while the image tab requries each image to be saved individually, due to the existance of the image file present on the server which requires more explicet adding and deletion. On page load, the user's existing settings are loaded into the fields. The drop-downs for image are populated by existing images in the user's image tab.
+After login, the user has access to the create store page with which they can customise the look and content of their store. The values are stored to the server on save. Every tab other than the images save the full set of elements, while the image tab requries each image to be saved individually, due to the existance of the image file present on the server which requires more explicit adding and deletion. On page load, the user's existing settings are loaded into the fields. The drop-downs for image are populated by existing images in the user's image tab.
 </p>
 <h4>Page generation</h4>
 <p>
@@ -34,15 +36,17 @@ When the edit page is saved, on any of the pages, page respecting the changes ar
 <p>
 The contact us page on the store page shows the information saved in the user's settings. Carousel image display. Dynamic search.
 </p>
-
+<p>Note that while the generated stores are for the most part fully functionally, the ability to actually spend money on the products is not included. This has been considered outside the scope of the project since the very beginning, as our main features are the store customization/generation and its interface.</p>
 
 <h2>Who did what</h2>
 
 <ul>
 <li>Matthew<ul>
 <!-- Stuff Matthew did -->
-<li>Bug fixing</li>
-<li>Miscellaneous tweaks (e.g. login box)</li>
+<li>Store generation code</li>
+<li>AJAX for Create Store page</li>
+<li>Saving images to server</li>
+<li>Minutiae</li>
 <!-- /Stuff Matthew did -->
 </ul></li>
 <li>Keegan<ul>
@@ -70,8 +74,12 @@ The contact us page on the store page shows the information saved in the user's 
 <h2>Product backlog</h2>
 <h2>Sprint backlog, for Assignment 3</h2>
 <h2>Code Resources</h2>
-mongo, mongoose, node.js,  we don't use express right?
 <ul>
+<li>MongoDB</li>
+<li>node.js, with the following added modules:<ul>
+<li>mongoose (integration with MongoDB)</li>
+<li>multiparty (processing of forms with non-textual data)</li>
+<li>Express is <em>not</em> used, since the original assignment deadline left us no time to wait for its introduction in class.</li></ul></li>
 <li>
 http://stackoverflow.com/questions/3226167/how-to-style-input-file-with-css3-javascript as answered by user981027
 <ul><li>
