@@ -466,23 +466,23 @@ function generate_store(escaped_email) {
 
 
 		contactpage = util.format(generateHeader('', data.settings.page.pageURL), data.settings.page.pageTitle, data.settings.navbar.navbarLogo);
-		contactpage += '<div class="container"><div class="jumbotron whitebox"><div class="row"><div class="col-md-12"><h1>Contact Info</h1></div></div>';
+		contactpage += '<div class="container"><div class="jumbotron whitebox"><div class="row"><div class="col-md-12"><h1 class="jumbotron_lesspadding">Contact Info</h1></div></div>';
 		//address
-		contactpage += util.format('<div class="row"><div class="col-md-3"><h3>Address: </h3></div><div class="col-md-9"><p>%s</p></div></div>', 
+		contactpage += util.format('<div class="row"><div class="col-md-3"><h3 class="textcenterd">Address: </h3></div><div class="col-md-9"><p class="textcenterd">%s</p></div></div>', 
 			data.settings.contact.stAdd + ", " + 
 			data.settings.contact.city + ", " + 
 			data.settings.contact.province + ", " + 
 			data.settings.contact.country);
 		//phone number
 		if (data.settings.contact.phone != null && data.settings.contact.phone != ""){
-			contactpage += util.format('<div class="row"><div class="col-md-3"><h3>Phone Number: </h3></div><div class="col-md-9"><p>%s</p></div></div>', data.settings.contact.phone);
+			contactpage += util.format('<div class="row"><div class="col-md-3"><h3 class="textcenterd">Phone Number: </h3></div><div class="col-md-9"><p class="textcenterd">%s</p></div></div>', data.settings.contact.phone);
 		}
 		//contact email
 		if (data.settings.contact.emailAdd != null && data.settings.contact.emailAdd != ""){
-			contactpage += util.format('<div class="row"><div class="col-md-3"><h3>Contact Email: </h3></div><div class="col-md-9">	<p>%s</p></div></div>', data.settings.contact.emailAdd);
+			contactpage += util.format('<div class="row"><div class="col-md-3"><h3 class="textcenterd">Contact Email: </h3></div><div class="col-md-9">	<p class="textcenterd">%s</p></div></div>', data.settings.contact.emailAdd);
 		}
 		//hours of operation
-			contactpage += util.format('<div class="row"><div class="col-md-12 col-sm-12"><h1>Store Hours</h1></div></div><div class="row"><div class="col-md-12 col-sm-12"><table class="table table-bordered"><tr><td>Day of The week</td><td>Hours</td></tr><tr><td>Monday</td><td>%s</td></tr><tr><td>Tuesday</td><td>%s</td></tr><tr><td>Wednesday</td><td>%s</td></tr><tr><td>Thursday</td><td>%s</td></tr><tr><td>Friday</td><td>%s</td></tr><tr><td>Saturday</td><td>%s</td></tr><tr><td>Sunday</td><td>%s</td></tr></table></div></div>', 
+			contactpage += util.format('<div class="row"><div class="col-md-12 col-sm-12"><h2>Store Hours</h2></div></div><div class="row"><div class="col-md-12 col-sm-12"><table class="table table-bordered"><tr><td>Day of The Week</td><td>Hours</td></tr><tr><td>Monday</td><td>%s</td></tr><tr><td>Tuesday</td><td>%s</td></tr><tr><td>Wednesday</td><td>%s</td></tr><tr><td>Thursday</td><td>%s</td></tr><tr><td>Friday</td><td>%s</td></tr><tr><td>Saturday</td><td>%s</td></tr><tr><td>Sunday</td><td>%s</td></tr></table></div></div>', 
 			data.settings.hours.monstart + " to "  + data.settings.hours.monend, 
 			data.settings.hours.tuestart + " to " + data.settings.hours.tueend, 
 			data.settings.hours.wedstart + " to "  + data.settings.hours.wedend, 
@@ -511,6 +511,7 @@ function giveStaticFile(res, path) {
 		}
 	});
 }
+
 
 http.createServer(function (req, res) {
 	var url = req.url;
