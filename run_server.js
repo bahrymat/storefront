@@ -465,7 +465,7 @@ function generate_store(escaped_email) {
 		
 
 
-		contactpage = util.format(generateHeader('', data.settings.page.pageURL), data.settings.page.pageTitle, data.settings.navbar.navbarLogo);
+		contactpage = util.format(generateHeader('contact', data.settings.page.pageURL), data.settings.page.pageTitle, data.settings.navbar.navbarLogo);
 		contactpage += '<div class="container"><div class="jumbotron whitebox"><div class="row"><div class="col-md-12"><h1 class="jumbotron_lesspadding">Contact Info</h1></div></div>';
 		//address
 		contactpage += util.format('<div class="row"><div class="col-md-3"><h3 class="textcenterd">Address: </h3></div><div class="col-md-9"><p class="textcenterd">%s</p></div></div>', 
