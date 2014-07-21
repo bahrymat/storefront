@@ -432,6 +432,8 @@ function generate_store(escaped_email) {
 	
 	var data = getStoreInfo(email, function (data) {
 	
+		var api_key = 'AIzaSyByqZu8QS_XxOM5elXfF_bVye3_j2NrreQ';
+	
 		productlistpage = util.format(generateHeader('products', data.settings.page.pageURL), data.settings.page.pageTitle, data.settings.navbar.navbarLogo);
 		data.productsPageElements.sort(function(a, b){return a.pos-b.pos}); //sort based on the pos property of the page element
 		productlistpage += processElements(data.productsPageElements, data.products, data.settings);
@@ -468,11 +470,11 @@ function generate_store(escaped_email) {
 		contactpage = util.format(generateHeader('contact', data.settings.page.pageURL), data.settings.page.pageTitle, data.settings.navbar.navbarLogo);
 		contactpage += '<div class="container"><div class="jumbotron whitebox"><div class="row"><div class="col-md-12"><h1 class="jumbotron_lesspadding">Contact Info</h1></div></div>';
 		//address
-		contactpage += util.format('<div class="row"><div class="col-md-3"><h3 class="textcenterd">Address: </h3></div><div class="col-md-9"><p class="textcenterd">%s</p></div></div>', 
-			data.settings.contact.stAdd + ", " + 
+		var address = data.settings.contact.stAdd + ", " + 
 			data.settings.contact.city + ", " + 
 			data.settings.contact.province + ", " + 
-			data.settings.contact.country);
+			data.settings.contact.country;
+		contactpage += util.format('<div class="row"><div class="col-md-3"><h3 class="textcenterd">Address: </h3></div><div class="col-md-9"><p class="textcenterd">%s</p></div></div>', address);
 		//phone number
 		if (data.settings.contact.phone != null && data.settings.contact.phone != ""){
 			contactpage += util.format('<div class="row"><div class="col-md-3"><h3 class="textcenterd">Phone Number: </h3></div><div class="col-md-9"><p class="textcenterd">%s</p></div></div>', data.settings.contact.phone);
@@ -490,7 +492,10 @@ function generate_store(escaped_email) {
 			data.settings.hours.frstart + " to "  + data.settings.hours.frend, 
 			data.settings.hours.satstart + " to "  + data.settings.hours.satend, 
 			data.settings.hours.sunstart + " to "  + data.settings.hours.sunend);
-		contactpage += '</div></div>';
+			
+		//map
+		contactpage += util.format('<div class="row"><div class="col-md-12 col-sm-12"><iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=%s&q=%s"></iframe></div></div></div></div>', api_key, address);
+		
 		contactpage += util.format(generateFooter(), data.settings.page.pageTitle);
 		fs.writeFile("./users/" + email + "/contact_page.html", contactpage);
 		
@@ -590,7 +595,7 @@ http.createServer(function (req, res) {
 						stAdd: sdata.contact.stAdd,
 						city: sdata.contact.city,
 						province: sdata.contact.province,
-						country: sdata.contact.province,
+						country: sdata.contact.country,
 						phone: sdata.contact.phone,
 						emailAdd: sdata.contact.emailAdd
 					},
