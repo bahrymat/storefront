@@ -73,7 +73,8 @@ var settingsSchema = mongoose.Schema({
 		frend: String,
 		satstart: String,
 		satend: String
-	}
+	},
+	hasBeenGenerated: Boolean
 
 });
 
@@ -302,7 +303,7 @@ function upload_image(req, res, img_directory) {
 
 function getStoreInfo(user, callback) {
 	var subbed_user = user.replace(".", "_").replace("@", "__");
-	var store_data = {homePageElements: [], productsPageElements: [], products: [], images: [], settings: {}}
+	var store_data = {homePageElements: [], productsPageElements: [], products: [], images: [], settings: {page:{}}}
 	mongoose.connect('mongodb://localhost:8081/easyStorefront');
 	var db = mongoose.connection;
 	db.on('error', console.error.bind(console, 'connection error:'));
@@ -367,9 +368,22 @@ function getStoreInfo(user, callback) {
 				store_data.settings = s_data[0];
 			}
 		
+		var Users = mongoose.model("users", userSchema);
+		Users.findOne({"user": user}, function (err, u_data) {
+			if (err) {
+				console.error(err);
+				db.close();
+				callback(store_data);
+				return;
+			}
+			if (u_data) {
+				store_data.settings.page.pageURL = u_data.url;
+			}
+		
 		db.close();
 		callback(store_data);
 		
+		});
 		});
 		});
 		});
@@ -614,7 +628,8 @@ http.createServer(function (req, res) {
 						frend: sdata.hours.frend,
 						satstart: sdata.hours.satstart,
 						satend: sdata.hours.satend
-					}
+					},
+					hasBeenGenerated: true
 
 				});
 				settings.findOne({}, function (err,q) {
@@ -1092,6 +1107,7 @@ http.createServer(function (req, res) {
 			res.writeHead(200, {"Content-Type": "application/json"});
 			var user = url.substring(14);
 			if (user == "") {
+				console.log('did not specify which user\'s data');
 				four_oh_four(res);
 				return;
 			}
