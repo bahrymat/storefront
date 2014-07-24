@@ -500,7 +500,7 @@ function generate_store(escaped_email) {
 		fs.writeFile("./users/" + email + "/contact_page.html", contactpage);
 		
 		var s = data.settings.style;
-		css = util.format('.textbox {color: %s} body {background-color: %s} .navbar {background-color: %s; border-color: %s} .main, #footer {font-family: %s} .navbar .nav a, .navbar .navbar-header a {color: %s} .navbar .nav .active a {background-color: %s} #footer {background-color: %s} #footer .text-muted {color: %s} .navbar-toggle .icon-bar {background-color: %s} .navbar-toggle {border-color: %s; background-color: %s}', s.fontcolour, s.bgcolour, s.navbarcolor, s.navbarhighlight, s.fontface, s.navbartextcolor, s.navbarhighlight, s.footercolor, s.footertext, s.navbartextcolor, s.navbartextcolor, s.navbarhighlight);
+		css = util.format('.textbox {color: %s} body {background-color: %s} .navbar {background-color: %s; border-color: %s} .main, #footer {font-family: %s} .navbar .nav a, .navbar .navbar-header a {color: %s} .navbar .nav .active a {background-color: %s} #footer {background-color: %s} #footer .text-muted {color: %s} .navbar-toggle .icon-bar {background-color: %s} .navbar-toggle {border-color: %s; background-color: %s} .carousel-inner > .item > img {width: auto;height:450px;max-height : 450px;} .thumbnail > img {max-height:250px;height:250px}', s.fontcolour, s.bgcolour, s.navbarcolor, s.navbarhighlight, s.fontface, s.navbartextcolor, s.navbarhighlight, s.footercolor, s.footertext, s.navbartextcolor, s.navbartextcolor, s.navbarhighlight);
 		fs.writeFile("./users/" + email + "/store_custom.css", css);
 	});
 }
