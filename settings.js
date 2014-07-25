@@ -158,7 +158,7 @@ function parseSettingsForms() {
 			if (this.type == 'checkbox') { //strange bug with checkboxes not properly storing their value.
 				formObject.settings[category][this.id] = $(this).is(':checked');
 			} else {
-				formObject.settings[category][this.id] = this.value ? this.value : this.placeholder;
+				formObject.settings[category][this.id] = this.value ? this.value : "";
 			}
 		});
 	});
