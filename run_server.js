@@ -241,7 +241,7 @@ function upload_image(req, res, img_directory) {
 	form.parse(req, function(err, fields, files) {
 		if (err) {
 			console.log(err);
-			four_oh_four(res); //a bit lazy
+			four_oh_four(res); 
 			return;
 		}
 
