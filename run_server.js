@@ -193,7 +193,7 @@ function login(email, password, callback) {
 	users.findOne({user:email, pass:password}, function (err,data) {
 		if (err) {
 			console.log(err);
-			callback(true, "Theres problems");
+			callback(true, "There's problems");
 			db.close()
 			return;
 		}
@@ -203,7 +203,7 @@ function login(email, password, callback) {
 			return;
 		}
 		else {
-			console.log(data);
+			console.log(data.user + ' logged in');
 			db.close()
 			callback(false, "");
 		}
@@ -241,7 +241,7 @@ function upload_image(req, res, img_directory) {
 	form.parse(req, function(err, fields, files) {
 		if (err) {
 			console.log(err);
-			four_oh_four(res); //a bit lazy
+			four_oh_four(res); 
 			return;
 		}
 
