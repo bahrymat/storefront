@@ -1050,7 +1050,7 @@ http.createServer(function (req, res) {
 						
 					} else if (page_url.substring(0,7) == "/search") {
 					
-						var query = page_url.substring(page_url.indexOf("=")+1).toLowerCase();
+						var query = page_url.substring(page_url.indexOf("=")+1).toLowerCase().replace("%20", " ");
 					
 						var db_name = store_owner.replace(".", "_").replace("@", "__") + "products";
 						var ProductList = db.model(db_name, productList);
