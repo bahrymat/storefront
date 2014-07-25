@@ -290,10 +290,11 @@ function populateSettings(callback) {
 						input.value = data.settings[field][field2];
 					}
 					if (field2 == "pageURL") {
-						$('#storelink').removeClass('hidden');
 						$('#storelink2')[0].href = "/store/" + data.settings[field][field2];
 					}
 				}
+			} else if (field == "hasBeenGenerated" && data.settings[field] == true) {
+				$('#storelink').removeClass('hidden');
 			}
 		}
 		
