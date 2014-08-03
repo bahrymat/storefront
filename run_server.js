@@ -22,6 +22,7 @@ db.once('open', function callback () {
 var userSchema = mongoose.Schema({
 	user:String, 
 	pass:String, 
+	salt: String,
 	url: String, 
 	examplesListing: Boolean,
 	csrfToken: String,
@@ -104,15 +105,6 @@ var settingsSchema = mongoose.Schema({
 	hasBeenGenerated: Boolean
 
 });
-
-var userSchema = mongoose.Schema({
-	user: String,
-	pass: String,
-	salt: String,
-	url: String,
-	examplesListing: Boolean
-});
-
 
 var redirected_urls = {"/": "/index.html", "/about": "/aboutus.html", "/edit": "/settings.html", "/logout": "/logout.html"}
 var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js",
