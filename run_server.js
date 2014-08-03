@@ -186,7 +186,6 @@ function registerUser(email, password, url, callback) {
   						console.log(err);
 						console.log("Password generation error");
 						callback(true, "We're having some issues, try again later.");
-						db.close();
 						return;
 					}
 					hash = hash.toString('hex');
@@ -198,7 +197,6 @@ function registerUser(email, password, url, callback) {
 							console.log(err);
 							console.log("Problem B");
 							callback(true, "We're having some issues, try again later.");
-							db.close();
 							return;
 						}
 
@@ -207,7 +205,6 @@ function registerUser(email, password, url, callback) {
 								//User not created properly
 								console.log(err);
 								console.log("Problem C");
-								db.close();
 								callback(true, "We're having some issues, try again later.");
 								return;
 							}
@@ -217,8 +214,7 @@ function registerUser(email, password, url, callback) {
 									//users/email not created
 									console.log("Problem D");
 									callback(true, "We're having some issues, try again later.");
-									console.log(uerr);		
-									db.close();
+									console.log(uerr);
 									return;
 								} else {
 									fs.mkdir(('users/' + email + '/images'), function (uerr) {
@@ -230,7 +226,6 @@ function registerUser(email, password, url, callback) {
 											return;
 										} else {
 											console.log('Created user: ' + u.user);
-											db.close();
 											callback(false, "");
 											return;
 										}
@@ -256,11 +251,9 @@ function login(email, password, callback) {
 		if (err) {
 			console.log(err);
 			callback(true, "There's problems");
-			db.close();
 			return;
 		}
 		else if (data == null){
-			db.close();
 			callback(true, "User no found");
 			return;
 		}
@@ -271,17 +264,14 @@ function login(email, password, callback) {
   					console.log(err);
 					console.log("Password hashing error");
 					callback(true, "We're having some issues, try again later.");
-					db.close();
 					return;
 				}
 				hash = hash.toString('hex');
 				if (hash == data.pass){
 					console.log(data.user + ' logged in');
-					db.close();
 					callback(false, "");
 					return;
 				} else {
-					db.close();
 					callback(true, "Incorrect password");
 					return;
 				}
