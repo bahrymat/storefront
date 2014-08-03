@@ -1,5 +1,5 @@
 var http = require('http'), fs = require('fs'), util = require('util'), mongoose = require('mongoose'), multiparty = require('multiparty'),
-    querystring = require('querystring');
+    querystring = require('querystring'), crypto = require('crypto');
 
 
 
@@ -112,7 +112,6 @@ var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator
    Static urls only - dynamic stuff like /login is handled separately. */
    
    
-var options = { server: { poolSize: 20 }};
 
 
 
