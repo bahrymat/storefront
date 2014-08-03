@@ -108,6 +108,13 @@ function url_parse(query) {
  var userSchema = mongoose.Schema({user:String, pass:String, url: String, examplesListing: Boolean});
 function registerUser(email, password, url, callback) {
 	return_value = undefined;
+	
+	var valid_chars = /^[a-zA-Z0-9_-]*$/;
+	var valid_email_chars = /^[a-zA-Z0-9_.+@-]*$/;
+	
+	
+	
+	
 	mongoose.connect('mongodb://localhost:8081/easyStorefront');
 
 	var db = mongoose.connection;
@@ -304,13 +311,12 @@ function upload_image(req, res, img_directory) {
 function getStoreInfo(user, callback) {
 	var subbed_user = user.replace(".", "_").replace("@", "__");
 	var store_data = {homePageElements: [], productsPageElements: [], products: [], images: [], settings: {page:{}}}
-	mongoose.connect('mongodb://localhost:8081/easyStorefront');
-	var db = mongoose.connection;
+	var db = mongoose.createConnection('mongodb://localhost:8081/easyStorefront');
 	db.on('error', console.error.bind(console, 'connection error:'));
 	db.once('open', function () {
 		console.log('Connected to MongoDB');
 		
-		var Images = mongoose.model(subbed_user + "images", imageSchema);
+		var Images = db.model(subbed_user + "images", imageSchema);
 		Images.find(function (err, image_data) {
 			if (err) {
 				console.error(err);
@@ -320,7 +326,7 @@ function getStoreInfo(user, callback) {
 			}
 			store_data.images = image_data;
 		
-		var HomePageElements = mongoose.model(subbed_user + "frontpages", eleList);
+		var HomePageElements = db.model(subbed_user + "frontpages", eleList);
 		HomePageElements.find(function (err, hp_data) {
 			if (err) {
 				console.error("banana" + err);
@@ -332,7 +338,7 @@ function getStoreInfo(user, callback) {
 				store_data.homePageElements = hp_data[0].elements;
 			}
 		
-		var ProductsPageElements = mongoose.model(subbed_user + "productpages", eleList);
+		var ProductsPageElements = db.model(subbed_user + "productpages", eleList);
 		ProductsPageElements.find(function (err, pp_data) {
 			if (err) {
 				console.error(err);
@@ -344,7 +350,7 @@ function getStoreInfo(user, callback) {
 				store_data.productsPageElements = pp_data[0].elements;
 			}
 		
-		var Products = mongoose.model(subbed_user + "products", productList);
+		var Products = db.model(subbed_user + "products", productList);
 		Products.find(function (err, p_data) {
 			if (err) {
 				console.error(err);
@@ -356,7 +362,7 @@ function getStoreInfo(user, callback) {
 				store_data.products = p_data[0].products;
 			}
 		
-		var Settings = mongoose.model(subbed_user + "settings", settingsSchema);
+		var Settings = db.model(subbed_user + "settings", settingsSchema);
 		Settings.find(function (err, s_data) {
 			if (err) {
 				console.error(err);
@@ -368,7 +374,7 @@ function getStoreInfo(user, callback) {
 				store_data.settings = s_data[0];
 			}
 		
-		var Users = mongoose.model("users", userSchema);
+		var Users = db.model("users", userSchema);
 		Users.findOne({"user": user}, function (err, u_data) {
 			if (err) {
 				console.error(err);
