@@ -5,19 +5,28 @@ var http = require('http'), fs = require('fs'), util = require('util'), mongoose
 
 
 
-
-mongoose.connect('mongodb://localhost:8081/easyStorefront');
 var db = mongoose.connection;
+mongoose.connect('mongodb://localhost:8081/easyStorefront', {server:{auto_reconnect:true}});
+
 db.on('error', console.error.bind(console, 'connection error:'));
+db.on('reconnect', function callback(){
+	console.log('Reconnected to MongoDB');
+});
+db.once('open', function callback () {
+  console.log("Connected to MongoDB");
+});
 
 
 
 
-
-
-
-
-
+var userSchema = mongoose.Schema({
+	user:String, 
+	pass:String, 
+	url: String, 
+	examplesListing: Boolean,
+	csrfToken: String,
+	sessionToken: String
+});
 	
 var eleSchema = mongoose.Schema({
   pos: Number,
@@ -126,7 +135,7 @@ function url_parse(query) {
 }
 
 
- var userSchema = mongoose.Schema({user:String, pass:String, url: String, examplesListing: Boolean});
+ 
 function registerUser(email, password, url, callback) {
 	return_value = undefined;
 	
@@ -149,7 +158,7 @@ function registerUser(email, password, url, callback) {
 		}
 		if (data == null) {
      	
-			var newUser = new users({user:email, pass:password, url:url, examplesListing:false});
+			var newUser = new users({user:email, pass:password, url:url, examplesListing:false, csrfToken:'', sessionToken:''});
 			newUser.save(function (err) {
 				if (err) {
 					console.log(err);
