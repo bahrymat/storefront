@@ -1,5 +1,5 @@
 var http = require('http'), fs = require('fs'), util = require('util'), mongoose = require('mongoose'), multiparty = require('multiparty'),
-    querystring = require('querystring');
+    querystring = require('querystring'), crypto = require('crypto');;
 	
 var eleSchema = mongoose.Schema({
   pos: Number,
@@ -78,6 +78,15 @@ var settingsSchema = mongoose.Schema({
 
 });
 
+var userSchema = mongoose.Schema({
+	user: String,
+	pass: String,
+	salt: String,
+	url: String,
+	examplesListing: Boolean
+});
+
+
 var redirected_urls = {"/": "/index.html", "/about": "/aboutus.html", "/edit": "/settings.html", "/logout": "/logout.html"}
 var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js",
                       "/settings.css", "/yuwei.JPG", "/keegan.jpg", "/jason.jpg", "/matt.jpg", "/exclamation.jpg", "/store_generic.css"]
@@ -104,8 +113,9 @@ function url_parse(query) {
 	}
 }
 
+var iterationlen = 10000;
+var bsize = 256;
 
- var userSchema = mongoose.Schema({user:String, pass:String, url: String, examplesListing: Boolean});
 function registerUser(email, password, url, callback) {
 	return_value = undefined;
 	mongoose.connect('mongodb://localhost:8081/easyStorefront');
@@ -127,50 +137,71 @@ function registerUser(email, password, url, callback) {
 			return;
 		}
 		if (data == null) {
-     	
-			var newUser = new users({user:email, pass:password, url:url, examplesListing:false});
-			newUser.save(function (err) {
-				if (err) {
-					console.log(err);
-					console.log("Problem B");
+			crypto.randomBytes(bsize, function(err, salt) {
+  				if (err) {
+  					console.log(err);
+					console.log("Salt generation error");
 					callback(true, "We're having some issues, try again later.");
 					db.close();
 					return;
 				}
-
-				users.findById(newUser._id, function (err, u) {
+				salt = salt.toString('hex');
+				console.log(password);
+				crypto.pbkdf2(password, salt, iterationlen, bsize, function(err, hash) {
 					if (err) {
-						//User not created properly
-						console.log(err);
-						console.log("Problem C");
-						db.close();
+  						console.log(err);
+						console.log("Password generation error");
 						callback(true, "We're having some issues, try again later.");
+						db.close();
 						return;
 					}
-					// Create dir on account creation
-					fs.mkdir(('users/' + email),function (uerr) {
-						if (uerr) {
-							//users/email not created
-							console.log("Problem D");
+					hash = hash.toString('hex');
+					console.log(hash);
+					var newUser = new users({user:email, pass:hash, salt:salt, url:url, examplesListing:false});
+
+					newUser.save(function (err) {
+						if (err) {
+							console.log(err);
+							console.log("Problem B");
 							callback(true, "We're having some issues, try again later.");
-							console.log(uerr);		
 							db.close();
-						} else {
-							fs.mkdir(('users/' + email + '/images'), function (uerr) {
-								if (uerr) {
-									//users/email/images not created
-									console.log("Problem E");
-									callback(true, "We're having some issues, try again later.");
-									console.log(uerr);
-								} else {
-									console.log('Created user: ' + u.user);
-									db.close();
-									callback(false, "");
-								}
-							});	
+							return;
 						}
+
+						users.findById(newUser._id, function (err, u) {
+							if (err) {
+								//User not created properly
+								console.log(err);
+								console.log("Problem C");
+								db.close();
+								callback(true, "We're having some issues, try again later.");
+								return;
+							}
+							// Create dir on account creation
+							fs.mkdir(('users/' + email),function (uerr) {
+								if (uerr) {
+									//users/email not created
+									console.log("Problem D");
+									callback(true, "We're having some issues, try again later.");
+									console.log(uerr);		
+									db.close();
+								} else {
+									fs.mkdir(('users/' + email + '/images'), function (uerr) {
+										if (uerr) {
+											//users/email/images not created
+											console.log("Problem E");
+											callback(true, "We're having some issues, try again later.");
+											console.log(uerr);
+										} else {
+											console.log('Created user: ' + u.user);
+											db.close();
+											callback(false, "");
+										}
+									});	
+								}
+							});
+						});
 					});
-					
 				});
 			});
 		} else {
@@ -190,22 +221,40 @@ function login(email, password, callback) {
 		console.log('Connected to MongoDB');
 	});
 	var users = mongoose.model('users', userSchema);
-	users.findOne({user:email, pass:password}, function (err,data) {
+	users.findOne({user:email}, function (err,data) {
 		if (err) {
 			console.log(err);
 			callback(true, "There's problems");
-			db.close()
+			db.close();
 			return;
 		}
 		else if (data == null){
 			db.close();
-			callback(true, "Username or password incorrect");
+			callback(true, "User no found");
 			return;
 		}
 		else {
-			console.log(data.user + ' logged in');
-			db.close()
-			callback(false, "");
+			//generate hash from salt
+			crypto.pbkdf2(password, data.salt, iterationlen, bsize, function(err, hash) {
+				if (err) {
+  					console.log(err);
+					console.log("Password hashing error");
+					callback(true, "We're having some issues, try again later.");
+					db.close();
+					return;
+				}
+				hash = hash.toString('hex');
+				if (hash == data.pass){
+					console.log(data.user + ' logged in');
+					db.close();
+					callback(false, "");
+					return;
+				} else {
+					db.close();
+					callback(true, "Incorrect password");
+					return;
+				}
+			});
 		}
 	});
 }
