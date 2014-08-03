@@ -133,6 +133,20 @@ function registerUser(email, password, url, callback) {
 	var valid_chars = /^[a-zA-Z0-9_-]*$/;
 	var valid_email_chars = /^[a-zA-Z0-9_.+@-]*$/;
 	
+	if (email.length < 1 || password.length < 1 || url.length < 1) {
+		callback(true, "All fields must be filled in.");
+		return;
+	} else if (email.length > 100 || password.length > 100 || url.length > 100) {
+		callback(true, "There is a limit of 100 characters.");
+		return;
+	} else if (!email.match(valid_email_chars)) {
+		callback(true, "Emails can only use the letters A-Z, the numbers 0-9, and the following symbols: _ - . @");
+		return;
+	} else if (!url.match(valid_chars) || !password.match(valid_chars)) {
+		callback(true, "URLs and passwords can only use the letters A-Z, the numbers 0-9, and the symbols _ and -.");
+		return;
+	}
+	
 	
 	
 	
@@ -266,8 +280,6 @@ function upload_image(req, res, img_directory) {
 		
 		var db_name = user_email.replace(".", "_").replace("@", "__") + "images";
 						
-		mongoose.connect('mongodb://localhost:8081/easyStorefront', options);
-		console.log('Connected to MongoDB');
 		var Image = mongoose.model(db_name, imageSchema);
 		var new_image = new Image({ititle: pretty_name, iimage: filename});
 		new_image.save(function(err, data) {
@@ -314,7 +326,6 @@ function upload_image(req, res, img_directory) {
 function getStoreInfo(user, callback) {
 	var subbed_user = user.replace(".", "_").replace("@", "__");
 	var store_data = {homePageElements: [], productsPageElements: [], products: [], images: [], settings: {page:{}}}
-	console.log('Connected to MongoDB');
 	
 	var Images = db.model(subbed_user + "images", imageSchema);
 	Images.find(function (err, image_data) {
@@ -891,7 +902,6 @@ http.createServer(function (req, res) {
 					}
 					
 					var db_name = user.replace(".", "_").replace("@", "__") + "images";
-					console.log('Connected to MongoDB');
 					var Image = mongoose.model(db_name, imageSchema);
 					Image.findOne({iimage: filename}).remove(function(err) {
 						if (err) {
