@@ -1,5 +1,23 @@
 var http = require('http'), fs = require('fs'), util = require('util'), mongoose = require('mongoose'), multiparty = require('multiparty'),
     querystring = require('querystring');
+
+
+
+
+
+
+mongoose.connect('mongodb://localhost:8081/easyStorefront');
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+
+
+
+
+
+
+
+
+
 	
 var eleSchema = mongoose.Schema({
   pos: Number,
@@ -83,6 +101,9 @@ var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator
                       "/settings.css", "/yuwei.JPG", "/keegan.jpg", "/jason.jpg", "/matt.jpg", "/exclamation.jpg", "/store_generic.css"]
 /* Included for security purposes, as well as to create a RESTful API.
    Static urls only - dynamic stuff like /login is handled separately. */
+   
+   
+var options = { server: { poolSize: 20 }};
 
 
 
@@ -115,13 +136,6 @@ function registerUser(email, password, url, callback) {
 	
 	
 	
-	mongoose.connect('mongodb://localhost:8081/easyStorefront');
-
-	var db = mongoose.connection;
-	db.on('error', console.error.bind(console, 'connection error:'));
-	db.once('open', function callback () {
-		console.log('Connected to MongoDB');
-	});
 
 	//first check if email in use
 	var users = mongoose.model('users', userSchema);
@@ -130,7 +144,7 @@ function registerUser(email, password, url, callback) {
 			console.log(err);
 			console.log("Problem A");
 			callback(true, "We're having some issues, try again later.");
-			db.close();
+			
 			return;
 		}
 		if (data == null) {
@@ -141,7 +155,7 @@ function registerUser(email, password, url, callback) {
 					console.log(err);
 					console.log("Problem B");
 					callback(true, "We're having some issues, try again later.");
-					db.close();
+					
 					return;
 				}
 
@@ -150,7 +164,7 @@ function registerUser(email, password, url, callback) {
 						//User not created properly
 						console.log(err);
 						console.log("Problem C");
-						db.close();
+						
 						callback(true, "We're having some issues, try again later.");
 						return;
 					}
@@ -161,7 +175,7 @@ function registerUser(email, password, url, callback) {
 							console.log("Problem D");
 							callback(true, "We're having some issues, try again later.");
 							console.log(uerr);		
-							db.close();
+							
 						} else {
 							fs.mkdir(('users/' + email + '/images'), function (uerr) {
 								if (uerr) {
@@ -171,7 +185,7 @@ function registerUser(email, password, url, callback) {
 									console.log(uerr);
 								} else {
 									console.log('Created user: ' + u.user);
-									db.close();
+									
 									callback(false, "");
 								}
 							});	
@@ -183,35 +197,29 @@ function registerUser(email, password, url, callback) {
 		} else {
 			console.log(data);
 			callback(true, "Email already in use");
-			db.close();
+			
 		}
 	});
 }
 
 
 function login(email, password, callback) {
-	mongoose.connect('mongodb://localhost:8081/easyStorefront');
-	var db = mongoose.connection;
-	db.on('error', console.error.bind(console, 'connection error:'));
-	db.once('open', function callback () {
-		console.log('Connected to MongoDB');
-	});
 	var users = mongoose.model('users', userSchema);
 	users.findOne({user:email, pass:password}, function (err,data) {
 		if (err) {
 			console.log(err);
 			callback(true, "There's problems");
-			db.close()
+			
 			return;
 		}
 		else if (data == null){
-			db.close();
+			
 			callback(true, "Username or password incorrect");
 			return;
 		}
 		else {
 			console.log(data.user + ' logged in');
-			db.close()
+			
 			callback(false, "");
 		}
 	});
@@ -258,44 +266,39 @@ function upload_image(req, res, img_directory) {
 		
 		var db_name = user_email.replace(".", "_").replace("@", "__") + "images";
 						
-		mongoose.connect('mongodb://localhost:8081/easyStorefront');
-		var db = mongoose.connection;
-		db.on('error', console.error.bind(console, 'connection error:'));
-		db.once('open', function callback () {
-			console.log('Connected to MongoDB');
-			var Image = mongoose.model(db_name, imageSchema);
-			var new_image = new Image({ititle: pretty_name, iimage: filename});
-			new_image.save(function(err, data) {
+		mongoose.connect('mongodb://localhost:8081/easyStorefront', options);
+		console.log('Connected to MongoDB');
+		var Image = mongoose.model(db_name, imageSchema);
+		var new_image = new Image({ititle: pretty_name, iimage: filename});
+		new_image.save(function(err, data) {
+			if (err) {
+				console.log(err);
+				
+				if (err.err.indexOf("duplicate key") != -1) {
+					sendPageWithSubstitutions(res, "error.html", "You may not use the same filename twice.");
+				} else {
+					four_oh_four(res);
+				}
+				return;
+			}
+			fs.readFile(files.imfile[0].path, function (err, data) {
 				if (err) {
 					console.log(err);
-					db.close();
-					if (err.err.indexOf("duplicate key") != -1) {
-						sendPageWithSubstitutions(res, "error.html", "You may not use the same filename twice.");
-					} else {
-						four_oh_four(res);
-					}
+					four_oh_four(res);
 					return;
 				}
-				fs.readFile(files.imfile[0].path, function (err, data) {
+				
+				var newPath = __dirname + "/users/" + user_email + "/images/" + filename;
+				
+				fs.writeFile(newPath, data, function (err) {
 					if (err) {
 						console.log(err);
 						four_oh_four(res);
 						return;
 					}
-					
-					var newPath = __dirname + "/users/" + user_email + "/images/" + filename;
-					
-					fs.writeFile(newPath, data, function (err) {
-						if (err) {
-							console.log(err);
-							four_oh_four(res);
-							return;
-						}
-						console.dir(new_image);
-						res.writeHead(303, {'Location': '/edit#images'});
-						res.end();
-						db.close();
-					});
+					console.dir(new_image);
+					res.writeHead(303, {'Location': '/edit#images'});
+					res.end();
 					
 				});
 				
@@ -311,90 +314,86 @@ function upload_image(req, res, img_directory) {
 function getStoreInfo(user, callback) {
 	var subbed_user = user.replace(".", "_").replace("@", "__");
 	var store_data = {homePageElements: [], productsPageElements: [], products: [], images: [], settings: {page:{}}}
-	var db = mongoose.createConnection('mongodb://localhost:8081/easyStorefront');
-	db.on('error', console.error.bind(console, 'connection error:'));
-	db.once('open', function () {
-		console.log('Connected to MongoDB');
-		
-		var Images = db.model(subbed_user + "images", imageSchema);
-		Images.find(function (err, image_data) {
-			if (err) {
-				console.error(err);
-				db.close();
-				callback(store_data);
-				return;
-			}
-			store_data.images = image_data;
-		
-		var HomePageElements = db.model(subbed_user + "frontpages", eleList);
-		HomePageElements.find(function (err, hp_data) {
-			if (err) {
-				console.error("banana" + err);
-				db.close();
-				callback(store_data);
-				return;
-			}
-			if (hp_data[0]) {
-				store_data.homePageElements = hp_data[0].elements;
-			}
-		
-		var ProductsPageElements = db.model(subbed_user + "productpages", eleList);
-		ProductsPageElements.find(function (err, pp_data) {
-			if (err) {
-				console.error(err);
-				db.close();
-				callback(store_data);
-				return;
-			}
-			if (pp_data[0]) {
-				store_data.productsPageElements = pp_data[0].elements;
-			}
-		
-		var Products = db.model(subbed_user + "products", productList);
-		Products.find(function (err, p_data) {
-			if (err) {
-				console.error(err);
-				db.close();
-				callback(store_data);
-				return;
-			}
-			if (p_data[0]) {
-				store_data.products = p_data[0].products;
-			}
-		
-		var Settings = db.model(subbed_user + "settings", settingsSchema);
-		Settings.find(function (err, s_data) {
-			if (err) {
-				console.error(err);
-				db.close();
-				callback(store_data);
-				return;
-			}
-			if (s_data[0]) {
-				store_data.settings = s_data[0];
-			}
-		
-		var Users = db.model("users", userSchema);
-		Users.findOne({"user": user}, function (err, u_data) {
-			if (err) {
-				console.error(err);
-				db.close();
-				callback(store_data);
-				return;
-			}
-			if (u_data) {
-				store_data.settings.page.pageURL = u_data.url;
-			}
-		
-		db.close();
-		callback(store_data);
-		
-		});
-		});
-		});
-		});
-		});
-		});
+	console.log('Connected to MongoDB');
+	
+	var Images = db.model(subbed_user + "images", imageSchema);
+	Images.find(function (err, image_data) {
+		if (err) {
+			console.error(err);
+			
+			callback(store_data);
+			return;
+		}
+		store_data.images = image_data;
+	
+	var HomePageElements = db.model(subbed_user + "frontpages", eleList);
+	HomePageElements.find(function (err, hp_data) {
+		if (err) {
+			console.error("banana" + err);
+			
+			callback(store_data);
+			return;
+		}
+		if (hp_data[0]) {
+			store_data.homePageElements = hp_data[0].elements;
+		}
+	
+	var ProductsPageElements = db.model(subbed_user + "productpages", eleList);
+	ProductsPageElements.find(function (err, pp_data) {
+		if (err) {
+			console.error(err);
+			
+			callback(store_data);
+			return;
+		}
+		if (pp_data[0]) {
+			store_data.productsPageElements = pp_data[0].elements;
+		}
+	
+	var Products = db.model(subbed_user + "products", productList);
+	Products.find(function (err, p_data) {
+		if (err) {
+			console.error(err);
+			
+			callback(store_data);
+			return;
+		}
+		if (p_data[0]) {
+			store_data.products = p_data[0].products;
+		}
+	
+	var Settings = db.model(subbed_user + "settings", settingsSchema);
+	Settings.find(function (err, s_data) {
+		if (err) {
+			console.error(err);
+			
+			callback(store_data);
+			return;
+		}
+		if (s_data[0]) {
+			store_data.settings = s_data[0];
+		}
+	
+	var Users = db.model("users", userSchema);
+	Users.findOne({"user": user}, function (err, u_data) {
+		if (err) {
+			console.error(err);
+			
+			callback(store_data);
+			return;
+		}
+		if (u_data) {
+			store_data.settings.page.pageURL = u_data.url;
+		}
+	
+	
+	callback(store_data);
+	
+	});
+	});
+	});
+	});
+	});
 	});
 }
 
@@ -582,12 +581,6 @@ http.createServer(function (req, res) {
 				res.writeHead(200);
 				var pdata =JSON.parse(data);
 				console.log('Updating ' + pdata.user + ' settings');
-				mongoose.connect('mongodb://localhost:8081/easyStorefront');
-				var db = mongoose.connection;
-				db.on('error', console.error.bind(console, 'connection error:'));
-				db.once('open', function callback () {
-					console.log('Connected to MongoDB');
-				});
 				var settings = mongoose.model(((pdata.user).trim()) + 'settings', settingsSchema);
 				var sdata = pdata.settings;
 				var new_settings = new settings (
@@ -642,7 +635,7 @@ http.createServer(function (req, res) {
 					var old = null;
 					if (err) {
 						console.log(err + ' here');
-						db.close()
+						
 						return;
 					}
 					else if (q != null){
@@ -651,14 +644,14 @@ http.createServer(function (req, res) {
 					new_settings.save(function (err) {  
 						if (err) {
 							console.log(err + ' or here');
-							db.close();
+							
 							return;
 						} else {
 							if (old != null){
 								settings.remove({_id: old}, function(err) {
 									if (err) {
 										console.log(err + ' maybe here');//this NO LONGER gets thrown for some reason
-										db.close();
+										
 										return;
 									}
 									var new_url = sdata.page.pageURL;
@@ -667,13 +660,13 @@ http.createServer(function (req, res) {
 									User.findOne({user: unescaped_email}, function (err, item) {
 										if (err || !item) {
 											console.log(err);
-											db.close();
+											
 											return;
 										}
 										item.url = sdata.page.pageURL;
 										item.examplesListing = sdata.page.pageHomepageListing;
 										item.save();
-										db.close();
+										
 										console.log("Products saved sucessfully");
 										generate_store(pdata.user);
 									});
@@ -689,12 +682,6 @@ http.createServer(function (req, res) {
 				res.writeHead(200);
 				var pdata =JSON.parse(data);
 				console.log('Updating ' + pdata.user + ' products');
-				mongoose.connect('mongodb://localhost:8081/easyStorefront');
-				var db = mongoose.connection;
-				db.on('error', console.error.bind(console, 'connection error:'));
-				db.once('open', function callback () {
-					console.log('Connected to MongoDB');
-				});
 				var pdata = JSON.parse(data);
 				var products = mongoose.model(((pdata.user).trim()) + 'p', productSchema);
 				var pList = mongoose.model(((pdata.user).trim()) + 'products', productList);
@@ -715,7 +702,7 @@ http.createServer(function (req, res) {
 					var old = null;
 					if (err) {
 						console.log(err + ' here');
-						db.close()
+						
 						return;
 					}
 					else if (q != null){
@@ -724,18 +711,18 @@ http.createServer(function (req, res) {
 					new_products.save(function (err) {  
 						if (err) {
 							console.log(err + ' or here');
-							db.close();
+							
 							return;
 						} else {
 							if (old != null){
 								pList.remove({_id: old}, function(err) {
 									if (err) {
 										console.log(err + ' maybe here');//this NO LONGER gets thrown for some reason
-										db.close();
+										
 										return;
 
 									}
-									db.close();
+									
 									console.log("Products saved sucessfully");
 									generate_store(pdata.user);
 								});}
@@ -749,12 +736,6 @@ http.createServer(function (req, res) {
 				res.writeHead(200);
 				var pdata = JSON.parse(data);
 				console.log('Updating ' + pdata.user + ' frontpage');
-				mongoose.connect('mongodb://localhost:8081/easyStorefront');
-				var db = mongoose.connection;
-				db.on('error', console.error.bind(console, 'connection error:'));
-				db.once('open', function callback () {
-					console.log('Connected to MongoDB');
-				});
 				var edata = JSON.parse(data);
 				var elements = mongoose.model('elements', eleSchema);
 				var eList = mongoose.model(((pdata.user).trim()) + 'frontpage', eleList);
@@ -792,7 +773,7 @@ http.createServer(function (req, res) {
 					var old = null;
 					if (err) {
 						console.log(err + ' here');
-						db.close()
+						
 						return;
 					}
 					else if (q != null){
@@ -801,17 +782,17 @@ http.createServer(function (req, res) {
 					new_elements.save(function (err) {  
 						if (err) {
 							console.log(err + ' or here');
-							db.close();
+							
 							return;
 						} else {
 							if (old != null){
 								eList.remove({_id: old}, function(err) {
 									if (err) {
 										console.log(err + ' maybe here');//this NO LONGER gets thrown for some reason
-										db.close();
+										
 										return;
 									}
-									db.close();
+									
 									console.log("frontpage saved sucessfully");
 									generate_store(pdata.user);
 								});}
@@ -827,12 +808,6 @@ http.createServer(function (req, res) {
 				res.writeHead(200);
 				var pdata = JSON.parse(data);
 				console.log('Updating ' + pdata.user + ' product page');
-				mongoose.connect('mongodb://localhost:8081/easyStorefront');
-				var db = mongoose.connection;
-				db.on('error', console.error.bind(console, 'connection error:'));
-				db.once('open', function callback () {
-					console.log('Connected to MongoDB');
-				});
 				var edata = JSON.parse(data);
 				var elements = mongoose.model('elements', eleSchema);
 				var eList = mongoose.model(((pdata.user).trim()) + 'productpage', eleList);
@@ -870,7 +845,7 @@ http.createServer(function (req, res) {
 					var old = null;
 					if (err) {
 						console.log(err + ' here');
-						db.close()
+						
 						return;
 					}
 					else if (q != null){
@@ -879,17 +854,17 @@ http.createServer(function (req, res) {
 					new_elements.save(function (err) {  
 						if (err) {
 							console.log(err + ' or here');
-							db.close();
+							
 							return;
 						} else {
 							if (old != null){
 								eList.remove({_id: old}, function(err) {
 									if (err) {
 										console.log(err + ' maybe here'); //this NO LONGER gets thrown for some reason
-										db.close();
+										
 										return;
 									}
-									db.close();
+									
 									console.log("Product page saved sucessfully");
 									generate_store(pdata.user);
 								});}
@@ -916,25 +891,19 @@ http.createServer(function (req, res) {
 					}
 					
 					var db_name = user.replace(".", "_").replace("@", "__") + "images";
-					
-					mongoose.connect('mongodb://localhost:8081/easyStorefront');
-					var db = mongoose.connection;
-					db.on('error', console.error.bind(console, 'connection error:'));
-					db.once('open', function callback () {
-						console.log('Connected to MongoDB');
-						var Image = mongoose.model(db_name, imageSchema);
-						Image.findOne({iimage: filename}).remove(function(err) {
-							if (err) {
-								console.log(err);
-								four_oh_four(res);
-								db.close();
-								return;
-							}
-							console.log(user + "'s " + filename + " deleted");
-							res.writeHead(200);
-							res.end();
-							db.close();
-						});
+					console.log('Connected to MongoDB');
+					var Image = mongoose.model(db_name, imageSchema);
+					Image.findOne({iimage: filename}).remove(function(err) {
+						if (err) {
+							console.log(err);
+							four_oh_four(res);
+							
+							return;
+						}
+						console.log(user + "'s " + filename + " deleted");
+						res.writeHead(200);
+						res.end();
+						
 					});
 					
 				});
@@ -955,23 +924,19 @@ http.createServer(function (req, res) {
 		} else if (unchanged_urls.indexOf(url) >= 0) {
 			giveStaticFile(res, __dirname + url);
 		} else if (url == "/examples") {
-			var db = mongoose.createConnection('mongodb://localhost:8081/easyStorefront');
-			db.on('error', console.error.bind(console, 'connection error:'));
-			db.once('open', function callback () {
-				var User = db.model('users', userSchema);
-				User.find({examplesListing: true}, function (err, items) {
-					if (err) {
-						console.log("there's problems " + err);
-						four_oh_four(res);
-						db.close();
-						return;
-					}
-					var exampleStores = "";
-					for (var i=0; i<items.length; i++) {
-						exampleStores += '<li><a href="/store/'+items[i].url+'">'+items[i].url+'</a></li>';
-					}
-					sendPageWithSubstitutions(res,"examples.html", exampleStores);
-				});
+			var User = db.model('users', userSchema);
+			User.find({examplesListing: true}, function (err, items) {
+				if (err) {
+					console.log("there's problems " + err);
+					four_oh_four(res);
+					
+					return;
+				}
+				var exampleStores = "";
+				for (var i=0; i<items.length; i++) {
+					exampleStores += '<li><a href="/store/'+items[i].url+'">'+items[i].url+'</a></li>';
+				}
+				sendPageWithSubstitutions(res,"examples.html", exampleStores);
 			});
 		} else if (url.substring(0,6) == "/store") {
 
@@ -989,32 +954,29 @@ http.createServer(function (req, res) {
 				return;
 			}
 					
-			var db = mongoose.createConnection('mongodb://localhost:8081/easyStorefront');
-			db.on('error', console.error.bind(console, 'connection error:'));
-			db.once('open', function callback () {
 				var User = db.model('users', userSchema);
 				User.findOne({url: store_url}, function (err, item) {
 					if (err) {
 						console.log("there's problems " + err);
 						four_oh_four(res);
-						db.close();
+						
 						return;
 					} else if (!item) {
 						console.log("store " + store_url + " does not exist!");
 						four_oh_four(res);
-						db.close();
+						
 						return;
 					}
 					store_owner = item.user;
 					
 					if (page_url == "/") { //store home page
-						db.close();
+						
 						giveStaticFile(res, __dirname + "/users/" + store_owner + "/store_splash.html");
 					} else if (page_url == "/products") {
-						db.close();
+						
 						giveStaticFile(res, __dirname + "/users/" + store_owner + "/store_products.html");
 					}else if (page_url == "/contact"){
-						db.close();
+						
 						giveStaticFile(res, __dirname + "/users/" + store_owner + "/contact_page.html");
 					} else if (page_url.substring(0,9) == "/product/") {
 					
@@ -1027,10 +989,10 @@ http.createServer(function (req, res) {
 						ProductList.findOne().exec(function(err, data) {
 							if (err || !data) {
 								four_oh_four(res);
-								db.close();
+								
 								return;
 							}
-							db.close();
+							
 							fs.readFile(__dirname + "/users/" + store_owner + "/store_product.html", function (err,filedata) {
 								if (err) {
 									console.log("missing product");
@@ -1065,10 +1027,10 @@ http.createServer(function (req, res) {
 						ProductList.findOne().exec(function(err, data) {
 							if (err || !data) {
 								four_oh_four(res);
-								db.close();
+								
 								return;
 							}
-							db.close();
+							
 							resultshtml = "";
 							for (var i = 0; i < data.products.length; i++) {
 								var p = data.products[i];
@@ -1089,24 +1051,23 @@ http.createServer(function (req, res) {
 						});
 
 					} else if (page_url == "/store_custom.css") {
-						db.close();
+						
 						giveStaticFile(res, __dirname + "/users/" + store_owner + "/store_custom.css");
 					} else if (page_url.substring(0,7) == "/images") {
-						db.close();
+						
 						var img = page_url.substring(7);
 						giveStaticFile(res, __dirname + "/users/" + store_owner + "/images/" + img);
 					} else if (page_url == "") { 
-						db.close();
+						
 						res.writeHead(303, {'Location': '/store/' + store_url + "/"}); //redirect from "/store/hatstore" to "/store/hatstore/" for technical reasons
 						res.end();
 					} else {
-						db.close();
+						
 						console.log(util.format("user tried to request page '%s' from store owner '%s'.", page_url, store_owner));
 						four_oh_four(res);
 					} 
 					
 				});
-			});
 
 			
 		} else if (url.substring(0,13) == "/getstoredata") {
