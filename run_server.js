@@ -140,7 +140,7 @@ function registerUser(email, password, url, callback) {
 		callback(true, "There is a limit of 100 characters.");
 		return;
 	} else if (!email.match(valid_email_chars)) {
-		callback(true, "Emails can only use the letters A-Z, the numbers 0-9, and the following symbols: _ - . @");
+		callback(true, "Emails can only use the letters A-Z, the numbers 0-9, and the following symbols: _ - . + @");
 		return;
 	} else if (!url.match(valid_chars) || !password.match(valid_chars)) {
 		callback(true, "URLs and passwords can only use the letters A-Z, the numbers 0-9, and the symbols _ and -.");
