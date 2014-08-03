@@ -185,7 +185,6 @@ function registerUser(email, password, url, callback) {
   					console.log(err);
 					console.log("Salt generation error");
 					callback(true, "We're having some issues, try again later.");
-					
 					return;
 				}
 				salt = salt.toString('hex');
@@ -228,6 +227,7 @@ function registerUser(email, password, url, callback) {
 									callback(true, "We're having some issues, try again later.");
 									console.log(uerr);		
 									db.close();
+									return;
 								} else {
 									fs.mkdir(('users/' + email + '/images'), function (uerr) {
 										if (uerr) {
@@ -235,10 +235,12 @@ function registerUser(email, password, url, callback) {
 											console.log("Problem E");
 											callback(true, "We're having some issues, try again later.");
 											console.log(uerr);
+											return;
 										} else {
 											console.log('Created user: ' + u.user);
 											db.close();
 											callback(false, "");
+											return;
 										}
 									});	
 								}
@@ -250,7 +252,7 @@ function registerUser(email, password, url, callback) {
 		} else {
 			console.log(data);
 			callback(true, "Email already in use");
-			
+			return;
 		}
 	});
 }
