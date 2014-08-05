@@ -113,10 +113,9 @@ var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator
    Static urls only - dynamic stuff like /login is handled separately. */
    
    
-var md5sum = crypto.createHash('md5');
 function hash_email(email) {
 	//converts an email to a md5 hash, so that it only has alphanumeric characters.
-	return md5sum.update(name).digest('hex');
+	return crypto.createHash('md5').update(email).digest('hex');
 }
 
 
