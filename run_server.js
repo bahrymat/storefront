@@ -113,7 +113,11 @@ var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator
    Static urls only - dynamic stuff like /login is handled separately. */
    
    
-
+var md5sum = crypto.createHash('md5');
+function hash_email(email) {
+	//converts an email to a md5 hash, so that it only has alphanumeric characters.
+	return md5sum.update(name).digest('hex');
+}
 
 
 /* converts url string in the form "email=foo@bar.com&password=abc123" into an object
@@ -209,7 +213,7 @@ function registerUser(email, password, url, callback) {
 								return;
 							}
 							// Create dir on account creation
-							fs.mkdir(('users/' + email),function (uerr) {
+							fs.mkdir(('users/' + hash_email(email)),function (uerr) {
 								if (uerr) {
 									//users/email not created
 									console.log("Problem D");
@@ -217,7 +221,7 @@ function registerUser(email, password, url, callback) {
 									console.log(uerr);
 									return;
 								} else {
-									fs.mkdir(('users/' + email + '/images'), function (uerr) {
+									fs.mkdir(('users/' + hash_email(email) + '/images'), function (uerr) {
 										if (uerr) {
 											//users/email/images not created
 											console.log("Problem E");
@@ -319,7 +323,7 @@ function upload_image(req, res, img_directory) {
 		var user_email = fields.email[0];
 		var filename = files.imfile[0].originalFilename;
 		
-		var db_name = user_email.replace(".", "_").replace("@", "__") + "images";
+		var db_name = hash_email(user_email) + "images";
 						
 		var Image = mongoose.model(db_name, imageSchema);
 		var new_image = new Image({ititle: pretty_name, iimage: filename});
@@ -341,7 +345,7 @@ function upload_image(req, res, img_directory) {
 					return;
 				}
 				
-				var newPath = __dirname + "/users/" + user_email + "/images/" + filename;
+				var newPath = __dirname + "/users/" + hash_email(user_email) + "/images/" + filename;
 				
 				fs.writeFile(newPath, data, function (err) {
 					if (err) {
@@ -365,7 +369,7 @@ function upload_image(req, res, img_directory) {
 }
 
 function getStoreInfo(user, callback) {
-	var subbed_user = user.replace(".", "_").replace("@", "__");
+	var subbed_user = hash_email(user);
 	var store_data = {homePageElements: [], productsPageElements: [], products: [], images: [], settings: {page:{}}}
 	
 	var Images = db.model(subbed_user + "images", imageSchema);
@@ -449,8 +453,7 @@ function getStoreInfo(user, callback) {
 	});
 }
 
-function generate_store(escaped_email) {
-	email = escaped_email.replace("__", "@").replace("_", ".");
+function generate_store(email) {
 	console.log("generating store for user " + email);
 
 	function generateHeader(active_link, store_url) {
@@ -509,7 +512,7 @@ function generate_store(escaped_email) {
 		data.productsPageElements.sort(function(a, b){return a.pos-b.pos}); //sort based on the pos property of the page element
 		productlistpage += processElements(data.productsPageElements, data.products, data.settings);
 		productlistpage += util.format(generateFooter(), data.settings.page.pageTitle);
-		fs.writeFile("./users/" + email + "/store_products.html", productlistpage);
+		fs.writeFile("./users/" + hash_email(email) + "/store_products.html", productlistpage);
 		
 		
 		
@@ -519,14 +522,14 @@ function generate_store(escaped_email) {
 		splashpage += processElements(data.homePageElements, data.products, data.settings);
 		splashpage += "</div></div>";
 		splashpage += util.format(generateFooter(), data.settings.page.pageTitle);
-		fs.writeFile("./users/" + email + "/store_splash.html", splashpage);
+		fs.writeFile("./users/" + hash_email(email) + "/store_splash.html", splashpage);
 		
 		
 		
 		productpage = util.format(generateHeader('', data.settings.page.pageURL), data.settings.page.pageTitle, data.settings.navbar.navbarLogo);
 		productpage += util.format('<div class="container"><div class="jumbotron jumbotron_lesspadding"><div class="row"><div class="col-md-5 col-sm-6"><img src="{pimage}" class="img-responsive img-rounded"></div><div class="col-md-7 col-sm-6"><h2>{ptitle}</h2><h4>%s{pprice}</h4><p>{pldescription}</p><p><a role="button" class="btn btn-primary" href="#">Buy Now</a></p></div></div><div class="row"><div class="col-md-12 col-sm-12"><div class="tags"><div class="button_label">Tags: </div> <div class="btn-group"> {buttons}</div></div></div></div></div></div>', data.settings.page.pageCurrency);
 		productpage += util.format(generateFooter(), data.settings.page.pageTitle);
-		fs.writeFile("./users/" + email + "/store_product.html", productpage);
+		fs.writeFile("./users/" + hash_email(email) + "/store_product.html", productpage);
 		
 		
 		
@@ -534,7 +537,7 @@ function generate_store(escaped_email) {
 		searchpage += util.format('<div class="container textbox"><h1>Search Results</h1><p class="lead">The following products were found for the query, "{search}".</p></div>');
 				searchpage += '<div class="container"><div class="row">{results}</div></div>';
 		searchpage += util.format(generateFooter(), data.settings.page.pageTitle);
-		fs.writeFile("./users/" + email + "/store_search.html", searchpage);
+		fs.writeFile("./users/" + hash_email(email) + "/store_search.html", searchpage);
 		
 
 
@@ -568,11 +571,11 @@ function generate_store(escaped_email) {
 		contactpage += util.format('<div class="row"><div class="col-md-12 col-sm-12"><iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=%s&q=%s"></iframe></div></div></div></div>', api_key, address);
 		
 		contactpage += util.format(generateFooter(), data.settings.page.pageTitle);
-		fs.writeFile("./users/" + email + "/contact_page.html", contactpage);
+		fs.writeFile("./users/" + hash_email(email) + "/contact_page.html", contactpage);
 		
 		var s = data.settings.style;
 		css = util.format('.textbox {color: %s} body {background-color: %s} .navbar {background-color: %s; border-color: %s} .main, #footer {font-family: %s} .navbar .nav a, .navbar .navbar-header a {color: %s} .navbar .nav .active a {background-color: %s} #footer {background-color: %s} #footer .text-muted {color: %s} .navbar-toggle .icon-bar {background-color: %s} .navbar-toggle {border-color: %s; background-color: %s} .carousel-inner > .item > img {width: auto;height:450px;max-height : 450px;} .thumbnail > img {max-height:250px;height:250px}', s.fontcolour, s.bgcolour, s.navbarcolor, s.navbarhighlight, s.fontface, s.navbartextcolor, s.navbarhighlight, s.footercolor, s.footertext, s.navbartextcolor, s.navbartextcolor, s.navbarhighlight);
-		fs.writeFile("./users/" + email + "/store_custom.css", css);
+		fs.writeFile("./users/" + hash_email(email) + "/store_custom.css", css);
 	});
 }
 
@@ -633,7 +636,7 @@ http.createServer(function (req, res) {
 				res.writeHead(200);
 				var pdata =JSON.parse(data);
 				console.log('Updating ' + pdata.user + ' settings');
-				var settings = mongoose.model(((pdata.user).trim()) + 'settings', settingsSchema);
+				var settings = mongoose.model(hash_email((pdata.user).trim()) + 'settings', settingsSchema);
 				var sdata = pdata.settings;
 				var new_settings = new settings (
 					{page: {
@@ -708,7 +711,7 @@ http.createServer(function (req, res) {
 									}
 									var new_url = sdata.page.pageURL;
 									var User = mongoose.model('users', userSchema);
-									var unescaped_email = pdata.user.replace("__", "@").replace("_", ".");
+									var unescaped_email = pdata.user;
 									User.findOne({user: unescaped_email}, function (err, item) {
 										if (err || !item) {
 											console.log(err);
@@ -720,7 +723,7 @@ http.createServer(function (req, res) {
 										item.save();
 										
 										console.log("Products saved sucessfully");
-										generate_store(pdata.user);
+										generate_store(unescaped_email);
 									});
 								});}
 							
@@ -735,8 +738,8 @@ http.createServer(function (req, res) {
 				var pdata =JSON.parse(data);
 				console.log('Updating ' + pdata.user + ' products');
 				var pdata = JSON.parse(data);
-				var products = mongoose.model(((pdata.user).trim()) + 'p', productSchema);
-				var pList = mongoose.model(((pdata.user).trim()) + 'products', productList);
+				var products = mongoose.model(hash_email((pdata.user).trim()) + 'p', productSchema);
+				var pList = mongoose.model(hash_email((pdata.user).trim()) + 'products', productList);
 				var prodata = pdata.products;
 				var new_products = new pList;
 				for(var i = 0; i < prodata.length;i++){
@@ -790,7 +793,7 @@ http.createServer(function (req, res) {
 				console.log('Updating ' + pdata.user + ' frontpage');
 				var edata = JSON.parse(data);
 				var elements = mongoose.model('elements', eleSchema);
-				var eList = mongoose.model(((pdata.user).trim()) + 'frontpage', eleList);
+				var eList = mongoose.model(hash_email((pdata.user).trim()) + 'frontpage', eleList);
 				var eledata = pdata.frontPageElements;
 				var new_elements = new eList;
 				for(var i = 0; i < eledata.length;i++){
@@ -862,7 +865,7 @@ http.createServer(function (req, res) {
 				console.log('Updating ' + pdata.user + ' product page');
 				var edata = JSON.parse(data);
 				var elements = mongoose.model('elements', eleSchema);
-				var eList = mongoose.model(((pdata.user).trim()) + 'productpage', eleList);
+				var eList = mongoose.model(hash_email((pdata.user).trim()) + 'productpage', eleList);
 				var eledata = pdata.productsPageElements;
 				var new_elements = new eList;
 				for(var i = 0; i < eledata.length;i++){
@@ -937,12 +940,12 @@ http.createServer(function (req, res) {
 				console.log(user);
 				console.log(filename);
 			
-				fs.unlink(__dirname + "/users/" + user + "/images/" + filename, function (err) {
+				fs.unlink(__dirname + "/users/" + hash_email(user) + "/images/" + filename, function (err) {
 					if (err) {
 						console.log(err);
 					}
 					
-					var db_name = user.replace(".", "_").replace("@", "__") + "images";
+					var db_name = hash_email(user) + "images";
 					var Image = mongoose.model(db_name, imageSchema);
 					Image.findOne({iimage: filename}).remove(function(err) {
 						if (err) {
@@ -1022,18 +1025,18 @@ http.createServer(function (req, res) {
 					
 					if (page_url == "/") { //store home page
 						
-						giveStaticFile(res, __dirname + "/users/" + store_owner + "/store_splash.html");
+						giveStaticFile(res, __dirname + "/users/" + hash_email(store_owner) + "/store_splash.html");
 					} else if (page_url == "/products") {
 						
-						giveStaticFile(res, __dirname + "/users/" + store_owner + "/store_products.html");
+						giveStaticFile(res, __dirname + "/users/" + hash_email(store_owner) + "/store_products.html");
 					}else if (page_url == "/contact"){
 						
-						giveStaticFile(res, __dirname + "/users/" + store_owner + "/contact_page.html");
+						giveStaticFile(res, __dirname + "/users/" + hash_email(store_owner) + "/contact_page.html");
 					} else if (page_url.substring(0,9) == "/product/") {
 					
 						var prod_num = page_url.substring(9);
 					
-						var db_name = store_owner.replace(".", "_").replace("@", "__") + "products";
+						var db_name = hash_email(store_owner) + "products";
 						var ProductList = db.model(db_name, productList);
 						
 						
@@ -1044,7 +1047,7 @@ http.createServer(function (req, res) {
 								return;
 							}
 							
-							fs.readFile(__dirname + "/users/" + store_owner + "/store_product.html", function (err,filedata) {
+							fs.readFile(__dirname + "/users/" + hash_email(store_owner) + "/store_product.html", function (err,filedata) {
 								if (err) {
 									console.log("missing product");
 									four_oh_four(res);
@@ -1071,7 +1074,7 @@ http.createServer(function (req, res) {
 					
 						var query = page_url.substring(page_url.indexOf("=")+1).toLowerCase().replace("%20", " ");
 					
-						var db_name = store_owner.replace(".", "_").replace("@", "__") + "products";
+						var db_name = hash_email(store_owner) + "products";
 						var ProductList = db.model(db_name, productList);
 						
 						
@@ -1090,7 +1093,7 @@ http.createServer(function (req, res) {
 									resultshtml += util.format('<div class="col-sm-6 col-md-4"><div class="thumbnail"><img src="images/'+p.pimage+'" alt="%s"><div class="caption"><h3>%s</h3><h4>%s%s</h4><p>%s</p><p><a href="#" class="btn btn-primary" role="button">Buy Now</a> <a href="product/'+i+'" class="btn btn-default" role="button">View Details</a></p></div></div></div>', p.ptitle, p.ptitle, "$", p.pprice, p.psdescription);
 								}
 							}
-							fs.readFile(__dirname + "/users/" + store_owner + "/store_search.html", function (err,filedata) {
+							fs.readFile(__dirname + "/users/" + hash_email(store_owner) + "/store_search.html", function (err,filedata) {
 								if (err) {
 									console.log("missing search result page");
 									four_oh_four(res);
@@ -1103,11 +1106,11 @@ http.createServer(function (req, res) {
 
 					} else if (page_url == "/store_custom.css") {
 						
-						giveStaticFile(res, __dirname + "/users/" + store_owner + "/store_custom.css");
+						giveStaticFile(res, __dirname + "/users/" + hash_email(store_owner) + "/store_custom.css");
 					} else if (page_url.substring(0,7) == "/images") {
 						
 						var img = page_url.substring(7);
-						giveStaticFile(res, __dirname + "/users/" + store_owner + "/images/" + img);
+						giveStaticFile(res, __dirname + "/users/" + hash_email(store_owner) + "/images/" + img);
 					} else if (page_url == "") { 
 						
 						res.writeHead(303, {'Location': '/store/' + store_url + "/"}); //redirect from "/store/hatstore" to "/store/hatstore/" for technical reasons

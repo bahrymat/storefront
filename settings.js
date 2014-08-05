@@ -148,7 +148,7 @@ function parseSettingsForms() {
 	var formObject = {
 		settings: {}
 	};
-	formObject.user = logged.replace(".", "_").replace("@", "__");
+	formObject.user = logged;
 	var fields;
 
 	$('.settings-container').each(function () {
@@ -174,7 +174,7 @@ function parseProductForms() {
 	var formObject = {
 		products: []
 	};
-	formObject.user = logged.replace(".", "_").replace("@", "__");
+	formObject.user = logged;
 	var fields;
 	$('.product-container').each(function (i) {
 		formObject.products[i] = {};
@@ -194,7 +194,7 @@ function parseFrontPageForms() {
 	var formObject = {
 		frontPageElements: []
 	};
-	formObject.user = logged.replace(".", "_").replace("@", "__");
+	formObject.user = logged;
 	var fields;
 	$('.element1-container').each(function (i) {
 		formObject.frontPageElements[i] = {};
@@ -215,7 +215,7 @@ function parseProductsPageForms() {
 	var formObject = {
 		productsPageElements: []
 	};
-	formObject.user = logged.replace(".", "_").replace("@", "__");
+	formObject.user = logged;
 	var fields;
 	$('.element2-container').each(function (i) {
 		formObject.productsPageElements[i] = {};
