@@ -1,5 +1,5 @@
 var http = require('http'), fs = require('fs'), util = require('util'), mongoose = require('mongoose'), multiparty = require('multiparty'),
-    querystring = require('querystring'), crypto = require('crypto');
+    querystring = require('querystring'), crypto = require('crypto'), validator = require('validator');
 
 
 
@@ -117,6 +117,15 @@ function hash_email(email) {
 	//converts an email to a md5 hash, so that it only has alphanumeric characters.
 	return crypto.createHash('md5').update(email).digest('hex');
 }
+
+function sanitize(string) {
+	return validator.stripLow(string, true).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function unsanitize(string) {
+	return string.replace(/&gt;/g,">").replace(/&lt;/g,"<").replace(/&amp;/g,"&");
+}
+
 
 
 /* converts url string in the form "email=foo@bar.com&password=abc123" into an object
@@ -610,6 +619,8 @@ http.createServer(function (req, res) {
 		
 		req.on('end', function() {
 
+			data = sanitize(data);
+			
 			if (url == "/register") {
 				var urlParams = url_parse(data);
 				registerUser(urlParams.signupEmail, urlParams.signupPass, urlParams.signupStoreName, function (err, err_message) {
@@ -1132,7 +1143,7 @@ http.createServer(function (req, res) {
 				return;
 			}
 			getStoreInfo(user, function (data) {
-				res.end(JSON.stringify(data));
+				res.end(unsanitize(JSON.stringify(data)));
 			});
 		} else {
 			console.log("user tried to request disallowed file: " + url);
