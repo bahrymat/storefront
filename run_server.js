@@ -619,7 +619,6 @@ http.createServer(function (req, res) {
 		
 		req.on('end', function() {
 
-			data = sanitize(data);
 			
 			if (url == "/register") {
 				var urlParams = url_parse(data);
@@ -642,6 +641,7 @@ http.createServer(function (req, res) {
 				});
 
 			} else if (url == "/changesettings") {
+				data = sanitize(data);
 				console.log("received store settings edit request"); 
 				res.writeHead(200);
 				var pdata =JSON.parse(data);
@@ -743,6 +743,7 @@ http.createServer(function (req, res) {
 								
 				res.end("Your settings changes have been saved!");
 			} else if (url == "/changeproducts") {
+				data = sanitize(data);
 				console.log("received store products edit request"); 
 				res.writeHead(200);
 				var pdata =JSON.parse(data);
@@ -797,6 +798,7 @@ http.createServer(function (req, res) {
 				
 				res.end("Your product changes have been saved!");
 			} else if (url == "/changefrontpage") {
+				data = sanitize(data);
 				console.log("received store front edit request"); 
 				res.writeHead(200);
 				var pdata = JSON.parse(data);
@@ -869,6 +871,7 @@ http.createServer(function (req, res) {
 				res.end("Your Home Page changes have been saved!");
 
 			} else if (url == "/changeproductpage") {
+				data = sanitize(data);
 				console.log("received store front edit request"); 
 				res.writeHead(200);
 				var pdata = JSON.parse(data);
