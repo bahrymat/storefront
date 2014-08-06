@@ -1,0 +1,8 @@
+# Ignore everything in this directory
+*
+# Except the following
+!.gitignore
+!667f8851572778d6e96de409f03898e0 #kitty
+!7278c6ce561185b27830d41f05f1f81a #corn
+!a70d34f63f56ae426b5391e11c25f4fd #chairs
+!f3ada405ce890b6f8204094deb12d8a8 #hats
