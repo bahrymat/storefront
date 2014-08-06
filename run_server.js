@@ -157,10 +157,6 @@ function registerUser(email, password, url, callback) {
 		return;
 	}
 	
-	
-	
-	
-
 	//first check if email in use
 	var users = mongoose.model('users', userSchema);
 	users.findOne({user:email}, function (err,data) {
@@ -189,7 +185,7 @@ function registerUser(email, password, url, callback) {
 						return;
 					}
 					hash = hash.toString('hex');
-					console.log(hash);
+					//console.log(hash);
 					var newUser = new users({user:email, pass:hash, salt:salt, url:url, examplesListing:false});
 
 					newUser.save(function (err) {
