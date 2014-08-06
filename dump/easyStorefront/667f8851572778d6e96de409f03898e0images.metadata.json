@@ -1,0 +1,1 @@
+{ "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "name" : "_id_", "ns" : "easyStorefront.667f8851572778d6e96de409f03898e0images" }, { "v" : 1, "unique" : true, "key" : { "iimage" : 1 }, "name" : "iimage_1", "ns" : "easyStorefront.667f8851572778d6e96de409f03898e0images", "background" : true } ] }
