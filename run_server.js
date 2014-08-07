@@ -110,6 +110,7 @@ var settingsSchema = mongoose.Schema({
 //pbkdf2 iteration and size value
 var iterationlen = 10000;
 var bitsize = 256;
+var saltsize = 64;
 
 var redirected_urls = {"/": "/index.html", "/about": "/aboutus.html", "/edit": "/settings.html", "/logout": "/logout.html"}
 var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js", '/bootstrap.min.css', '/bootstrap.min.js', '/fonts/glyphicons-halflings-regular.woff', '/fonts/glyphicons-halflings-regular.ttf',
@@ -303,7 +304,7 @@ function login(email, password, callback) {
 
 function generatesessionid(data, callback) {
 	//generate salt
-	crypto.randomBytes(64, function(err, salt) {
+	crypto.randomBytes(saltsize, function(err, salt) {
   		if (err) {
   			console.log(err);
 			console.log("Salt generation error");
@@ -312,7 +313,7 @@ function generatesessionid(data, callback) {
 		}
 		salt = salt.toString('hex');
 		//generate session ID
-		crypto.randomBytes(64, function(err, sessionid) {
+		crypto.randomBytes(saltsize, function(err, sessionid) {
 			if (err) {
 				console.log(err);
 				console.log("Session ID generation error");
@@ -321,7 +322,7 @@ function generatesessionid(data, callback) {
 			}
 			sessionid = sessionid.toString('hex');
 			//hash session ID using salt then store salt and session token in data
-			crypto.pbkdf2(sessionid, salt, iterationlen, 64, function(err, hash) {
+			crypto.pbkdf2(sessionid, salt, iterationlen, bitsize, function(err, hash) {
 				if (err) {
   					console.log(err);
 					console.log("Session ID hashing error");
@@ -692,7 +693,7 @@ function verify_tokens(cookie, csrf_tokens, callback) {
 	}
 	users.findOne({user:cookie.email}, function (err,userdata) {
 		console.log(cookie.sessionid);
-		crypto.pbkdf2(cookie.sessionid, userdata.sessionSalt, iterationlen, 64, function(err, hash) {
+		crypto.pbkdf2(cookie.sessionid, userdata.sessionSalt, iterationlen, bitsize, function(err, hash) {
 			if (err) {
 				console.log(err);
 				console.log("Session ID hash error");

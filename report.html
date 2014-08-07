@@ -278,10 +278,12 @@ For every graph below, the x axis is the percentage of requests (note the non-li
 <h2>Security Measures</h2>
 <h3>CRSF tagging</h3>
 <p>Our site was previously vulnerable to cross-site request forgeries, where users could be tricked into making changes to their stores that they did not intend. To prevent this, we have given the users a unique CSRF token every time they visit the store edit page, and disregarded any requests that do not reply with the same token.</p>
+<h3>Hashing algorithm</h3>
+<p>The preferred method of hashing would've been to use bcrypt, since it is not as susceptible to hardware-assisted offline brute-force attack using GPUs and similar devices compared to other hashing algorithms. However, the node module of bcrypt required admin access due to its dependencies, meaning that it cannot be installed on cdf computers. Instead, pbkdf2 was deemed slow enough for the purposes of this assignment.</p>
 <h3>Session ID</h3>
-<p>FILL THIS IN IF YOU KNOW WHAT WAS DONE ABOUT THIS</p>
-<h3>Password Hasing in DB</h3>
-<p>FILL THIS IN IF YOU KNOW WHAT WAS DONE ABOUT THIS</p>
+<p>The session ID is generated serverside upon login using nodejs crypto's randomByte function to generate 64 random bytes as hex. It is hashed using pbkdf2 with a random 64-byte salt using 10000 iterations and key stretched to 256 bytes. The hash is then stored in the server database along with the salt. Meanwhile the client receives the session ID (not the hash) as a cookie. This is to prevent session hijacking should the user database ever be compromised, though it doesn't remove the risk of session hijacking if the user's cookie is compromised.</p>
+<h3>Password Hashing in DB</h3>
+<p>The password is hashed and stored in the same way as session ID.</p>
 <h3>User Input Validation</h3>
 <p>In the assignment 2 version of our product, it was possible for users to insert arbitrary HTML into their store pages. Obviously, this was a major security issue, so the input has been filtered to contain plain text only.</p>
 <h2>Limitations</h2>
