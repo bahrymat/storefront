@@ -75,6 +75,7 @@
 <li>Fixed server/database interaction</li>
 <li>Sanitized user input</li>
 <li>Crash prevention</li>
+<li>CSRF token for store creation page</li>
 <li>Edited report.html</li>
 <!-- /Stuff Matthew did -->
 </ul></li>
@@ -252,13 +253,13 @@ For every graph below, the x axis is the percentage of requests (note the non-li
 -->
 <h2>Security Measures</h2>
 <h3>CRSF tagging</h3>
-<!-- FILL THIS IN IF YOU KNOW WHAT WAS DONE ABOUT THIS -->
+<p>Our site was previously vulnerable to cross-site request forgeries, where users could be tricked into making changes to their stores that they did not intend. To prevent this, we have given the users a unique CSRF token every time they visit the store edit page, and disregarded any requests that do not reply with the same token.</p>
 <h3>Session ID</h3>
-<!-- FILL THIS IN IF YOU KNOW WHAT WAS DONE ABOUT THIS -->
+<p>FILL THIS IN IF YOU KNOW WHAT WAS DONE ABOUT THIS</p>
 <h3>Password Hasing in DB</h3>
-<!-- FILL THIS IN IF YOU KNOW WHAT WAS DONE ABOUT THIS -->
+<p>FILL THIS IN IF YOU KNOW WHAT WAS DONE ABOUT THIS</p>
 <h3>User Input Validation</h3>
-<!-- FILL THIS IN IF YOU KNOW WHAT WAS DONE ABOUT THIS -->
+<p>In the assignment 2 version of our product, it was possible for users to insert arbitrary HTML into their store pages. Obviously, this was a major security issue, so the input has been filtered to contain plain text only.</p>
 <h2>Limitations</h2>
 <!-- FILL THIS IN IF YOU Have anything to say -->
 <p>One of the major limitations of the project is that it is being run from the CDF servers. As such, our project server is subject to varying levels of performance. This makes load testing espetially difficult, since one cannot guaruntee uniform load on the cdf servers so the results of the load testing done may mnot be entirely accurate. Additionally, CDF limits the number of processes available to an individual user, giving a hard cap on the amount of concurrency testable (and is empirically around 1000 concurrent requests).</p>
