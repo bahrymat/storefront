@@ -330,7 +330,7 @@ function generatesessionid(data, callback) {
 				}
 				hash = hash.toString('hex');
 				data.sessionSalt = salt;
-				data.sessionToken = sessionid;
+				data.sessionToken = hash;
 				data.save(function(err) {
 					if (err) {
   					console.log(err);
@@ -339,7 +339,7 @@ function generatesessionid(data, callback) {
 					return;
 				    }
 				});
-				callback(false, hash);
+				callback(false, sessionid);
 				return;
 			});
 		});
@@ -682,12 +682,43 @@ function generate_csrf_token() {
 	return crypto.createHash('md5').update(random).digest('hex');
 }
 
+
+function verify_tokens(cookie, csrf_tokens, callback) {
+	var users = mongoose.model('users', userSchema);
+	if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
+		callback(true, "(what's a user friendly message to give when the csrf token is wrong?)");
+		console.log("invalid csrf token from " + cookie.email);
+		return;
+	}
+	users.findOne({user:cookie.email}, function (err,userdata) {
+		console.log(cookie.sessionid);
+		crypto.pbkdf2(cookie.sessionid, userdata.sessionSalt, iterationlen, 64, function(err, hash) {
+			if (err) {
+				console.log(err);
+				console.log("Session ID hash error");
+				callback(true, "We're having some issues, try again later.");
+				return;
+			}
+			hash = hash.toString('hex');
+			if (hash != userdata.sessionToken) {
+				callback(true, "(what's a user friendly message to give when the session hash is wrong?)");
+				console.log("you done goofed");
+				console.log(hash);
+				console.log(userdata.sessionToken);
+			} else {
+				callback(false, "");
+			}
+		});
+	});
+}
+
+
+
 csrf_tokens = {};
 
 http.createServer(function (req, res) {
 
 	var url = req.url;
-	var users = mongoose.model('users', userSchema);
 	var cookie = cookie2object(req.headers.cookie ? req.headers.cookie : "");
 	
 	
@@ -695,11 +726,13 @@ http.createServer(function (req, res) {
 	if (req.method == "POST") {
 	
 		if (url == "/addimage") { // special case - we need to use the request object to save the image.
-			if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
-				res.end("(what's a user friendly message to give when the csrf token is wrong?)");
-				console.log("invalid csrf token from " + cookie.email);
-				return;
-			}
+			verify_tokens(cookie, csrf_tokens, function callback(error, err_msg) {
+				if (error) {
+					res.writeHead(200);
+					res.end(err_msg);
+					return;
+				}
+			});
 			upload_image(req, res);
 			return;
 		}
@@ -730,373 +763,379 @@ http.createServer(function (req, res) {
 					if (err) {
 						sendPageWithSubstitutions(res, "error.html", err_message);
 					} else {
-						sendPageWithSubstitutions(res, "login.html", util.format('document.cookie="email=%s";\ndocument.cookie="session_hash=%s";', urlParams.email, sessionid));
+						console.log('set hash in cookie to '+sessionid);
+						sendPageWithSubstitutions(res, "login.html", util.format('document.cookie="email=%s";\ndocument.cookie="sessionid=%s";', urlParams.email, sessionid));
 					}
 				});
 
 			} else if (url == "/changesettings") {
-				if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
-					res.end("(what's a user friendly message to give when the csrf token is wrong?)");
-					console.log("invalid csrf token from " + cookie.email);
-					return;
-				}
-				users.findOne({user:cookie.email}, function (err,userdata) {
-				if (cookie.session_hash != userdata.sessionToken){
-					console.log("you done goofed");
-					}
-				});
-				data = sanitize(data);
-				console.log("received store settings edit request"); 
-				res.writeHead(200);
-				var pdata =JSON.parse(data);
-				console.log('Updating ' + pdata.user + ' settings');
-				var settings = mongoose.model(hash_email((pdata.user).trim()) + 'settings', settingsSchema);
-				var sdata = pdata.settings;
-				var new_settings = new settings (
-					{page: {
-						pageURL: sdata.page.pageURL,
-						pageTitle: sdata.page.pageTitle,
-						pageCurrency: sdata.page.pageCurrency,
-						pageDisplayOnline: sdata.page.pageDisplayOnline,
-						pageHomepageListing: sdata.page.pageHomepageListing
-					},
-					style: {
-						bgcolour: sdata.style.bgcolour,
-						fontcolour: sdata.style.fontcolour,
-						fontface: sdata.style.fontface,
-						navbarcolor: sdata.style.navbarcolor,
-						navbarhighlight: sdata.style.navbarhighlight,
-						navbartextcolor: sdata.style.navbartextcolor,
-						footercolor: sdata.style.footercolor,
-						footertext: sdata.style.footertext
-					},
-					navbar: {
-						navbarLogo: sdata.navbar.navbarLogo
-					},
-					contact: {
-						stAdd: sdata.contact.stAdd,
-						city: sdata.contact.city,
-						province: sdata.contact.province,
-						country: sdata.contact.country,
-						phone: sdata.contact.phone,
-						emailAdd: sdata.contact.emailAdd
-					},
-					hours: {
-						sunstart: sdata.hours.sunstart,
-						sunend: sdata.hours.sunend,
-						monstart: sdata.hours.monstart,
-						monend: sdata.hours.monend,
-						tuestart: sdata.hours.tuestart,
-						tueend: sdata.hours.tueend,
-						wedstart: sdata.hours.wedstart,
-						wedend: sdata.hours.wedend,
-						thustart: sdata.hours.thustart,
-						thuend: sdata.hours.thuend,
-						frstart: sdata.hours.frstart,
-						frend: sdata.hours.frend,
-						satstart: sdata.hours.satstart,
-						satend: sdata.hours.satend
-					},
-					hasBeenGenerated: true
-
-				});
-				settings.findOne({}, function (err,q) {
-					var old = null;
-					if (err) {
-						console.log(err + ' here');
-						
+				verify_tokens(cookie, csrf_tokens, function callback(error, err_msg) {
+					if (error) {
+						res.writeHead(200);
+						res.end(err_msg);
 						return;
 					}
-					else if (q != null){
-					 	old = q._id;
-					}
-					new_settings.save(function (err) {  
+					data = sanitize(data);
+					console.log("received store settings edit request"); 
+					res.writeHead(200);
+					var pdata =JSON.parse(data);
+					console.log('Updating ' + pdata.user + ' settings');
+					var settings = mongoose.model(hash_email((pdata.user).trim()) + 'settings', settingsSchema);
+					var sdata = pdata.settings;
+					var new_settings = new settings (
+						{page: {
+							pageURL: sdata.page.pageURL,
+							pageTitle: sdata.page.pageTitle,
+							pageCurrency: sdata.page.pageCurrency,
+							pageDisplayOnline: sdata.page.pageDisplayOnline,
+							pageHomepageListing: sdata.page.pageHomepageListing
+						},
+						style: {
+							bgcolour: sdata.style.bgcolour,
+							fontcolour: sdata.style.fontcolour,
+							fontface: sdata.style.fontface,
+							navbarcolor: sdata.style.navbarcolor,
+							navbarhighlight: sdata.style.navbarhighlight,
+							navbartextcolor: sdata.style.navbartextcolor,
+							footercolor: sdata.style.footercolor,
+							footertext: sdata.style.footertext
+						},
+						navbar: {
+							navbarLogo: sdata.navbar.navbarLogo
+						},
+						contact: {
+							stAdd: sdata.contact.stAdd,
+							city: sdata.contact.city,
+							province: sdata.contact.province,
+							country: sdata.contact.country,
+							phone: sdata.contact.phone,
+							emailAdd: sdata.contact.emailAdd
+						},
+						hours: {
+							sunstart: sdata.hours.sunstart,
+							sunend: sdata.hours.sunend,
+							monstart: sdata.hours.monstart,
+							monend: sdata.hours.monend,
+							tuestart: sdata.hours.tuestart,
+							tueend: sdata.hours.tueend,
+							wedstart: sdata.hours.wedstart,
+							wedend: sdata.hours.wedend,
+							thustart: sdata.hours.thustart,
+							thuend: sdata.hours.thuend,
+							frstart: sdata.hours.frstart,
+							frend: sdata.hours.frend,
+							satstart: sdata.hours.satstart,
+							satend: sdata.hours.satend
+						},
+						hasBeenGenerated: true
+
+					});
+					settings.findOne({}, function (err,q) {
+						var old = null;
 						if (err) {
-							console.log(err + ' or here');
+							console.log(err + ' here');
 							
 							return;
-						} else {
-							if (old != null){
-								settings.remove({_id: old}, function(err) {
-									if (err) {
-										console.log(err + ' maybe here');//this NO LONGER gets thrown for some reason
-										
-										return;
-									}
-									var new_url = sdata.page.pageURL;
-									var User = mongoose.model('users', userSchema);
-									var unescaped_email = pdata.user;
-									User.findOne({user: unescaped_email}, function (err, item) {
-										if (err || !item) {
-											console.log(err);
+						}
+						else if (q != null){
+							old = q._id;
+						}
+						new_settings.save(function (err) {  
+							if (err) {
+								console.log(err + ' or here');
+								
+								return;
+							} else {
+								if (old != null){
+									settings.remove({_id: old}, function(err) {
+										if (err) {
+											console.log(err + ' maybe here');//this NO LONGER gets thrown for some reason
 											
 											return;
 										}
-										item.url = sdata.page.pageURL;
-										item.examplesListing = sdata.page.pageHomepageListing;
-										item.save();
+										var new_url = sdata.page.pageURL;
+										var User = mongoose.model('users', userSchema);
+										var unescaped_email = pdata.user;
+										User.findOne({user: unescaped_email}, function (err, item) {
+											if (err || !item) {
+												console.log(err);
+												
+												return;
+											}
+											item.url = sdata.page.pageURL;
+											item.examplesListing = sdata.page.pageHomepageListing;
+											item.save();
+											
+											console.log("Products saved sucessfully");
+											generate_store(unescaped_email);
+										});
+									});}
+								
+							}
+						});
+					});
+									
+					res.end("Your settings changes have been saved!");
+				});
+			} else if (url == "/changeproducts") {
+				verify_tokens(cookie, csrf_tokens, function callback(error, err_msg) {
+					if (error) {
+						res.writeHead(200);
+						res.end(err_msg);
+						return;
+					}
+					data = sanitize(data);
+					console.log("received store products edit request"); 
+					res.writeHead(200);
+					var pdata =JSON.parse(data);
+					console.log('Updating ' + pdata.user + ' products');
+					var pdata = JSON.parse(data);
+					var products = mongoose.model(hash_email((pdata.user).trim()) + 'p', productSchema);
+					var pList = mongoose.model(hash_email((pdata.user).trim()) + 'products', productList);
+					var prodata = pdata.products;
+					var new_products = new pList;
+					for(var i = 0; i < prodata.length;i++){
+						var new_product = new products({
+							ptitle : prodata[i].ptitle,
+							psdescription : prodata[i].psdescription,
+							pldescription : prodata[i].pldescription,
+							pprice : prodata[i].pprice,
+							pimage : prodata[i].pimage,
+							ptags : prodata[i].ptags
+						});
+						new_products.products.addToSet(new_product);
+					}
+					pList.findOne({}, function (err,q) {
+						var old = null;
+						if (err) {
+							console.log(err + ' here');
+							
+							return;
+						}
+						else if (q != null){
+							old = q._id;
+						}
+						new_products.save(function (err) {  
+							if (err) {
+								console.log(err + ' or here');
+								
+								return;
+							} else {
+								if (old != null){
+									pList.remove({_id: old}, function(err) {
+										if (err) {
+											console.log(err + ' maybe here');//this NO LONGER gets thrown for some reason
+											
+											return;
+
+										}
 										
 										console.log("Products saved sucessfully");
-										generate_store(unescaped_email);
-									});
-								});}
-							
-						}
-					});
-				});
-								
-				res.end("Your settings changes have been saved!");
-			} else if (url == "/changeproducts") {
-				if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
-					res.end("(what's a user friendly message to give when the csrf token is wrong?)");
-					console.log("invalid csrf token from " + cookie.email);
-					return;
-				}
-				data = sanitize(data);
-				console.log("received store products edit request"); 
-				res.writeHead(200);
-				var pdata =JSON.parse(data);
-				console.log('Updating ' + pdata.user + ' products');
-				var pdata = JSON.parse(data);
-				var products = mongoose.model(hash_email((pdata.user).trim()) + 'p', productSchema);
-				var pList = mongoose.model(hash_email((pdata.user).trim()) + 'products', productList);
-				var prodata = pdata.products;
-				var new_products = new pList;
-				for(var i = 0; i < prodata.length;i++){
-					var new_product = new products({
-						ptitle : prodata[i].ptitle,
-						psdescription : prodata[i].psdescription,
-						pldescription : prodata[i].pldescription,
-						pprice : prodata[i].pprice,
-						pimage : prodata[i].pimage,
-						ptags : prodata[i].ptags
-					});
-					new_products.products.addToSet(new_product);
-				}
-				pList.findOne({}, function (err,q) {
-					var old = null;
-					if (err) {
-						console.log(err + ' here');
-						
-						return;
-					}
-					else if (q != null){
-					 	old = q._id;
-					}
-					new_products.save(function (err) {  
-						if (err) {
-							console.log(err + ' or here');
-							
-							return;
-						} else {
-							if (old != null){
-								pList.remove({_id: old}, function(err) {
-									if (err) {
-										console.log(err + ' maybe here');//this NO LONGER gets thrown for some reason
-										
-										return;
-
-									}
-									
-									console.log("Products saved sucessfully");
-									generate_store(pdata.user);
-								});}
-						}
-					});
-				});
-				
-				res.end("Your product changes have been saved!");
-			} else if (url == "/changefrontpage") {
-				if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
-					res.end("(what's a user friendly message to give when the csrf token is wrong?)");
-					console.log("invalid csrf token from " + cookie.email);
-					return;
-				}
-				data = sanitize(data);
-				console.log("received store front edit request"); 
-				res.writeHead(200);
-				var pdata = JSON.parse(data);
-				console.log('Updating ' + pdata.user + ' frontpage');
-				var edata = JSON.parse(data);
-				var elements = mongoose.model('elements', eleSchema);
-				var eList = mongoose.model(hash_email((pdata.user).trim()) + 'frontpage', eleList);
-				var eledata = pdata.frontPageElements;
-				var new_elements = new eList;
-				for(var i = 0; i < eledata.length;i++){
-					var new_ele = new elements({
-						type : eledata[i].type,
-						pos : eledata[i].pos
-					});
-					if (new_ele.type == 'ImageBlock'){
-					new_ele.fields = [
-					  {ititle: eledata[i].ititle}, 
-					  {idescription: eledata[i].idescription},
-					  {iimage:eledata[i].iimage}];
-					} else if (new_ele.type == 'TextBlock'){
-					new_ele.fields = [
-					  {ttitle: eledata[i].ttitle}, 
-					  {tdescription: eledata[i].tdescription}];
-					} else if (new_ele.type == 'Carousel'){
-					new_ele.fields = [
-					  {cimage1: eledata[i].cimage1},
-					  {cimage2: eledata[i].cimage2},
-					  {cimage3: eledata[i].cimage3}];
-					} else if (new_ele.type == 'StartShoppingButton'){
-					//incase we change contents
-					new_ele.fields = [];
-					} else {
-					//This should never be reached
-					console.log('something bad happened saving the front page');
-					}
-					new_elements.elements.addToSet(new_ele);
-				}
-				eList.findOne({}, function (err,q) {
-					var old = null;
-					if (err) {
-						console.log(err + ' here');
-						
-						return;
-					}
-					else if (q != null){
-					 	old = q._id;
-					}
-					new_elements.save(function (err) {  
-						if (err) {
-							console.log(err + ' or here');
-							
-							return;
-						} else {
-							if (old != null){
-								eList.remove({_id: old}, function(err) {
-									if (err) {
-										console.log(err + ' maybe here');//this NO LONGER gets thrown for some reason
-										
-										return;
-									}
-									
-									console.log("frontpage saved sucessfully");
-									generate_store(pdata.user);
-								});}
-						}
+										generate_store(pdata.user);
+									});}
+							}
+						});
 					});
 					
+					res.end("Your product changes have been saved!");
 				});
+			} else if (url == "/changefrontpage") {
+				verify_tokens(cookie, csrf_tokens, function callback(error, err_msg) {
+					if (error) {
+						res.writeHead(200);
+						res.end(err_msg);
+						return;
+					}
+					data = sanitize(data);
+					console.log("received store front edit request"); 
+					res.writeHead(200);
+					var pdata = JSON.parse(data);
+					console.log('Updating ' + pdata.user + ' frontpage');
+					var edata = JSON.parse(data);
+					var elements = mongoose.model('elements', eleSchema);
+					var eList = mongoose.model(hash_email((pdata.user).trim()) + 'frontpage', eleList);
+					var eledata = pdata.frontPageElements;
+					var new_elements = new eList;
+					for(var i = 0; i < eledata.length;i++){
+						var new_ele = new elements({
+							type : eledata[i].type,
+							pos : eledata[i].pos
+						});
+						if (new_ele.type == 'ImageBlock'){
+						new_ele.fields = [
+						  {ititle: eledata[i].ititle}, 
+						  {idescription: eledata[i].idescription},
+						  {iimage:eledata[i].iimage}];
+						} else if (new_ele.type == 'TextBlock'){
+						new_ele.fields = [
+						  {ttitle: eledata[i].ttitle}, 
+						  {tdescription: eledata[i].tdescription}];
+						} else if (new_ele.type == 'Carousel'){
+						new_ele.fields = [
+						  {cimage1: eledata[i].cimage1},
+						  {cimage2: eledata[i].cimage2},
+						  {cimage3: eledata[i].cimage3}];
+						} else if (new_ele.type == 'StartShoppingButton'){
+						//incase we change contents
+						new_ele.fields = [];
+						} else {
+						//This should never be reached
+						console.log('something bad happened saving the front page');
+						}
+						new_elements.elements.addToSet(new_ele);
+					}
+					eList.findOne({}, function (err,q) {
+						var old = null;
+						if (err) {
+							console.log(err + ' here');
+							
+							return;
+						}
+						else if (q != null){
+							old = q._id;
+						}
+						new_elements.save(function (err) {  
+							if (err) {
+								console.log(err + ' or here');
+								
+								return;
+							} else {
+								if (old != null){
+									eList.remove({_id: old}, function(err) {
+										if (err) {
+											console.log(err + ' maybe here');//this NO LONGER gets thrown for some reason
+											
+											return;
+										}
+										
+										console.log("frontpage saved sucessfully");
+										generate_store(pdata.user);
+									});}
+							}
+						});
+						
+					});
 
-				res.end("Your Home Page changes have been saved!");
+					res.end("Your Home Page changes have been saved!");
+				});
 
 			} else if (url == "/changeproductpage") {
-				if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
-					res.end("(what's a user friendly message to give when the csrf token is wrong?)");
-					console.log("invalid csrf token from " + cookie.email);
-					return;
-				}
-				data = sanitize(data);
-				console.log("received store front edit request"); 
-				res.writeHead(200);
-				var pdata = JSON.parse(data);
-				console.log('Updating ' + pdata.user + ' product page');
-				var edata = JSON.parse(data);
-				var elements = mongoose.model('elements', eleSchema);
-				var eList = mongoose.model(hash_email((pdata.user).trim()) + 'productpage', eleList);
-				var eledata = pdata.productsPageElements;
-				var new_elements = new eList;
-				for(var i = 0; i < eledata.length;i++){
-					var new_ele = new elements({
-						type : eledata[i].type,
-						pos : eledata[i].pos
-					});
-					if (new_ele.type == 'ImageBlock'){
-					  new_ele.fields = [
-					    {ititle: eledata[i].ititle}, 
-					    {idescription: eledata[i].idescription},
-					    {iimage:eledata[i].iimage}];
-					} else if (new_ele.type == 'TextBlock'){
-					  new_ele.fields = [
-					    {ttitle: eledata[i].ttitle}, 
-					    {tdescription: eledata[i].tdescription}];
-					} else if (new_ele.type == 'Carousel'){
-					  new_ele.fields = [
-					    {cimage1: eledata[i].cimage1},
-					    {cimage2: eledata[i].cimage2},
-					    {cimage3: eledata[i].cimage3}];
-					} else if (new_ele.type == 'StartShoppingButton'){
-					//incase we change contents
-					  new_ele.fields = [];
-					} else {
-					//This should never be reached
-					  console.log('something bad happened saving the front page');
-					}
-					new_elements.elements.addToSet(new_ele);
-				}
-				eList.findOne({}, function (err,q) {
-					var old = null;
-					if (err) {
-						console.log(err + ' here');
-						
+				verify_tokens(cookie, csrf_tokens, function callback(error, err_msg) {
+					if (error) {
+						res.writeHead(200);
+						res.end(err_msg);
 						return;
 					}
-					else if (q != null){
-					 	old = q._id;
+					data = sanitize(data);
+					console.log("received store front edit request"); 
+					res.writeHead(200);
+					var pdata = JSON.parse(data);
+					console.log('Updating ' + pdata.user + ' product page');
+					var edata = JSON.parse(data);
+					var elements = mongoose.model('elements', eleSchema);
+					var eList = mongoose.model(hash_email((pdata.user).trim()) + 'productpage', eleList);
+					var eledata = pdata.productsPageElements;
+					var new_elements = new eList;
+					for(var i = 0; i < eledata.length;i++){
+						var new_ele = new elements({
+							type : eledata[i].type,
+							pos : eledata[i].pos
+						});
+						if (new_ele.type == 'ImageBlock'){
+						  new_ele.fields = [
+							{ititle: eledata[i].ititle}, 
+							{idescription: eledata[i].idescription},
+							{iimage:eledata[i].iimage}];
+						} else if (new_ele.type == 'TextBlock'){
+						  new_ele.fields = [
+							{ttitle: eledata[i].ttitle}, 
+							{tdescription: eledata[i].tdescription}];
+						} else if (new_ele.type == 'Carousel'){
+						  new_ele.fields = [
+							{cimage1: eledata[i].cimage1},
+							{cimage2: eledata[i].cimage2},
+							{cimage3: eledata[i].cimage3}];
+						} else if (new_ele.type == 'StartShoppingButton'){
+						//incase we change contents
+						  new_ele.fields = [];
+						} else {
+						//This should never be reached
+						  console.log('something bad happened saving the front page');
+						}
+						new_elements.elements.addToSet(new_ele);
 					}
-					new_elements.save(function (err) {  
+					eList.findOne({}, function (err,q) {
+						var old = null;
 						if (err) {
-							console.log(err + ' or here');
+							console.log(err + ' here');
 							
 							return;
-						} else {
-							if (old != null){
-								eList.remove({_id: old}, function(err) {
-									if (err) {
-										console.log(err + ' maybe here'); //this NO LONGER gets thrown for some reason
-										
-										return;
-									}
-									
-									console.log("Product page saved sucessfully");
-									generate_store(pdata.user);
-								});}
 						}
+						else if (q != null){
+							old = q._id;
+						}
+						new_elements.save(function (err) {  
+							if (err) {
+								console.log(err + ' or here');
+								
+								return;
+							} else {
+								if (old != null){
+									eList.remove({_id: old}, function(err) {
+										if (err) {
+											console.log(err + ' maybe here'); //this NO LONGER gets thrown for some reason
+											
+											return;
+										}
+										
+										console.log("Product page saved sucessfully");
+										generate_store(pdata.user);
+									});}
+							}
+						});
 					});
+
+					res.end("Your Product Page changes have been saved!");
 				});
 
-				res.end("Your Product Page changes have been saved!");
-
 			} else if (url.substring(0,12) == "/deleteimage") {
-				if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
-					res.end("(what's a user friendly message to give when the csrf token is wrong?)");
-					console.log("invalid csrf token from " + cookie.email);
-					return;
-				}
-			
-				var path = url.split("/");
-				if (path.length != 4) {
-					return;
-				}
-				var user = path[2];
-				var filename = querystring.unescape(path[3]);
-				console.log(user);
-				console.log(filename);
-			
-				fs.unlink(__dirname + "/users/" + hash_email(user) + "/images/" + filename, function (err) {
-					if (err) {
-						console.log(err);
+				verify_tokens(cookie, csrf_tokens, function callback(error, err_msg) {
+					if (error) {
+						res.writeHead(200);
+						res.end(err_msg);
+						return;
 					}
-					
-					var db_name = hash_email(user) + "images";
-					var Image = mongoose.model(db_name, imageSchema);
-					Image.findOne({iimage: filename}).remove(function(err) {
+			
+					var path = url.split("/");
+					if (path.length != 4) {
+						return;
+					}
+					var user = path[2];
+					var filename = querystring.unescape(path[3]);
+					console.log(user);
+					console.log(filename);
+				
+					fs.unlink(__dirname + "/users/" + hash_email(user) + "/images/" + filename, function (err) {
 						if (err) {
 							console.log(err);
-							four_oh_four(res);
-							
-							return;
 						}
-						console.log(user + "'s " + filename + " deleted");
-						res.writeHead(200);
-						res.end();
+						
+						var db_name = hash_email(user) + "images";
+						var Image = mongoose.model(db_name, imageSchema);
+						Image.findOne({iimage: filename}).remove(function(err) {
+							if (err) {
+								console.log(err);
+								four_oh_four(res);
+								
+								return;
+							}
+							console.log(user + "'s " + filename + " deleted");
+							res.writeHead(200);
+							res.end();
+							
+						});
 						
 					});
-					
 				});
 				
 			} else {
