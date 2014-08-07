@@ -210,20 +210,21 @@
 <h3> Scalability and Security</h3>
 <ul>
 <li>Plug any database/html injection and other such vulnerabilities<ul><li>owner:Matthew, status: completed</li></ul></li>
-<li>Make sure account creation/logins are secure<ul><li>owner:???, status: ???</li></ul></li>
+<li>Make sure account creation/logins are secure<ul><li>owner: Matthew and Yuwei, status: completed</li></ul></li>
 <li>Hash user passwords in the database <ul><li>owner:Yuwei, status: completed</li></ul></li>
 <li>Make sure server code is scalable<ul><li>owner:Matthew and Jason, status: completed</li></ul></li>
 <li>Load test<ul><li>owner:Jason, status: completed</li></ul></li>
-<li>Securely ensure a user is logged in for the edit page (csrf, sessions)<ul><li>owner:Yuwei and Keegan, status: completed</li></ul></li>
+<li>Securely ensure a user is logged in for the edit page (csrf, sessions)<ul><li>owner:Yuwei and <strike>Keegan</strike> Matthew, status: completed</li></ul></li>
 </ul>
 </div>
-<h2>Load/Stress Test</h2>
-To perform the stress test the ab program was used to simulate requests to various points around the site at differing levels of concurrency. Specifically, for each test a total of 3000 requests were made at 5, 50, 200, 500, or 1000 concurrent requests. The results of these tests are shown below.
-
+<h2>Load/Stress Test</h2><p>
+To perform the stress test the ab program was used to simulate requests to various points around the site at differing levels of concurrency. Specifically, for each test a total of 3000 requests were made at 5, 50, 200, 500, or 1000 concurrent requests. The results of these tests are shown below.</p>
+<p>
 In the original code (as submitted for A2) a connection was made to the database as needed. Evidently, this logic does not scale well, essentially reducing the server to a handful of concurrent requests at a time.
-<br>
-Once the instability of the multiple connection method was found, we decided to aabndone it in favor of a single connection that persists throughout the entire function of the server. The daa shows this to be a much more effective method for the server
-<br>
+</p>
+<p>
+Once the instability of the multiple connection method was found, we decided to abandon it in favor of a single connection that persists throughout the entire function of the server. The data shows this to be a much more effective method for the server
+</p>
 
 
 <p>
@@ -236,39 +237,41 @@ For every graph below, the x axis is the percentage of requests (note the non-li
 <font color='#0f0'>200 concurrent requests</font><br>
 <font color='#f00'>50 concurrent requests</font><br>
 <font color='#999'>5 concurrent requests</font>
-</p> <!-- chart.js is really laggy, commenting out for testing the rest of the page
-<h3>Front Page</h3>
+</p> 
+<table><h3>Front Page</h3>
+<tr><td>
 <h4>Pre</h4>
-<canvas id="fppre" width="600" height="400"></canvas>
-<h4>Post</h4>
-<canvas id="fppost" width="600" height="400"></canvas>
-<h3>About us</h3>
+<canvas id="fppre" width="300" height="200"></canvas></td>
+<td><h4>Post</h4>
+<canvas id="fppost" width="300" height="200"></canvas></td></tr></table>
+<table><h3>About us</h3><tr><td>
 <h4>Pre</h4>
-<canvas id="abpre" width="600" height="400"></canvas>
-<h4>Post</h4>
-<canvas id="abpost" width="600" height="400"></canvas>
+<canvas id="abpre" width="300" height="200"></canvas></td>
+<td><h4>Post</h4>
+<canvas id="abpost" width="300" height="200"></canvas></td></tr></table>
 <h3>Example Stores</h3>
-<h4>Pre</h4><h4>Post</h4>
+<h4>Pre</h4>Test did not finish<h4>Post</h4>
 <canvas id="expost" width="600" height="400"></canvas>
 <h3>Store Contact page</h3>
-<h4>Pre</h4><h4>Post</h4>
+<h4>Pre</h4>Test did not finish<h4>Post</h4>
 <canvas id="conpost" width="600" height="400"></canvas>
-<h3>Search, return multiple results</h3>
-<h4>Pre</h4><h4>Post</h4>
-<canvas id="mspost" width="600" height="400"></canvas>
+
 <h3>Store front page</h3>
-<h4>Pre</h4><h4>Post</h4>
+<h4>Pre</h4>Test did not finish<h4>Post</h4>
 <canvas id="sfppost" width="600" height="400"></canvas>
 <h3>Store Product page</h3>
-<h4>Pre</h4><h4>Post</h4>
+<h4>Pre</h4>Test did not finish<h4>Post</h4>
 <canvas id="spppost" width="600" height="400"></canvas>
 <h3>Individual Product page (detailed view)</h3>
-<h4>Pre</h4><h4>Post</h4>
+<h4>Pre</h4>Test did not finish<h4>Post</h4>
 <canvas id="scppost" width="600" height="400"></canvas>
 <h3>Search page, single result</h3>
-<h4>Pre</h4><h4>Post</h4>
+<h4>Pre</h4>Test did not finish<h4>Post</h4>
 <canvas id="ssppost" width="600" height="400"></canvas>
--->
+<h3>Search, return multiple results</h3>
+<h4>Pre</h4>Test did not finish<h4>Post</h4>
+<canvas id="mspost" width="600" height="400"></canvas>
+
 <h2>Security Measures</h2>
 <h3>CRSF tagging</h3>
 <p>Our site was previously vulnerable to cross-site request forgeries, where users could be tricked into making changes to their stores that they did not intend. To prevent this, we have given the users a unique CSRF token every time they visit the store edit page, and disregarded any requests that do not reply with the same token.</p>
