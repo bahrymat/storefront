@@ -682,12 +682,33 @@ function generate_csrf_token() {
 	return crypto.createHash('md5').update(random).digest('hex');
 }
 
+
+function verify_tokens(cookie, csrf_tokens, callback) {
+	var users = mongoose.model('users', userSchema);
+	if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
+		callback(true, "(what's a user friendly message to give when the csrf token is wrong?)");
+		console.log("invalid csrf token from " + cookie.email);
+		return;
+	}
+	users.findOne({user:cookie.email}, function (err,userdata) {
+		if (cookie.session_hash != userdata.sessionToken) {
+			callback(true, "(what's a user friendly message to give when the session hash is wrong?)");
+			console.log("you done goofed");
+			console.log(cookie.session_hash);
+			console.log(userdata.sessionToken);
+		} else {
+			callback(false, "");
+		}
+	});
+}
+
+
+
 csrf_tokens = {};
 
 http.createServer(function (req, res) {
 
 	var url = req.url;
-	var users = mongoose.model('users', userSchema);
 	var cookie = cookie2object(req.headers.cookie ? req.headers.cookie : "");
 	
 	
@@ -730,122 +751,120 @@ http.createServer(function (req, res) {
 					if (err) {
 						sendPageWithSubstitutions(res, "error.html", err_message);
 					} else {
+						console.log('set hash in cookie to '+sessionid);
 						sendPageWithSubstitutions(res, "login.html", util.format('document.cookie="email=%s";\ndocument.cookie="session_hash=%s";', urlParams.email, sessionid));
 					}
 				});
 
 			} else if (url == "/changesettings") {
-				if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
-					res.end("(what's a user friendly message to give when the csrf token is wrong?)");
-					console.log("invalid csrf token from " + cookie.email);
-					return;
-				}
-				users.findOne({user:cookie.email}, function (err,userdata) {
-				if (cookie.session_hash != userdata.sessionToken){
-					console.log("you done goofed");
-					}
-				});
-				data = sanitize(data);
-				console.log("received store settings edit request"); 
-				res.writeHead(200);
-				var pdata =JSON.parse(data);
-				console.log('Updating ' + pdata.user + ' settings');
-				var settings = mongoose.model(hash_email((pdata.user).trim()) + 'settings', settingsSchema);
-				var sdata = pdata.settings;
-				var new_settings = new settings (
-					{page: {
-						pageURL: sdata.page.pageURL,
-						pageTitle: sdata.page.pageTitle,
-						pageCurrency: sdata.page.pageCurrency,
-						pageDisplayOnline: sdata.page.pageDisplayOnline,
-						pageHomepageListing: sdata.page.pageHomepageListing
-					},
-					style: {
-						bgcolour: sdata.style.bgcolour,
-						fontcolour: sdata.style.fontcolour,
-						fontface: sdata.style.fontface,
-						navbarcolor: sdata.style.navbarcolor,
-						navbarhighlight: sdata.style.navbarhighlight,
-						navbartextcolor: sdata.style.navbartextcolor,
-						footercolor: sdata.style.footercolor,
-						footertext: sdata.style.footertext
-					},
-					navbar: {
-						navbarLogo: sdata.navbar.navbarLogo
-					},
-					contact: {
-						stAdd: sdata.contact.stAdd,
-						city: sdata.contact.city,
-						province: sdata.contact.province,
-						country: sdata.contact.country,
-						phone: sdata.contact.phone,
-						emailAdd: sdata.contact.emailAdd
-					},
-					hours: {
-						sunstart: sdata.hours.sunstart,
-						sunend: sdata.hours.sunend,
-						monstart: sdata.hours.monstart,
-						monend: sdata.hours.monend,
-						tuestart: sdata.hours.tuestart,
-						tueend: sdata.hours.tueend,
-						wedstart: sdata.hours.wedstart,
-						wedend: sdata.hours.wedend,
-						thustart: sdata.hours.thustart,
-						thuend: sdata.hours.thuend,
-						frstart: sdata.hours.frstart,
-						frend: sdata.hours.frend,
-						satstart: sdata.hours.satstart,
-						satend: sdata.hours.satend
-					},
-					hasBeenGenerated: true
-
-				});
-				settings.findOne({}, function (err,q) {
-					var old = null;
-					if (err) {
-						console.log(err + ' here');
-						
+				verify_tokens(cookie, csrf_tokens, function callback(error, err_msg) {
+					if (error) {
+						res.writeHead(200);
+						res.end(err_msg);
 						return;
 					}
-					else if (q != null){
-					 	old = q._id;
-					}
-					new_settings.save(function (err) {  
+					data = sanitize(data);
+					console.log("received store settings edit request"); 
+					res.writeHead(200);
+					var pdata =JSON.parse(data);
+					console.log('Updating ' + pdata.user + ' settings');
+					var settings = mongoose.model(hash_email((pdata.user).trim()) + 'settings', settingsSchema);
+					var sdata = pdata.settings;
+					var new_settings = new settings (
+						{page: {
+							pageURL: sdata.page.pageURL,
+							pageTitle: sdata.page.pageTitle,
+							pageCurrency: sdata.page.pageCurrency,
+							pageDisplayOnline: sdata.page.pageDisplayOnline,
+							pageHomepageListing: sdata.page.pageHomepageListing
+						},
+						style: {
+							bgcolour: sdata.style.bgcolour,
+							fontcolour: sdata.style.fontcolour,
+							fontface: sdata.style.fontface,
+							navbarcolor: sdata.style.navbarcolor,
+							navbarhighlight: sdata.style.navbarhighlight,
+							navbartextcolor: sdata.style.navbartextcolor,
+							footercolor: sdata.style.footercolor,
+							footertext: sdata.style.footertext
+						},
+						navbar: {
+							navbarLogo: sdata.navbar.navbarLogo
+						},
+						contact: {
+							stAdd: sdata.contact.stAdd,
+							city: sdata.contact.city,
+							province: sdata.contact.province,
+							country: sdata.contact.country,
+							phone: sdata.contact.phone,
+							emailAdd: sdata.contact.emailAdd
+						},
+						hours: {
+							sunstart: sdata.hours.sunstart,
+							sunend: sdata.hours.sunend,
+							monstart: sdata.hours.monstart,
+							monend: sdata.hours.monend,
+							tuestart: sdata.hours.tuestart,
+							tueend: sdata.hours.tueend,
+							wedstart: sdata.hours.wedstart,
+							wedend: sdata.hours.wedend,
+							thustart: sdata.hours.thustart,
+							thuend: sdata.hours.thuend,
+							frstart: sdata.hours.frstart,
+							frend: sdata.hours.frend,
+							satstart: sdata.hours.satstart,
+							satend: sdata.hours.satend
+						},
+						hasBeenGenerated: true
+
+					});
+					settings.findOne({}, function (err,q) {
+						var old = null;
 						if (err) {
-							console.log(err + ' or here');
+							console.log(err + ' here');
 							
 							return;
-						} else {
-							if (old != null){
-								settings.remove({_id: old}, function(err) {
-									if (err) {
-										console.log(err + ' maybe here');//this NO LONGER gets thrown for some reason
-										
-										return;
-									}
-									var new_url = sdata.page.pageURL;
-									var User = mongoose.model('users', userSchema);
-									var unescaped_email = pdata.user;
-									User.findOne({user: unescaped_email}, function (err, item) {
-										if (err || !item) {
-											console.log(err);
+						}
+						else if (q != null){
+							old = q._id;
+						}
+						new_settings.save(function (err) {  
+							if (err) {
+								console.log(err + ' or here');
+								
+								return;
+							} else {
+								if (old != null){
+									settings.remove({_id: old}, function(err) {
+										if (err) {
+											console.log(err + ' maybe here');//this NO LONGER gets thrown for some reason
 											
 											return;
 										}
-										item.url = sdata.page.pageURL;
-										item.examplesListing = sdata.page.pageHomepageListing;
-										item.save();
-										
-										console.log("Products saved sucessfully");
-										generate_store(unescaped_email);
-									});
-								});}
-							
-						}
-					});
-				});
+										var new_url = sdata.page.pageURL;
+										var User = mongoose.model('users', userSchema);
+										var unescaped_email = pdata.user;
+										User.findOne({user: unescaped_email}, function (err, item) {
+											if (err || !item) {
+												console.log(err);
+												
+												return;
+											}
+											item.url = sdata.page.pageURL;
+											item.examplesListing = sdata.page.pageHomepageListing;
+											item.save();
+											
+											console.log("Products saved sucessfully");
+											generate_store(unescaped_email);
+										});
+									});}
 								
-				res.end("Your settings changes have been saved!");
+							}
+						});
+					});
+									
+					res.end("Your settings changes have been saved!");
+				});
 			} else if (url == "/changeproducts") {
 				if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
 					res.end("(what's a user friendly message to give when the csrf token is wrong?)");
