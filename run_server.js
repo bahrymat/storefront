@@ -110,6 +110,7 @@ var settingsSchema = mongoose.Schema({
 //pbkdf2 iteration and size value
 var iterationlen = 10000;
 var bitsize = 256;
+var saltsize = 64;
 
 var redirected_urls = {"/": "/index.html", "/about": "/aboutus.html", "/edit": "/settings.html", "/logout": "/logout.html"}
 var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js", '/bootstrap.min.css',
@@ -316,7 +317,7 @@ function logout(user_email) {
 
 function generatesessionid(data, callback) {
 	//generate salt
-	crypto.randomBytes(64, function(err, salt) {
+	crypto.randomBytes(saltsize, function(err, salt) {
   		if (err) {
   			console.log(err);
 			console.log("Salt generation error");
@@ -325,7 +326,7 @@ function generatesessionid(data, callback) {
 		}
 		salt = salt.toString('hex');
 		//generate session ID
-		crypto.randomBytes(64, function(err, sessionid) {
+		crypto.randomBytes(saltsize, function(err, sessionid) {
 			if (err) {
 				console.log(err);
 				console.log("Session ID generation error");
@@ -334,7 +335,7 @@ function generatesessionid(data, callback) {
 			}
 			sessionid = sessionid.toString('hex');
 			//hash session ID using salt then store salt and session token in data
-			crypto.pbkdf2(sessionid, salt, iterationlen, 64, function(err, hash) {
+			crypto.pbkdf2(sessionid, salt, iterationlen, bitsize, function(err, hash) {
 				if (err) {
   					console.log(err);
 					console.log("Session ID hashing error");
@@ -705,7 +706,7 @@ function verify_tokens(cookie, csrf_tokens, callback) {
 	}
 	users.findOne({user:cookie.email}, function (err,userdata) {
 		console.log(cookie.sessionid);
-		crypto.pbkdf2(cookie.sessionid, userdata.sessionSalt, iterationlen, 64, function(err, hash) {
+		crypto.pbkdf2(cookie.sessionid, userdata.sessionSalt, iterationlen, bitsize, function(err, hash) {
 			if (err) {
 				console.log(err);
 				console.log("Session ID hash error");
@@ -776,8 +777,14 @@ http.createServer(function (req, res) {
 					if (err) {
 						sendPageWithSubstitutions(res, "error.html", err_message);
 					} else {
-						console.log('set hash in cookie to '+sessionid);
-						sendPageWithSubstitutions(res, "login.html", util.format('document.cookie="email=%s";\ndocument.cookie="sessionid=%s";', urlParams.email, sessionid));
+						/*
+						var d = new Date();
+					    d.setTime(d.getTime() + (24*60*60*1000));
+					    var expires = "expires="+d.toGMTString();*/
+					    var cookiestring = util.format('document.cookie="email=%s; %s";\ndocument.cookie="sessionid=%s; %s";', urlParams.email, sessionid);
+					    console.log(cookiestring);
+					    console.log('set hash in cookie to '+sessionid);
+						sendPageWithSubstitutions(res, "login.html", cookiestring);
 					}
 				});
 
