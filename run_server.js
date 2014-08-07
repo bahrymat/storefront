@@ -107,7 +107,7 @@ var settingsSchema = mongoose.Schema({
 });
 
 var redirected_urls = {"/": "/index.html", "/about": "/aboutus.html", "/edit": "/settings.html", "/logout": "/logout.html"}
-var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js",
+var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js", '/bootstrap.min.css', '/bootstrap.min.js', '/fonts/glyphicons-halflings-regular.woff', '/fonts/glyphicons-halflings-regular.ttf',
                       "/settings.css", "/yuwei.JPG", "/keegan.jpg", "/jason.jpg", "/matt.jpg", "/exclamation.jpg", "/store_generic.css"]
 /* Included for security purposes, as well as to create a RESTful API.
    Static urls only - dynamic stuff like /login is handled separately. */
@@ -464,7 +464,7 @@ function generate_store(email) {
 	console.log("generating store for user " + email);
 
 	function generateHeader(active_link, store_url) {
-		var headerhtml = '<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="utf-8"><title>%s</title><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"><link href="/store_generic.css" rel="stylesheet"><link href="/store/'+store_url+'/store_custom.css" rel="stylesheet"></head><body><div class="navbar"><div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/store/'+store_url+'"><img src="/store/'+store_url+'/images/%s" height="100%" alt="Logo Image Goes Here"></a></div><div class="collapse navbar-collapse"><ul class="nav navbar-nav">';
+		var headerhtml = '<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="utf-8"><title>%s</title><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><link href="/bootstrap.min.css" rel="stylesheet"><link href="/store_generic.css" rel="stylesheet"><link href="/store/'+store_url+'/store_custom.css" rel="stylesheet"></head><body><div class="navbar"><div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/store/'+store_url+'"><img src="/store/'+store_url+'/images/%s" height="100%" alt="Logo Image Goes Here"></a></div><div class="collapse navbar-collapse"><ul class="nav navbar-nav">';
 		headerhtml += active_link == "home" ? '<li class="active">' : '<li>'
 		headerhtml += '<a href="/store/'+store_url+'">Home</a></li>'
 		headerhtml += active_link == "products" ? '<li class="active">' : '<li>'
@@ -474,7 +474,7 @@ function generate_store(email) {
 		return headerhtml;
 	}
 	function generateFooter() {
-		return '</div><div id="footer"><div class="container text-right"><p class="text-muted"><small>\u00A92014 %s. Store created with the assistance of easyStorefront.</small></p></div></div><script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script><script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script></body></html>';
+		return '</div><div id="footer"><div class="container text-right"><p class="text-muted"><small>\u00A92014 %s. Store created with the assistance of easyStorefront.</small></p></div></div><script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script><script type="text/javascript" src="/bootstrap.min.js"></script></body></html>';
 	}
 	function getFieldItem(fields, desired_key) {
 		for (var i=0; i<fields.length; i++) {
