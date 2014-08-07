@@ -677,7 +677,7 @@ http.createServer(function (req, res) {
 					if (err) {
 						sendPageWithSubstitutions(res, "error.html", err_message);
 					} else {
-						sendPageWithSubstitutions(res, "login.html", urlParams.email);
+						sendPageWithSubstitutions(res, "login.html", util.format('document.cookie="email=%s";\ndocument.cookie="session_hash=%s";', urlParams.email, 'test_session_hash'));
 					}
 				});
 
