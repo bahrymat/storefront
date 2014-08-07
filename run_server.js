@@ -303,6 +303,17 @@ function login(email, password, callback) {
 }
 
 
+function logout(user_email) {
+	delete csrf_tokens[user_email];
+	var users = mongoose.model('users', userSchema);
+	users.findOne({user:user_email}, function (err,data) {
+		data.sessionSalt = "";
+		data.sessionToken = "";
+		data.save();
+	});
+	
+}
+
 function generatesessionid(data, callback) {
 	//generate salt
 	crypto.randomBytes(64, function(err, salt) {
@@ -1158,6 +1169,9 @@ http.createServer(function (req, res) {
 				giveStaticFile(res, __dirname + redirected_urls[url], cookie="csrf_token="+csrf_token)
 			} else {
 				giveStaticFile(res, __dirname + redirected_urls[url]);
+			}
+			if (url == "/logout") {
+				logout(cookie.email);
 			}
 		} else if (unchanged_urls.indexOf(url) >= 0) {
 			giveStaticFile(res, __dirname + url);
