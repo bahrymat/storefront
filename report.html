@@ -99,6 +99,8 @@
 </ul>
 
 <h2>Product backlog</h2>
+<h3><a href="javascript:toggle('backlog1')">Assignment 1</a></h3>
+<div id="backlog1">
 <h3>Design</h3>
 <ul><li>Come up with a visual design for the website on paper or as an image mockup
 <ul><li>Edit page</li>
@@ -113,6 +115,9 @@
 <li>Front page</li>
 <li>Example store pages</li>
 <li>About us page</li></ul></li></ul>
+</div>
+<h3><a href="javascript:toggle('backlog2')">Assignment 2</a></h3>
+<div id="backlog2">
 <h3>Set up Server</h3>
 <ul><li>Setup files on cdf server, using RESTful api</li></ul>
 <h3>Server integration</h3>
@@ -144,6 +149,9 @@
 <li>'Message of the day' type display</li>
 <li>Whatever comes to mind</li>
 </ul>
+</div>
+<h3><a href="javascript:toggle('backlog3')">Assignment 3</a></h3>
+<div id="backlog3">
 <h3> Scalability and Security</h3>
 <ul>
 <li>Plug any database/html injection and other such vulnerabilities</li>
@@ -153,8 +161,10 @@
 <li>Load test</li>
 <li>Securely ensure a user is logged in for the edit page (csrf, sessions)</li>
 </ul>
-
+</div>
 <h2>Sprint backlog</h2>
+<h3><a href="javascript:toggle('sprint1')">Assignment 1</a></h3>
+<div id="sprint1">
 <h3>Design</h3>
 <ul><li>Come up with a visual design for the website on paper or as an image mockup
 <ul><li>Edit page <ul><li>owner: Jason, status: completed</li></ul></li>
@@ -169,6 +179,9 @@
 <li>Front page<ul><li>owner: Yuwei, status: completed</li></ul></li>
 <li>Store pages<ul><li>owner: Matthew, status: completed</li></ul></li>
 <li>About us page<ul><li>owner: Keegan, status: completed</li></ul></li></ul></li></ul>
+</div>
+<h3><a href="javascript:toggle('sprint2')">Assignment 2</a></h3>
+<div id="sprint2">
 <h3>Set up Server</h3>owner: Matthew, status: completed
 <ul><li>Setup files on cdf server, using RESTful api</li></ul>
 <h3>Server integration</h3>owner: Jason, status: completed
@@ -190,6 +203,9 @@
 <li>Link tags on individual product page to searches for that tag<ul><li>owner:Matthew, status: completed</li></ul></li>
 <li>More navbar/footer customisation<ul><li>owner:No-one, status: abandoned</li></ul></li>
 </ul>
+</div>
+<h3><a href="javascript:toggle('sprint3')">Assignment 3</a></h3>
+<div id="sprint3">
 <h3> Scalability and Security</h3>
 <ul>
 <li>Plug any database/html injection and other such vulnerabilities<ul><li>owner:Matthew, status: completed</li></ul></li>
@@ -199,6 +215,7 @@
 <li>Load test<ul><li>owner:Jason, status: completed</li></ul></li>
 <li>Securely ensure a user is logged in for the edit page (csrf, sessions)<ul><li>owner:Yuwei and Keegan, status: completed</li></ul></li>
 </ul>
+</div>
 <h2>Load/Stress Test</h2>
 To perform the stress test the ab program was used to simulate requests to various points around the site at differing levels of concurrency. Specifically, for each test a total of 3000 requests were made at 5, 50, 200, 500, or 1000 concurrent requests. The results of these tests are shown below.
 
@@ -263,6 +280,21 @@ For every graph below, the x axis is the percentage of requests (note the non-li
 <h2>Limitations</h2>
 <!-- FILL THIS IN IF YOU Have anything to say -->
 <p>One of the major limitations of the project is that it is being run from the CDF servers. As such, our project server is subject to varying levels of performance. This makes load testing espetially difficult, since one cannot guaruntee uniform load on the cdf servers so the results of the load testing done may mnot be entirely accurate. Additionally, CDF limits the number of processes available to an individual user, giving a hard cap on the amount of concurrency testable (and is empirically around 1000 concurrent requests).</p>
+<script type='text/javascript'>
+function toggle(id) {
+	if (document.getElementById(id).style.display == "none") {
+		document.getElementById(id).style.display = "block";
+	} else {
+		document.getElementById(id).style.display = "none";
+	}
+}
+toggle('backlog1');
+toggle('backlog2');
+toggle('backlog3');
+toggle('sprint1');
+toggle('sprint2');
+toggle('sprint3');
+</script>
 <script type='text/javascript' src="report.js"></script>
 </body>
 </html>
