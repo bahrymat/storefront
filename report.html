@@ -223,14 +223,14 @@
 <h2>Load/Stress Test</h2><p>
 To perform the stress test the ab program was used to simulate requests to various points around the site at differing levels of concurrency. Specifically, for each test a total of 3000 requests were made at 5, 50, 200, 500, or 1000 concurrent requests. The results of these tests are shown below.</p>
 <p>
-In the original code (as submitted for A2) a connection was made to the database as needed. Evidently, this logic does not scale well, essentially reducing the server to a handful of concurrent requests at a time.
+In the original code (as submitted for A2) a connection was made to the database as needed. Evidently, this logic does not scale well, essentially reducing the server to a handful of concurrent requests at a time. This means that none of the tests used actually completed without error when database interaction was involved. In fact, they all timed out after a handful of requests, regardless of the number of concurrent requests.
 </p>
 <p>
 Once the instability of the multiple connection method was found, we decided to abandon it in favor of a single connection that persists throughout the entire function of the server. The data shows this to be a much more effective method for the server
 </p>
 
 <p>
-For every graph below, the x axis is the percentage of requests (note the non-linear scale) and the y-axis is the time in miliseconds for the percentage of requests to be served.
+For every graph below, the <em>x</em>-axis is the percentage of requests (note the non-linear scale) and the <em>y</em>-axis is the time in miliseconds for the percentage of requests to be served. This is the case for every graph.
 </p>
 
 <p>Please see <em>autotest.sh</em> to see how this data was generated.</p>
@@ -292,7 +292,7 @@ For every graph below, the x axis is the percentage of requests (note the non-li
 <p>In the assignment 2 version of our product, it was possible for users to insert arbitrary HTML into their store pages. Obviously, this was a major security issue, so the input has been filtered to contain plain text only.</p>
 <h2>Limitations</h2>
 <!-- FILL THIS IN IF YOU Have anything to say -->
-<p>One of the major limitations of the project is that it is being run from the CDF servers. As such, our project server is subject to varying levels of performance. This makes load testing espetially difficult, since one cannot guaruntee uniform load on the cdf servers so the results of the load testing done may mnot be entirely accurate. Additionally, CDF limits the number of processes available to an individual user, giving a hard cap on the amount of concurrency testable (and is empirically around 1000 concurrent requests).</p>
+<p>One of the major limitations of the project is that it is being run from the CDF servers. As such, our project server is subject to varying levels of performance. This makes load testing espetially difficult, since one cannot guaruntee uniform load on the cdf servers so the results of the load testing done may mnot be entirely accurate. Additionally, CDF limits the number of processes available to an individual user, giving a hard cap on the amount of concurrency testable (and is empirically around 1000 concurrent requests). This is clearly fixable by shifting to more dedicated hardware for both the server and the database, which would allow for more consistant performance, and likely better performance in general.</p>
 <script type='text/javascript'>
 function toggle(id) {
 	if (document.getElementById(id).style.display == "none") {
