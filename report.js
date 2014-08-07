@@ -474,3 +474,47 @@ var ssppostData = {
 }
     var ssppost = document.getElementById('ssppost').getContext('2d');
     new Chart(ssppost).Line(ssppostData, {datasetFill :false});
+
+var gsdpostData = {
+	labels : ["50","66","75","80","90","95", "98", "99", "100"],
+	datasets : [
+{
+			strokeColor : "#000",
+			pointColor : "#000",
+			pointStrokeColor : "#000",
+			data : [3806,4141,4176,4190,6804,7094,7351,7391,7439]
+		},
+
+{
+			strokeColor : "#00f",
+			pointColor : "#00f",
+			pointStrokeColor : "#000",
+			data : [2010,2035,2043,2046,2049,2908,3027,3063,3102]
+		},
+
+
+{
+			strokeColor : "#0f0",
+			pointColor : "#0f0",
+			pointStrokeColor : "#000",
+			data : [809,820,824,831,842,848,853,854,856]
+		},
+
+{
+			strokeColor : "#f00",
+			pointColor : "#f00",
+			pointStrokeColor : "#000",
+			data : [190,204,230,245,263,271,277,282,289]
+		},
+		{
+			strokeColor : "#999",
+			pointColor : "#fff",
+			pointStrokeColor : "#000",
+			data : [16,21,22,23,29,34,41,44,54]
+		}
+
+
+	]
+}
+    var gsdpost = document.getElementById('gsdpost').getContext('2d');
+    new Chart(gsdpost).Line(gsdpostData, {datasetFill :false});
