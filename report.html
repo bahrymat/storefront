@@ -215,7 +215,7 @@ For every graph below, the x axis is the percentage of requests (note the non-li
 <font color='#0f0'>200 concurrent requests</font><br>
 <font color='#f00'>50 concurrent requests</font><br>
 <font color='#999'>5 concurrent requests</font>
-</p> <!--
+</p> <!-- chart.js is really laggy, commenting out for testing the rest of the page
 <h3>Front Page</h3>
 <h4>Pre</h4>
 <canvas id="fppre" width="600" height="400"></canvas>
@@ -258,6 +258,7 @@ For every graph below, the x axis is the percentage of requests (note the non-li
 <h3>User Input Validation</h3>
 <!-- FILL THIS IN IF YOU KNOW WHAT WAS DONE ABOUT THIS -->
 <h2>Limitations</h2>
+<!-- FILL THIS IN IF YOU Have anything to say -->
 <p>One of the major limitations of the project is that it is being run from the CDF servers. As such, our project server is subject to varying levels of performance. This makes load testing espetially difficult, since one cannot guaruntee uniform load on the cdf servers so the results of the load testing done may mnot be entirely accurate. Additionally, CDF limits the number of processes available to an individual user, giving a hard cap on the amount of concurrency testable (and is empirically around 1000 concurrent requests).</p>
 <script type='text/javascript' src="report.js"></script>
 </body>
