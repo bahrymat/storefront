@@ -52,7 +52,7 @@
 <tr><td>
 <b>Bio:</b></br> Fourth-year computer science specialist at the University of Toronto. Does not take good photos.</td></tr>
 <tr><td>
-<b>Things Learned:</b><br><!--Here--></td></tr>
+<b>Things Learned:</b><br>Simulating syncronous code execution in an asyncronous environment, NoSQL database interaction, asyncronous coding, further understanding of HTML, Javascript and CSS, server/client interaction in something other than C.<!--Here--></td></tr>
 </table></td></tr>
 <!-- /Stuff for Jason to fill in -->
 <tr><td><h3>Yuwei</h3><img src='yuwei.JPG' height='150px'></img></td>
@@ -229,7 +229,6 @@ In the original code (as submitted for A2) a connection was made to the database
 Once the instability of the multiple connection method was found, we decided to abandon it in favor of a single connection that persists throughout the entire function of the server. The data shows this to be a much more effective method for the server
 </p>
 
-
 <p>
 For every graph below, the x axis is the percentage of requests (note the non-linear scale) and the y-axis is the time in miliseconds for the percentage of requests to be served.
 </p>
@@ -253,35 +252,35 @@ For every graph below, the x axis is the percentage of requests (note the non-li
 <td><h4>Post</h4>
 <canvas id="abpost" width="300" height="200"></canvas></td></tr></table>
 <h3>Example Stores</h3>
-<h4>Pre</h4>All tests timed out<h4>Post</h4>
+<h4>Pre</h4>All tests timed out, for every concurrency load<h4>Post</h4>
 <canvas id="expost" width="600" height="400"></canvas>
 <h3>Store Contact page</h3>
-<h4>Pre</h4>All tests timed out<h4>Post</h4>
+<h4>Pre</h4>All tests timed out, for every concurrency load<h4>Post</h4>
 <canvas id="conpost" width="600" height="400"></canvas>
 
 <h3>Store front page</h3>
-<h4>Pre</h4>All tests timed out<h4>Post</h4>
+<h4>Pre</h4>All tests timed out, for every concurrency load<h4>Post</h4>
 <canvas id="sfppost" width="600" height="400"></canvas>
 <h3>Store Product page</h3>
-<h4>Pre</h4>All tests timed out<h4>Post</h4>
+<h4>Pre</h4>All tests timed out, for every concurrency load<h4>Post</h4>
 <canvas id="spppost" width="600" height="400"></canvas>
 <h3>Individual Product page (detailed view)</h3>
-<h4>Pre</h4>All tests timed out<h4>Post</h4>
+<h4>Pre</h4>All tests timed out, for every concurrency load<h4>Post</h4>
 <canvas id="scppost" width="600" height="400"></canvas>
 <h3>Search page, single result</h3>
-<h4>Pre</h4>All tests timed out<h4>Post</h4>
+<h4>Pre</h4>All tests timed out, for every concurrency load<h4>Post</h4>
 <canvas id="ssppost" width="600" height="400"></canvas>
 <h3>Search, return multiple results</h3>
-<h4>Pre</h4>All tests timed out<h4>Post</h4>
+<h4>Pre</h4>All tests timed out, for every concurrency load<h4>Post</h4>
 <canvas id="mspost" width="600" height="400"></canvas>
 
 <h2>Security Measures</h2>
 <h3>CSRF tagging</h3>
 <p>Our site was previously vulnerable to cross-site request forgeries, where users could be tricked into making changes to their stores that they did not intend. To prevent this, we have given the users a unique CSRF token every time they visit the store edit page, and disregarded any requests that do not reply with the same token.</p>
 <h3>Session ID</h3>
-<p>A session ID is created on login that allow the user a unique identifier proving their indentity. This ID is stored in the database as a comparison when a user takes any action. If the session ID from the client matches that in the database, then the user is verified as a genuine user. If, however, the ID does not match, then no editing is allowed, preventing potential attacks.</p>
+
 <h3>Password Hasing in DB</h3>
-<p>Instead of storing the passwords in plain text, they are hashed using the PBKDF2 algorithm. This helps to prevent the loss of accounts should the database be compromised.</p>
+
 <h3>User Input Validation</h3>
 <p>In the assignment 2 version of our product, it was possible for users to insert arbitrary HTML into their store pages. Obviously, this was a major security issue, so the input has been filtered to contain plain text only.</p>
 <h2>Limitations</h2>
