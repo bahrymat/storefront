@@ -112,7 +112,7 @@ var iterationlen = 10000;
 var bitsize = 256;
 
 var redirected_urls = {"/": "/index.html", "/about": "/aboutus.html", "/edit": "/settings.html", "/logout": "/logout.html"}
-var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js",
+var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js", '/bootstrap.min.css', '/bootstrap.min.js', '/fonts/glyphicons-halflings-regular.woff', '/fonts/glyphicons-halflings-regular.ttf',
                       "/settings.css", "/yuwei.JPG", "/keegan.jpg", "/jason.jpg", "/matt.jpg", "/exclamation.jpg", "/store_generic.css"]
 /* Included for security purposes, as well as to create a RESTful API.
    Static urls only - dynamic stuff like /login is handled separately. */
@@ -268,7 +268,7 @@ function login(email, password, callback) {
 			callback(true, null, "User no found");
 			return;
 		}
-		else {
+		else if (data.salt) { 
 			//generate hash from salt
 			crypto.pbkdf2(password, data.salt, iterationlen, bitsize, function(err, hash) {
 				if (err) {
@@ -293,6 +293,9 @@ function login(email, password, callback) {
 					return;
 				}
 			});
+		} else {
+			//only way data.salt could be missing is if the database is in the old format
+			callback(true, "Your user account is in the assignment2 format, try registering a new one.");
 		}
 	});
 }
@@ -515,7 +518,7 @@ function generate_store(email) {
 	console.log("generating store for user " + email);
 
 	function generateHeader(active_link, store_url) {
-		var headerhtml = '<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="utf-8"><title>%s</title><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"><link href="/store_generic.css" rel="stylesheet"><link href="/store/'+store_url+'/store_custom.css" rel="stylesheet"></head><body><div class="navbar"><div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/store/'+store_url+'"><img src="/store/'+store_url+'/images/%s" height="100%" alt="Logo Image Goes Here"></a></div><div class="collapse navbar-collapse"><ul class="nav navbar-nav">';
+		var headerhtml = '<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="utf-8"><title>%s</title><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><link href="/bootstrap.min.css" rel="stylesheet"><link href="/store_generic.css" rel="stylesheet"><link href="/store/'+store_url+'/store_custom.css" rel="stylesheet"></head><body><div class="navbar"><div class="container"><div class="navbar-header"><button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/store/'+store_url+'"><img src="/store/'+store_url+'/images/%s" height="100%" alt="Logo Image Goes Here"></a></div><div class="collapse navbar-collapse"><ul class="nav navbar-nav">';
 		headerhtml += active_link == "home" ? '<li class="active">' : '<li>'
 		headerhtml += '<a href="/store/'+store_url+'">Home</a></li>'
 		headerhtml += active_link == "products" ? '<li class="active">' : '<li>'
@@ -525,7 +528,7 @@ function generate_store(email) {
 		return headerhtml;
 	}
 	function generateFooter() {
-		return '</div><div id="footer"><div class="container text-right"><p class="text-muted"><small>\u00A92014 %s. Store created with the assistance of easyStorefront.</small></p></div></div><script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script><script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script></body></html>';
+		return '</div><div id="footer"><div class="container text-right"><p class="text-muted"><small>\u00A92014 %s. Store created with the assistance of easyStorefront.</small></p></div></div><script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script><script type="text/javascript" src="/bootstrap.min.js"></script></body></html>';
 	}
 	function getFieldItem(fields, desired_key) {
 		for (var i=0; i<fields.length; i++) {
@@ -637,11 +640,14 @@ function generate_store(email) {
 	});
 }
 
-function giveStaticFile(res, path) {
+function giveStaticFile(res, path, cookie) {
 	fs.readFile(path, function (err,data) {
 		if (err) {
 			console.log(path + " should have been found, but wasn't!");
 			four_oh_four(res);
+		} else if (cookie) {
+			res.writeHead(200, {"Set-Cookie": cookie});
+			res.end(data);
 		} else {
 			res.writeHead(200);
 			res.end(data);
@@ -649,13 +655,52 @@ function giveStaticFile(res, path) {
 	});
 }
 
+//http://stackoverflow.com/questions/5047346/converting-strings-like-document-cookie-to-objects
+function cookie2object(str) {
+    str = str.split('; ');
+    var result = {};
+    for (var i = 0; i < str.length; i++) {
+        var cur = str[i].split('=');
+        result[cur[0]] = cur[1];
+    }
+    return result;
+}
+function object2cookie(obj) {
+	var result = "";
+	for (key in obj) {
+		result += key;
+		result += "=";
+		result += obj[key];
+		result += "; "
+	}
+	return result[1] ? result.slice(0,-2) : result;
+}
+
+
+function generate_csrf_token() {
+	var random = Math.random().toString(); //wow this is dumb
+	return crypto.createHash('md5').update(random).digest('hex');
+}
+
+
+csrf_tokens = {};
 
 http.createServer(function (req, res) {
+
 	var url = req.url;
+
+	var cookie = cookie2object(req.headers.cookie ? req.headers.cookie : "");
+	
+	
 	
 	if (req.method == "POST") {
 	
 		if (url == "/addimage") { // special case - we need to use the request object to save the image.
+			if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
+				res.end("(what's a user friendly message to give when the csrf token is wrong?)");
+				console.log("invalid csrf token from " + cookie.email);
+				return;
+			}
 			upload_image(req, res);
 			return;
 		}
@@ -686,11 +731,16 @@ http.createServer(function (req, res) {
 					if (err) {
 						sendPageWithSubstitutions(res, "error.html", err_message);
 					} else {
-						sendPageWithSubstitutions(res, "login.html", urlParams.email);
+						sendPageWithSubstitutions(res, "login.html", util.format('document.cookie="email=%s";\ndocument.cookie="session_hash=%s";', urlParams.email, 'test_session_hash'));
 					}
 				});
 
 			} else if (url == "/changesettings") {
+				if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
+					res.end("(what's a user friendly message to give when the csrf token is wrong?)");
+					console.log("invalid csrf token from " + cookie.email);
+					return;
+				}
 				data = sanitize(data);
 				console.log("received store settings edit request"); 
 				res.writeHead(200);
@@ -793,6 +843,11 @@ http.createServer(function (req, res) {
 								
 				res.end("Your settings changes have been saved!");
 			} else if (url == "/changeproducts") {
+				if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
+					res.end("(what's a user friendly message to give when the csrf token is wrong?)");
+					console.log("invalid csrf token from " + cookie.email);
+					return;
+				}
 				data = sanitize(data);
 				console.log("received store products edit request"); 
 				res.writeHead(200);
@@ -848,6 +903,11 @@ http.createServer(function (req, res) {
 				
 				res.end("Your product changes have been saved!");
 			} else if (url == "/changefrontpage") {
+				if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
+					res.end("(what's a user friendly message to give when the csrf token is wrong?)");
+					console.log("invalid csrf token from " + cookie.email);
+					return;
+				}
 				data = sanitize(data);
 				console.log("received store front edit request"); 
 				res.writeHead(200);
@@ -921,6 +981,11 @@ http.createServer(function (req, res) {
 				res.end("Your Home Page changes have been saved!");
 
 			} else if (url == "/changeproductpage") {
+				if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
+					res.end("(what's a user friendly message to give when the csrf token is wrong?)");
+					console.log("invalid csrf token from " + cookie.email);
+					return;
+				}
 				data = sanitize(data);
 				console.log("received store front edit request"); 
 				res.writeHead(200);
@@ -993,6 +1058,11 @@ http.createServer(function (req, res) {
 				res.end("Your Product Page changes have been saved!");
 
 			} else if (url.substring(0,12) == "/deleteimage") {
+				if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
+					res.end("(what's a user friendly message to give when the csrf token is wrong?)");
+					console.log("invalid csrf token from " + cookie.email);
+					return;
+				}
 			
 				var path = url.split("/");
 				if (path.length != 4) {
@@ -1037,7 +1107,13 @@ http.createServer(function (req, res) {
 
 	} else if (req.method == "GET") {
 		if (redirected_urls[url] != undefined) {
-			giveStaticFile(res, __dirname + redirected_urls[url]);
+			if (url == "/edit") {
+				var csrf_token = generate_csrf_token()
+				csrf_tokens[cookie.email] = csrf_token;
+				giveStaticFile(res, __dirname + redirected_urls[url], cookie="csrf_token="+csrf_token)
+			} else {
+				giveStaticFile(res, __dirname + redirected_urls[url]);
+			}
 		} else if (unchanged_urls.indexOf(url) >= 0) {
 			giveStaticFile(res, __dirname + url);
 		} else if (url == "/examples") {
