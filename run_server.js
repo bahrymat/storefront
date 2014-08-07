@@ -332,7 +332,7 @@ function generatesessionid(data, callback) {
 				}
 				hash = hash.toString('hex');
 				data.sessionSalt = salt;
-				data.sessionToken = sessionid;
+				data.sessionToken = hash;
 				data.save(function(err) {
 					if (err) {
   					console.log(err);
@@ -341,7 +341,7 @@ function generatesessionid(data, callback) {
 					return;
 				    }
 				});
-				callback(false, hash);
+				callback(false, sessionid);
 				return;
 			});
 		});
@@ -693,14 +693,24 @@ function verify_tokens(cookie, csrf_tokens, callback) {
 		return;
 	}
 	users.findOne({user:cookie.email}, function (err,userdata) {
-		if (cookie.session_hash != userdata.sessionToken) {
-			callback(true, "(what's a user friendly message to give when the session hash is wrong?)");
-			console.log("you done goofed");
-			console.log(cookie.session_hash);
-			console.log(userdata.sessionToken);
-		} else {
-			callback(false, "");
-		}
+		console.log(cookie.sessionid);
+		crypto.pbkdf2(cookie.sessionid, userdata.sessionSalt, iterationlen, 64, function(err, hash) {
+			if (err) {
+				console.log(err);
+				console.log("Session ID hash error");
+				callback(true, "We're having some issues, try again later.");
+				return;
+			}
+			hash = hash.toString('hex');
+			if (hash != userdata.sessionToken) {
+				callback(true, "(what's a user friendly message to give when the session hash is wrong?)");
+				console.log("you done goofed");
+				console.log(hash);
+				console.log(userdata.sessionToken);
+			} else {
+				callback(false, "");
+			}
+		});
 	});
 }
 
@@ -756,7 +766,7 @@ http.createServer(function (req, res) {
 						sendPageWithSubstitutions(res, "error.html", err_message);
 					} else {
 						console.log('set hash in cookie to '+sessionid);
-						sendPageWithSubstitutions(res, "login.html", util.format('document.cookie="email=%s";\ndocument.cookie="session_hash=%s";', urlParams.email, sessionid));
+						sendPageWithSubstitutions(res, "login.html", util.format('document.cookie="email=%s";\ndocument.cookie="sessionid=%s";', urlParams.email, sessionid));
 					}
 				});
 
