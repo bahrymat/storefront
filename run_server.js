@@ -26,7 +26,8 @@ var userSchema = mongoose.Schema({
 	url: String, 
 	examplesListing: Boolean,
 	csrfToken: String,
-	sessionToken: String
+	sessionToken: String,
+	sessionSalt: String
 });
 	
 var eleSchema = mongoose.Schema({
@@ -106,6 +107,10 @@ var settingsSchema = mongoose.Schema({
 
 });
 
+//pbkdf2 iteration and size value
+var iterationlen = 10000;
+var bitsize = 256;
+
 var redirected_urls = {"/": "/index.html", "/about": "/aboutus.html", "/edit": "/settings.html", "/logout": "/logout.html"}
 var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js",
                       "/settings.css", "/yuwei.JPG", "/keegan.jpg", "/jason.jpg", "/matt.jpg", "/exclamation.jpg", "/store_generic.css"]
@@ -146,8 +151,6 @@ function url_parse(query) {
 	}
 }
 
-var iterationlen = 10000;
-var bsize = 256;
 
 function registerUser(email, password, url, callback) {
 	return_value = undefined;
@@ -180,7 +183,7 @@ function registerUser(email, password, url, callback) {
 			return;
 		}
 		if (data == null) {
-			crypto.randomBytes(bsize, function(err, salt) {
+			crypto.randomBytes(bitsize, function(err, salt) {
   				if (err) {
   					console.log(err);
 					console.log("Salt generation error");
@@ -189,7 +192,7 @@ function registerUser(email, password, url, callback) {
 				}
 				salt = salt.toString('hex');
 				console.log(password);
-				crypto.pbkdf2(password, salt, iterationlen, bsize, function(err, hash) {
+				crypto.pbkdf2(password, salt, iterationlen, bitsize, function(err, hash) {
 					if (err) {
   						console.log(err);
 						console.log("Password generation error");
@@ -258,29 +261,35 @@ function login(email, password, callback) {
 	users.findOne({user:email}, function (err,data) {
 		if (err) {
 			console.log(err);
-			callback(true, "There's problems");
+			callback(true, null, "There's problems");
 			return;
 		}
 		else if (data == null){
-			callback(true, "User no found");
+			callback(true, null, "User no found");
 			return;
 		}
 		else {
 			//generate hash from salt
-			crypto.pbkdf2(password, data.salt, iterationlen, bsize, function(err, hash) {
+			crypto.pbkdf2(password, data.salt, iterationlen, bitsize, function(err, hash) {
 				if (err) {
   					console.log(err);
 					console.log("Password hashing error");
-					callback(true, "We're having some issues, try again later.");
+					callback(true, null, "We're having some issues, try again later.");
 					return;
 				}
 				hash = hash.toString('hex');
 				if (hash == data.pass){
-					console.log(data.user + ' logged in');
-					callback(false, "");
-					return;
+					generatesessionid (data, function(err, sessionid){
+						if (err) {
+							callback(true, null, "We're having some issues, try again later.");
+							return;
+						}
+						console.log(data.user + ' logged in');
+						callback(false, sessionid, "");
+						return;
+					});
 				} else {
-					callback(true, "Incorrect password");
+					callback(true, null, "Incorrect password");
 					return;
 				}
 			});
@@ -288,6 +297,51 @@ function login(email, password, callback) {
 	});
 }
 
+
+function generatesessionid(data, callback) {
+	//generate salt
+	crypto.randomBytes(bitsize, function(err, salt) {
+  		if (err) {
+  			console.log(err);
+			console.log("Salt generation error");
+			callback(true, null);
+			return;
+		}
+		salt = salt.toString('hex');
+		//generate session ID
+		crypto.randomBytes(bitsize, function(err, sessionid) {
+			if (err) {
+				console.log(err);
+				console.log("Session ID generation error");
+				callback(true, null);
+				return;
+			}
+			sessionid = sessionid.toString('hex');
+			//hash session ID using salt then store salt and session token in data
+			crypto.pbkdf2(sessionid, salt, iterationlen, bitsize, function(err, hash) {
+				if (err) {
+  					console.log(err);
+					console.log("Session ID hashing error");
+					callback(true, null);
+					return;
+				}
+				hash = hash.toString('hex');
+				data.sessionSalt = salt;
+				data.sessionToken = sessionid;
+				data.save(function(err) {
+					if (err) {
+  					console.log(err);
+					console.log("data save error");
+					callback(true, null);
+					return;
+				    }
+				});
+				callback(false, hash);
+				return;
+			});
+		});
+	});
+}
 
 
 function four_oh_four(res) {
@@ -628,7 +682,7 @@ http.createServer(function (req, res) {
 
 			} else if (url == "/login") {
 				var urlParams = url_parse(data);
-				login(urlParams.email, urlParams.password, function (err, err_message) {
+				login(urlParams.email, urlParams.password, function (err, sessionid, err_message) {
 					if (err) {
 						sendPageWithSubstitutions(res, "error.html", err_message);
 					} else {
