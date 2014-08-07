@@ -113,8 +113,10 @@ var bitsize = 256;
 var saltsize = 64;
 
 var redirected_urls = {"/": "/index.html", "/about": "/aboutus.html", "/edit": "/settings.html", "/logout": "/logout.html"}
-var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js", '/bootstrap.min.css', '/bootstrap.min.js', '/fonts/glyphicons-halflings-regular.woff', '/fonts/glyphicons-halflings-regular.ttf',
-                      "/settings.css", "/yuwei.JPG", "/keegan.jpg", "/jason.jpg", "/matt.jpg", "/exclamation.jpg", "/store_generic.css"]
+var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js", '/bootstrap.min.css',
+                      '/bootstrap.min.js', '/fonts/glyphicons-halflings-regular.woff', '/fonts/glyphicons-halflings-regular.ttf',
+                      "/settings.css", "/yuwei.JPG", "/keegan.jpg", "/jason.jpg", "/matt.jpg", "/exclamation.jpg", "/store_generic.css", "/report.html",
+					  "/report.js", "/Chart.min.js"]
 /* Included for security purposes, as well as to create a RESTful API.
    Static urls only - dynamic stuff like /login is handled separately. */
    
