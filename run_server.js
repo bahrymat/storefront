@@ -586,11 +586,14 @@ function generate_store(email) {
 	});
 }
 
-function giveStaticFile(res, path) {
+function giveStaticFile(res, path, cookie) {
 	fs.readFile(path, function (err,data) {
 		if (err) {
 			console.log(path + " should have been found, but wasn't!");
 			four_oh_four(res);
+		} else if (cookie) {
+			res.writeHead(200, {"Set-Cookie": cookie});
+			res.end(data);
 		} else {
 			res.writeHead(200);
 			res.end(data);
@@ -598,15 +601,52 @@ function giveStaticFile(res, path) {
 	});
 }
 
+//http://stackoverflow.com/questions/5047346/converting-strings-like-document-cookie-to-objects
+function cookie2object(str) {
+    str = str.split('; ');
+    var result = {};
+    for (var i = 0; i < str.length; i++) {
+        var cur = str[i].split('=');
+        result[cur[0]] = cur[1];
+    }
+    return result;
+}
+function object2cookie(obj) {
+	var result = "";
+	for (key in obj) {
+		result += key;
+		result += "=";
+		result += obj[key];
+		result += "; "
+	}
+	return result[1] ? result.slice(0,-2) : result;
+}
+
+
+function generate_csrf_token() {
+	var random = Math.random().toString(); //wow this is dumb
+	return crypto.createHash('md5').update(random).digest('hex');
+}
+
+
+csrf_tokens = {};
 
 http.createServer(function (req, res) {
 
 	var url = req.url;
 
+	var cookie = cookie2object(req.headers.cookie ? req.headers.cookie : "");
+	
+	
 	
 	if (req.method == "POST") {
 	
 		if (url == "/addimage") { // special case - we need to use the request object to save the image.
+			if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
+				res.end("(what's a user friendly message to give when the csrf token is wrong?)");
+				console.log("invalid csrf token from " + cookie.email);
+				return;
+			}
 			upload_image(req, res);
 			return;
 		}
@@ -642,6 +682,11 @@ http.createServer(function (req, res) {
 				});
 
 			} else if (url == "/changesettings") {
+				if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
+					res.end("(what's a user friendly message to give when the csrf token is wrong?)");
+					console.log("invalid csrf token from " + cookie.email);
+					return;
+				}
 				data = sanitize(data);
 				console.log("received store settings edit request"); 
 				res.writeHead(200);
@@ -744,6 +789,11 @@ http.createServer(function (req, res) {
 								
 				res.end("Your settings changes have been saved!");
 			} else if (url == "/changeproducts") {
+				if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
+					res.end("(what's a user friendly message to give when the csrf token is wrong?)");
+					console.log("invalid csrf token from " + cookie.email);
+					return;
+				}
 				data = sanitize(data);
 				console.log("received store products edit request"); 
 				res.writeHead(200);
@@ -799,6 +849,11 @@ http.createServer(function (req, res) {
 				
 				res.end("Your product changes have been saved!");
 			} else if (url == "/changefrontpage") {
+				if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
+					res.end("(what's a user friendly message to give when the csrf token is wrong?)");
+					console.log("invalid csrf token from " + cookie.email);
+					return;
+				}
 				data = sanitize(data);
 				console.log("received store front edit request"); 
 				res.writeHead(200);
@@ -872,6 +927,11 @@ http.createServer(function (req, res) {
 				res.end("Your Home Page changes have been saved!");
 
 			} else if (url == "/changeproductpage") {
+				if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
+					res.end("(what's a user friendly message to give when the csrf token is wrong?)");
+					console.log("invalid csrf token from " + cookie.email);
+					return;
+				}
 				data = sanitize(data);
 				console.log("received store front edit request"); 
 				res.writeHead(200);
@@ -944,6 +1004,11 @@ http.createServer(function (req, res) {
 				res.end("Your Product Page changes have been saved!");
 
 			} else if (url.substring(0,12) == "/deleteimage") {
+				if (!csrf_tokens[cookie.email] || cookie.csrf_token != csrf_tokens[cookie.email]) {
+					res.end("(what's a user friendly message to give when the csrf token is wrong?)");
+					console.log("invalid csrf token from " + cookie.email);
+					return;
+				}
 			
 				var path = url.split("/");
 				if (path.length != 4) {
@@ -988,7 +1053,13 @@ http.createServer(function (req, res) {
 
 	} else if (req.method == "GET") {
 		if (redirected_urls[url] != undefined) {
-			giveStaticFile(res, __dirname + redirected_urls[url]);
+			if (url == "/edit") {
+				var csrf_token = generate_csrf_token()
+				csrf_tokens[cookie.email] = csrf_token;
+				giveStaticFile(res, __dirname + redirected_urls[url], cookie="csrf_token="+csrf_token)
+			} else {
+				giveStaticFile(res, __dirname + redirected_urls[url]);
+			}
 		} else if (unchanged_urls.indexOf(url) >= 0) {
 			giveStaticFile(res, __dirname + url);
 		} else if (url == "/examples") {

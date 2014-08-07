@@ -144,7 +144,7 @@ refreshImageEvents();
 
 function parseSettingsForms() {
 	var forms = $('.storeform-container');
-	var logged = document.cookie.slice(6);
+	var logged = getCookie("email");
 	var formObject = {
 		settings: {}
 	};
@@ -170,7 +170,7 @@ function parseSettingsForms() {
 
 function parseProductForms() {
 	var forms = $('.storeform-container');
-	var logged = document.cookie.slice(6);
+	var logged = getCookie("email");
 	var formObject = {
 		products: []
 	};
@@ -190,7 +190,7 @@ function parseProductForms() {
 
 function parseFrontPageForms() {
 	var forms = $('.storeform-container');
-	var logged = document.cookie.slice(6);
+	var logged = getCookie("email");
 	var formObject = {
 		frontPageElements: []
 	};
