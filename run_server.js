@@ -265,7 +265,7 @@ function login(email, password, callback) {
 			callback(true, "User no found");
 			return;
 		}
-		else {
+		else if (data.salt) { 
 			//generate hash from salt
 			crypto.pbkdf2(password, data.salt, iterationlen, bsize, function(err, hash) {
 				if (err) {
@@ -284,6 +284,9 @@ function login(email, password, callback) {
 					return;
 				}
 			});
+		} else {
+			//only way data.salt could be missing is if the database is in the old format
+			callback(true, "Your user account is in the assignment2 format, try registering a new one.");
 		}
 	});
 }
@@ -597,7 +600,9 @@ function giveStaticFile(res, path) {
 
 
 http.createServer(function (req, res) {
+
 	var url = req.url;
+
 	
 	if (req.method == "POST") {
 	
