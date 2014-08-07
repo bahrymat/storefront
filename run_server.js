@@ -303,7 +303,7 @@ function login(email, password, callback) {
 
 function generatesessionid(data, callback) {
 	//generate salt
-	crypto.randomBytes(bitsize, function(err, salt) {
+	crypto.randomBytes(64, function(err, salt) {
   		if (err) {
   			console.log(err);
 			console.log("Salt generation error");
@@ -312,7 +312,7 @@ function generatesessionid(data, callback) {
 		}
 		salt = salt.toString('hex');
 		//generate session ID
-		crypto.randomBytes(bitsize, function(err, sessionid) {
+		crypto.randomBytes(64, function(err, sessionid) {
 			if (err) {
 				console.log(err);
 				console.log("Session ID generation error");
@@ -321,7 +321,7 @@ function generatesessionid(data, callback) {
 			}
 			sessionid = sessionid.toString('hex');
 			//hash session ID using salt then store salt and session token in data
-			crypto.pbkdf2(sessionid, salt, iterationlen, bitsize, function(err, hash) {
+			crypto.pbkdf2(sessionid, salt, iterationlen, 64, function(err, hash) {
 				if (err) {
   					console.log(err);
 					console.log("Session ID hashing error");
@@ -682,13 +682,12 @@ function generate_csrf_token() {
 	return crypto.createHash('md5').update(random).digest('hex');
 }
 
-
 csrf_tokens = {};
 
 http.createServer(function (req, res) {
 
 	var url = req.url;
-
+	var users = mongoose.model('users', userSchema);
 	var cookie = cookie2object(req.headers.cookie ? req.headers.cookie : "");
 	
 	
@@ -731,7 +730,7 @@ http.createServer(function (req, res) {
 					if (err) {
 						sendPageWithSubstitutions(res, "error.html", err_message);
 					} else {
-						sendPageWithSubstitutions(res, "login.html", util.format('document.cookie="email=%s";\ndocument.cookie="session_hash=%s";', urlParams.email, 'test_session_hash'));
+						sendPageWithSubstitutions(res, "login.html", util.format('document.cookie="email=%s";\ndocument.cookie="session_hash=%s";', urlParams.email, sessionid));
 					}
 				});
 
@@ -741,6 +740,11 @@ http.createServer(function (req, res) {
 					console.log("invalid csrf token from " + cookie.email);
 					return;
 				}
+				users.findOne({user:cookie.email}, function (err,userdata) {
+				if (cookie.session_hash != userdata.sessionToken){
+					console.log("you done goofed");
+					}
+				});
 				data = sanitize(data);
 				console.log("received store settings edit request"); 
 				res.writeHead(200);
