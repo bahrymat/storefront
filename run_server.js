@@ -777,11 +777,7 @@ http.createServer(function (req, res) {
 					if (err) {
 						sendPageWithSubstitutions(res, "error.html", err_message);
 					} else {
-						/*
-						var d = new Date();
-					    d.setTime(d.getTime() + (24*60*60*1000));
-					    var expires = "expires="+d.toGMTString();*/
-					    var cookiestring = util.format('document.cookie="email=%s; %s";\ndocument.cookie="sessionid=%s; %s";', urlParams.email, sessionid);
+					    var cookiestring = util.format('document.cookie="email=%s";\ndocument.cookie="sessionid=%s";', urlParams.email, sessionid);
 					    console.log(cookiestring);
 					    console.log('set hash in cookie to '+sessionid);
 						sendPageWithSubstitutions(res, "login.html", cookiestring);
