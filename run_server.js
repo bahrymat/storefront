@@ -112,7 +112,7 @@ var iterationlen = 10000;
 var bitsize = 256;
 var saltsize = 64;
 
-var redirected_urls = {"/": "/index.html", "/about": "/aboutus.html", "/edit": "/settings.html", "/logout": "/logout.html"}
+var redirected_urls = {"/": "/index.html", "/about": "/aboutus.html", "/logout": "/logout.html"}
 var unchanged_urls = ["/bootstrapvalidator-dist-0.4.5/dist/js/bootstrapValidator.js", "/index.css", "/index.js", "/settings.js", '/bootstrap.min.css',
                       '/bootstrap.min.js', '/fonts/glyphicons-halflings-regular.woff', '/fonts/glyphicons-halflings-regular.ttf',
                       "/settings.css", "/yuwei.JPG", "/keegan.jpg", "/jason.jpg", "/matt.jpg", "/exclamation.jpg", "/store_generic.css", "/report.html",
@@ -1170,18 +1170,16 @@ http.createServer(function (req, res) {
 
 	} else if (req.method == "GET") {
 		if (redirected_urls[url] != undefined) {
-			if (url == "/edit") {
-				var csrf_token = generate_csrf_token()
-				csrf_tokens[cookie.email] = csrf_token;
-				giveStaticFile(res, __dirname + redirected_urls[url], cookie="csrf_token="+csrf_token)
-			} else {
-				giveStaticFile(res, __dirname + redirected_urls[url]);
-			}
+			giveStaticFile(res, __dirname + redirected_urls[url]);
 			if (url == "/logout") {
 				logout(cookie.email);
 			}
 		} else if (unchanged_urls.indexOf(url) >= 0) {
 			giveStaticFile(res, __dirname + url);
+		} else if (url == "/edit") {
+			var csrf_token = generate_csrf_token();
+			csrf_tokens[cookie.email] = csrf_token;
+			sendPageWithSubstitutions(res, "settings.html", csrf_token);
 		} else if (url == "/examples") {
 			var User = db.model('users', userSchema);
 			User.find({examplesListing: true}, function (err, items) {

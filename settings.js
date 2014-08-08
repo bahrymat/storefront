@@ -230,6 +230,7 @@ function parseProductsPageForms() {
 
 }
 
+document.cookie="csrf_token="+$('#csrf')[0].value;
 
 $('.settingssubmit').click(parseSettingsForms);
 $('.productssubmit').click(parseProductForms);
